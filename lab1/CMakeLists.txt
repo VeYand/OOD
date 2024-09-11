@@ -12,51 +12,97 @@ FetchContent_Declare(
 
 FetchContent_MakeAvailable(googletest)
 
-add_executable(${PROJECT_NAME}
-        lib/Duck/Fly/FlyNoWay.h
-        lib/Duck/Fly/FlyWithWings.h
-        lib/Duck/Fly/IFlyBehavior.h
-        lib/Duck/Quack/IQuackBehavior.h
-        lib/Duck/Quack/MuteQuackBehavior.h
-        lib/Duck/Quack/QuackBehavior.h
-        lib/Duck/Quack/SqueakBehavior.h
-        lib/Duck/DecoyDuck.h
-        lib/Duck/Duck.h
-        lib/Duck/MallardDuck.h
-        lib/Duck/ModelDuck.h
-        lib/Duck/RedheadDuck.h
-        lib/Duck/RubberDuck.h
-        lib/DuckFunctions.h
-        SimUDuck.cpp
-        lib/Duck/Dance/DanceMinuetBehavior.h
-        lib/Duck/Dance/DanceWaltzBehavior.h
-        lib/Duck/Dance/IDanceBehavior.h
-        lib/Duck/Dance/NoDanceBehavior.h
+add_executable(${PROJECT_NAME}_1
+        lab1_1/lib/Duck/Fly/FlyNoWay.h
+        lab1_1/lib/Duck/Fly/FlyWithWings.h
+        lab1_1/lib/Duck/Fly/IFlyBehavior.h
+        lab1_1/lib/Duck/Quack/IQuackBehavior.h
+        lab1_1/lib/Duck/Quack/MuteQuackBehavior.h
+        lab1_1/lib/Duck/Quack/QuackBehavior.h
+        lab1_1/lib/Duck/Quack/SqueakBehavior.h
+        lab1_1/lib/Duck/DecoyDuck.h
+        lab1_1/lib/Duck/Duck.h
+        lab1_1/lib/Duck/MallardDuck.h
+        lab1_1/lib/Duck/ModelDuck.h
+        lab1_1/lib/Duck/RedheadDuck.h
+        lab1_1/lib/Duck/RubberDuck.h
+        lab1_1/lib/DuckFunctions.h
+        lab1_1/SimUDuck.cpp
+        lab1_1/lib/Duck/Dance/DanceMinuetBehavior.h
+        lab1_1/lib/Duck/Dance/DanceWaltzBehavior.h
+        lab1_1/lib/Duck/Dance/IDanceBehavior.h
+        lab1_1/lib/Duck/Dance/NoDanceBehavior.h
 )
 
-add_executable(${PROJECT_NAME}Test
-        lib/Duck/Fly/FlyNoWay.h
-        lib/Duck/Fly/FlyWithWings.h
-        lib/Duck/Fly/IFlyBehavior.h
-        lib/Duck/Quack/IQuackBehavior.h
-        lib/Duck/Quack/MuteQuackBehavior.h
-        lib/Duck/Quack/QuackBehavior.h
-        lib/Duck/Quack/SqueakBehavior.h
-        lib/Duck/DecoyDuck.h
-        lib/Duck/Duck.h
-        lib/Duck/MallardDuck.h
-        lib/Duck/ModelDuck.h
-        lib/Duck/RedheadDuck.h
-        lib/Duck/RubberDuck.h
-        lib/DuckFunctions.h
-        lib/Duck/Dance/DanceMinuetBehavior.h
-        lib/Duck/Dance/DanceWaltzBehavior.h
-        lib/Duck/Dance/IDanceBehavior.h
-        lib/Duck/Dance/NoDanceBehavior.h
-        test/DuckTest.cpp
+add_executable(${PROJECT_NAME}Test_1
+        lab1_1/lib/Duck/Fly/FlyNoWay.h
+        lab1_1/lib/Duck/Fly/FlyWithWings.h
+        lab1_1/lib/Duck/Fly/IFlyBehavior.h
+        lab1_1/lib/Duck/Quack/IQuackBehavior.h
+        lab1_1/lib/Duck/Quack/MuteQuackBehavior.h
+        lab1_1/lib/Duck/Quack/QuackBehavior.h
+        lab1_1/lib/Duck/Quack/SqueakBehavior.h
+        lab1_1/lib/Duck/DecoyDuck.h
+        lab1_1/lib/Duck/Duck.h
+        lab1_1/lib/Duck/MallardDuck.h
+        lab1_1/lib/Duck/ModelDuck.h
+        lab1_1/lib/Duck/RedheadDuck.h
+        lab1_1/lib/Duck/RubberDuck.h
+        lab1_1/lib/DuckFunctions.h
+        lab1_1/lib/Duck/Dance/DanceMinuetBehavior.h
+        lab1_1/lib/Duck/Dance/DanceWaltzBehavior.h
+        lab1_1/lib/Duck/Dance/IDanceBehavior.h
+        lab1_1/lib/Duck/Dance/NoDanceBehavior.h
+        lab1_1/test/DuckTest.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}Test gtest_main)
+add_executable(${PROJECT_NAME}_2
+        lab1_2/lib/Duck/Fly/FlyNoWay.h
+        lab1_2/lib/Duck/Fly/FlyWithWings.h
+        lab1_2/lib/Duck/Fly/IFlyBehavior.h
+        lab1_2/lib/Duck/Quack/IQuackBehavior.h
+        lab1_2/lib/Duck/Quack/MuteQuackBehavior.h
+        lab1_2/lib/Duck/Quack/QuackBehavior.h
+        lab1_2/lib/Duck/Quack/SqueakBehavior.h
+        lab1_2/lib/Duck/DecoyDuck.h
+        lab1_2/lib/Duck/Duck.h
+        lab1_2/lib/Duck/MallardDuck.h
+        lab1_2/lib/Duck/ModelDuck.h
+        lab1_2/lib/Duck/RedheadDuck.h
+        lab1_2/lib/Duck/RubberDuck.h
+        lab1_2/lib/DuckFunctions.h
+        lab1_2/SimUDuck.cpp
+        lab1_2/lib/Duck/Dance/DanceMinuetBehavior.h
+        lab1_2/lib/Duck/Dance/DanceWaltzBehavior.h
+        lab1_2/lib/Duck/Dance/IDanceBehavior.h
+        lab1_2/lib/Duck/Dance/NoDanceBehavior.h
+)
+
+add_executable(${PROJECT_NAME}Test_2
+        lab1_2/lib/Duck/Fly/FlyNoWay.h
+        lab1_2/lib/Duck/Fly/FlyWithWings.h
+        lab1_2/lib/Duck/Fly/IFlyBehavior.h
+        lab1_2/lib/Duck/Quack/IQuackBehavior.h
+        lab1_2/lib/Duck/Quack/MuteQuackBehavior.h
+        lab1_2/lib/Duck/Quack/QuackBehavior.h
+        lab1_2/lib/Duck/Quack/SqueakBehavior.h
+        lab1_2/lib/Duck/DecoyDuck.h
+        lab1_2/lib/Duck/Duck.h
+        lab1_2/lib/Duck/MallardDuck.h
+        lab1_2/lib/Duck/ModelDuck.h
+        lab1_2/lib/Duck/RedheadDuck.h
+        lab1_2/lib/Duck/RubberDuck.h
+        lab1_2/lib/DuckFunctions.h
+        lab1_2/lib/Duck/Dance/DanceMinuetBehavior.h
+        lab1_2/lib/Duck/Dance/DanceWaltzBehavior.h
+        lab1_2/lib/Duck/Dance/IDanceBehavior.h
+        lab1_2/lib/Duck/Dance/NoDanceBehavior.h
+        lab1_2/test/DuckTest.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}Test_1 gtest_main)
+target_link_libraries(${PROJECT_NAME}Test_2 gtest_main)
 enable_testing()
-add_test(NAME ${PROJECT_NAME}Test COMMAND ${PROJECT_NAME}Test)
+add_test(NAME ${PROJECT_NAME}Test_1 COMMAND ${PROJECT_NAME}Test_1)
+add_test(NAME ${PROJECT_NAME}Test_2 COMMAND ${PROJECT_NAME}Test_2)
 
