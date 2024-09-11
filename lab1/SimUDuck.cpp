@@ -8,8 +8,12 @@
 
 int main()
 {
-	const MallardDuck mallardDuck;
+	MallardDuck mallardDuck;
 	PlayWithDuck(mallardDuck);
+	mallardDuck.Fly();
+	mallardDuck.Fly();
+	mallardDuck.SetFlyBehavior(std::make_unique<FlyWithWings>());
+	mallardDuck.Fly();
 
 	const RedheadDuck redheadDuck;
 	PlayWithDuck(redheadDuck);
