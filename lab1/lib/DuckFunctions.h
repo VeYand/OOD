@@ -7,7 +7,7 @@ inline void DrawDuck(Duck const &duck) {
 	duck.Display();
 }
 
-inline void PlayWithDuck(Duck &duck) {
+inline void PlayWithDuck(Duck const &duck) {
 	DrawDuck(duck);
 	duck.Quack();
 	duck.Fly();

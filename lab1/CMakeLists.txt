@@ -7,7 +7,7 @@ add_executable(lab1
         lib/Duck/Fly/FlyNoWay.h
         lib/Duck/Fly/FlyWithWings.h
         lib/Duck/Fly/IFlyBehavior.h
-        lib/Duck/Quack/IQuakBehavior.h
+        lib/Duck/Quack/IQuackBehavior.h
         lib/Duck/Quack/MuteQuackBehavior.h
         lib/Duck/Quack/QuackBehavior.h
         lib/Duck/Quack/SqueakBehavior.h
@@ -19,4 +19,8 @@ add_executable(lab1
         lib/Duck/RubberDuck.h
         lib/DuckFunctions.h
         SimUDuck.cpp
+        lib/Duck/Dance/DanceMinuetBehavior.h
+        lib/Duck/Dance/DanceWaltzBehavior.h
+        lib/Duck/Dance/IDanceBehavior.h
+        lib/Duck/Dance/NoDanceBehavior.h
 )

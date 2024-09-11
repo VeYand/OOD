@@ -8,16 +8,16 @@
 
 int main()
 {
-	MallardDuck mallardDuck;
+	const MallardDuck mallardDuck;
 	PlayWithDuck(mallardDuck);
 
-	RedheadDuck redheadDuck;
+	const RedheadDuck redheadDuck;
 	PlayWithDuck(redheadDuck);
 
-	RubberDuck rubberDuck;
+	const RubberDuck rubberDuck;
 	PlayWithDuck(rubberDuck);
 
-	DecoyDuck decoyDuck;
+	const DecoyDuck decoyDuck;
 	PlayWithDuck(decoyDuck);
 
 	ModelDuck modelDuck;

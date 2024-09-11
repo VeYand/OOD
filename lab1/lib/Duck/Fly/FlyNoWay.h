@@ -6,7 +6,9 @@
 class FlyNoWay final : public IFlyBehavior
 {
 public:
-	void Fly() override {}
+	void Fly() override
+	{
+	}
 };
 
 #endif // FLYNOWAY_H
