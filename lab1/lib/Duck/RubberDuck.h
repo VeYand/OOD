@@ -4,6 +4,7 @@
 #include "Duck.h"
 #include "Fly/FlyNoWay.h"
 #include "Quack/SqueakBehavior.h"
+#include "Dance/NoDanceBehavior.h"
 #include <iostream>
 
 class RubberDuck final : public Duck

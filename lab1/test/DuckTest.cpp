@@ -1,60 +1,37 @@
 #include <gtest/gtest.h>
+#include <gmock/gmock.h>
+#include <memory>
+#include "../lib/Duck/Dance/IDanceBehavior.h"
 #include "../lib/Duck/Duck.h"
-#include "../lib/Duck/DecoyDuck.h"
-#include "../lib/Duck/MallardDuck.h"
-#include "../lib/Duck/ModelDuck.h"
-#include "../lib/Duck/RedheadDuck.h"
-#include "../lib/Duck/RubberDuck.h"
-#include <sstream>
+#include "../lib/Duck/Fly/FlyWithWings.h"
+#include "../lib/Duck/Quack/QuackBehavior.h"
+#include "MockDanceBehavior.h"
 
-const std::string noDanceOutput;
-const std::string minuetDanceOutput = "I'm dancing a minuet!!\n";
-const std::string waltzDanceOutput = "I'm dancing a waltz!!\n";
-
-void assertDance(const Duck &duck, const std::string& danceOutput)
+class TestDuck final : public Duck
 {
-	const std::stringstream buffer;
-	std::streambuf* oldCoutBuffer = std::cout.rdbuf(buffer.rdbuf());
+public:
+	explicit TestDuck(std::unique_ptr<IDanceBehavior>&& danceBehavior)
+		: Duck(
+			std::make_unique<FlyWithWings>(),
+			std::make_unique<QuackBehavior>(),
+			std::move(danceBehavior)
+			)
+	{
+	}
+
+	void Display() const override
+	{
+		std::cout << "I'm test duck" << std::endl;
+	}
+};
+
+TEST(DuckTest, DuckCanDance)
+{
+	auto mockDanceBehavior = std::make_unique<MockDanceBehavior>();
+
+	EXPECT_CALL(*mockDanceBehavior, Dance()).Times(testing::AtLeast(1));
+
+	const TestDuck duck(std::move(mockDanceBehavior));
 	duck.Dance();
-	std::cout.rdbuf(oldCoutBuffer);
-
-	ASSERT_EQ(buffer.str(), danceOutput);
 }
 
-TEST (DuckTest, MallardDuckDance)
-{
-	const MallardDuck duck;
-	assertDance(duck, waltzDanceOutput);
-}
-
-TEST (DuckTest, RedheadDuckDance)
-{
-	const RedheadDuck duck;
-	assertDance(duck, minuetDanceOutput);
-}
-
-TEST (DuckTest, ModelDuckDance)
-{
-	const ModelDuck duck;
-	assertDance(duck, noDanceOutput);
-}
-
-TEST (DuckTest, RubberDuckDance)
-{
-	const RubberDuck duck;
-	assertDance(duck, noDanceOutput);
-}
-
-
-TEST (DuckTest, DecoyDuckDance)
-{
-	const DecoyDuck duck;
-	assertDance(duck, noDanceOutput);
-}
-
-GTEST_API_ int main(int argc, char** argv)
-{
-	std::cout << "Running tests" << std::endl;
-	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
-}

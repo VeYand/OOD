@@ -4,6 +4,7 @@
 #include "Duck.h"
 #include "Fly/FlyNoWay.h"
 #include "Quack/QuackBehavior.h"
+#include "Dance/NoDanceBehavior.h"
 
 class ModelDuck final : public Duck
 {

@@ -56,7 +56,6 @@ add_executable(${PROJECT_NAME}Test
         test/DuckTest.cpp
 )
 
-target_link_libraries(${PROJECT_NAME}Test gtest_main)
+target_link_libraries(${PROJECT_NAME}Test gtest_main gmock)
 enable_testing()
 add_test(NAME ${PROJECT_NAME}Test COMMAND ${PROJECT_NAME}Test)
-
