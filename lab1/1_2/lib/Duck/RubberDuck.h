@@ -6,6 +6,7 @@
 #include "Quack/SqueakBehavior.h"
 #include "Dance/NoDanceBehavior.h"
 #include <iostream>
+#include "QuackPolicy/QuackAfterEvenFlights.h"
 
 class RubberDuck final : public Duck
 {
@@ -14,7 +15,8 @@ public:
 		: Duck(
 			std::make_unique<FlyNoWay>(),
 			std::make_unique<SqueakBehavior>(),
-			std::make_unique<NoDanceBehavior>()
+			std::make_unique<NoDanceBehavior>(),
+			std::make_unique<QuackAfterEvenFlights>()
 			)
 	{
 	}

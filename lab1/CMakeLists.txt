@@ -57,47 +57,54 @@ add_executable(${PROJECT_NAME}Test_1
 )
 
 add_executable(${PROJECT_NAME}_2
-        lib/Duck/Fly/FlyNoWay.h
-        lib/Duck/Fly/FlyWithWings.h
-        lib/Duck/Fly/IFlyBehavior.h
-        lib/Duck/Quack/IQuackBehavior.h
-        lib/Duck/Quack/MuteQuackBehavior.h
-        lib/Duck/Quack/QuackBehavior.h
-        lib/Duck/Quack/SqueakBehavior.h
-        lib/Duck/DecoyDuck.h
-        lib/Duck/Duck.h
-        lib/Duck/MallardDuck.h
-        lib/Duck/ModelDuck.h
-        lib/Duck/RedheadDuck.h
-        lib/Duck/RubberDuck.h
-        lib/DuckFunctions.h
-        SimUDuck.cpp
-        lib/Duck/Dance/DanceMinuetBehavior.h
-        lib/Duck/Dance/DanceWaltzBehavior.h
-        lib/Duck/Dance/IDanceBehavior.h
-        lib/Duck/Dance/NoDanceBehavior.h
+        1_2/lib/Duck/Fly/FlyNoWay.h
+        1_2/lib/Duck/Fly/FlyWithWings.h
+        1_2/lib/Duck/Fly/IFlyBehavior.h
+        1_2/lib/Duck/Quack/IQuackBehavior.h
+        1_2/lib/Duck/Quack/MuteQuackBehavior.h
+        1_2/lib/Duck/Quack/QuackBehavior.h
+        1_2/lib/Duck/Quack/SqueakBehavior.h
+        1_2/lib/Duck/DecoyDuck.h
+        1_2/lib/Duck/Duck.h
+        1_2/lib/Duck/MallardDuck.h
+        1_2/lib/Duck/ModelDuck.h
+        1_2/lib/Duck/RedheadDuck.h
+        1_2/lib/Duck/RubberDuck.h
+        1_2/lib/DuckFunctions.h
+        1_2/SimUDuck.cpp
+        1_2/lib/Duck/Dance/DanceMinuetBehavior.h
+        1_2/lib/Duck/Dance/DanceWaltzBehavior.h
+        1_2/lib/Duck/Dance/IDanceBehavior.h
+        1_2/lib/Duck/Dance/NoDanceBehavior.h
+        1_2/lib/Duck/QuackPolicy/IQuackPolicy.h
+        1_2/lib/Duck/QuackPolicy/QuackAfterEvenFlights.h
+        1_2/lib/Duck/QuackPolicy/QuackBeforeOddFlights.h
 )
 
 add_executable(${PROJECT_NAME}Test_2
-        lib/Duck/Fly/FlyNoWay.h
-        lib/Duck/Fly/FlyWithWings.h
-        lib/Duck/Fly/IFlyBehavior.h
-        lib/Duck/Quack/IQuackBehavior.h
-        lib/Duck/Quack/MuteQuackBehavior.h
-        lib/Duck/Quack/QuackBehavior.h
-        lib/Duck/Quack/SqueakBehavior.h
-        lib/Duck/DecoyDuck.h
-        lib/Duck/Duck.h
-        lib/Duck/MallardDuck.h
-        lib/Duck/ModelDuck.h
-        lib/Duck/RedheadDuck.h
-        lib/Duck/RubberDuck.h
-        lib/DuckFunctions.h
-        lib/Duck/Dance/DanceMinuetBehavior.h
-        lib/Duck/Dance/DanceWaltzBehavior.h
-        lib/Duck/Dance/IDanceBehavior.h
-        lib/Duck/Dance/NoDanceBehavior.h
-        test/DuckTest.cpp
+        1_2/lib/Duck/Fly/FlyNoWay.h
+        1_2/lib/Duck/Fly/FlyWithWings.h
+        1_2/lib/Duck/Fly/IFlyBehavior.h
+        1_2/lib/Duck/Quack/IQuackBehavior.h
+        1_2/lib/Duck/Quack/MuteQuackBehavior.h
+        1_2/lib/Duck/Quack/QuackBehavior.h
+        1_2/lib/Duck/Quack/SqueakBehavior.h
+        1_2/lib/Duck/DecoyDuck.h
+        1_2/lib/Duck/Duck.h
+        1_2/lib/Duck/MallardDuck.h
+        1_2/lib/Duck/ModelDuck.h
+        1_2/lib/Duck/RedheadDuck.h
+        1_2/lib/Duck/RubberDuck.h
+        1_2/lib/DuckFunctions.h
+        1_2/lib/Duck/Dance/DanceMinuetBehavior.h
+        1_2/lib/Duck/Dance/DanceWaltzBehavior.h
+        1_2/lib/Duck/Dance/IDanceBehavior.h
+        1_2/lib/Duck/Dance/NoDanceBehavior.h
+        1_2/test/DuckTest.cpp
+        1_2/test/MockDanceBehavior.h
+        1_2/test/MockFlyBehavior.h
+        1_2/test/MockQuackPolicy.h
+        1_2/test/MockQuackBehavior.h
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1 gtest_main gmock)

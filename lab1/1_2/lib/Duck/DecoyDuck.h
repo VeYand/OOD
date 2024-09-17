@@ -5,6 +5,7 @@
 #include "Dance/NoDanceBehavior.h"
 #include "Fly/FlyNoWay.h"
 #include "Quack/MuteQuackBehavior.h"
+#include "QuackPolicy/QuackAfterEvenFlights.h"
 #include <iostream>
 #include <memory>
 
@@ -15,7 +16,8 @@ public:
 		: Duck(
 			std::make_unique<FlyNoWay>(),
 			std::make_unique<MuteQuackBehavior>(),
-			std::make_unique<NoDanceBehavior>()
+			std::make_unique<NoDanceBehavior>(),
+			std::make_unique<QuackAfterEvenFlights>()
 			)
 	{
 	}

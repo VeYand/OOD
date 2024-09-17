@@ -5,7 +5,7 @@
 #include "Dance/DanceMinuetBehavior.h"
 #include "Fly/FlyWithWings.h"
 #include "Quack/QuackBehavior.h"
-
+#include "QuackPolicy/QuackBeforeOddFlights.h"
 #include <memory>
 
 class RedheadDuck final : public Duck
@@ -15,7 +15,8 @@ public:
 		: Duck(
 			std::make_unique<FlyWithWings>(),
 			std::make_unique<QuackBehavior>(),
-			std::make_unique<DanceMinuetBehavior>()
+			std::make_unique<DanceMinuetBehavior>(),
+			std::make_unique<QuackBeforeOddFlights>()
 			)
 	{
 	}
