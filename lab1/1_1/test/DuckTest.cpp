@@ -29,9 +29,8 @@ TEST(DuckTest, DuckCanDance)
 {
 	auto mockDanceBehavior = std::make_unique<MockDanceBehavior>();
 
-	EXPECT_CALL(*mockDanceBehavior, Dance()).Times(testing::AtLeast(1));
+	EXPECT_CALL(*mockDanceBehavior, Dance()).Times(1);
 
 	const TestDuck duck(std::move(mockDanceBehavior));
 	duck.Dance();
 }
-

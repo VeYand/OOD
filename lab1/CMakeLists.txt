@@ -3,6 +3,7 @@ project(lab1)
 
 set(CMAKE_CXX_STANDARD 20)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
 include(FetchContent)
 FetchContent_Declare(

@@ -8,7 +8,7 @@
 class MockDanceBehavior final : public IDanceBehavior
 {
 public:
-	MOCK_METHOD(void, Dance, (), (override));
+	MOCK_METHOD(void, Dance, (), (const, override));
 };
 
 #endif // MOCKDANCEBEHAVIOR_H
