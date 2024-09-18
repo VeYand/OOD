@@ -14,11 +14,6 @@ public:
 	{
 		return 0;
 	}
-
-	[[nodiscard]] int GetNextFlightCount() const override
-	{
-		return 0;
-	}
 };
 
 #endif // FLYNOWAY_H

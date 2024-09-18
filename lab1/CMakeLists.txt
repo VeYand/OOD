@@ -77,9 +77,6 @@ add_executable(${PROJECT_NAME}_2
         1_2/lib/Duck/Dance/DanceWaltzBehavior.h
         1_2/lib/Duck/Dance/IDanceBehavior.h
         1_2/lib/Duck/Dance/NoDanceBehavior.h
-        1_2/lib/Duck/QuackPolicy/IQuackPolicy.h
-        1_2/lib/Duck/QuackPolicy/QuackAfterEvenFlights.h
-        1_2/lib/Duck/QuackPolicy/QuackBeforeOddFlights.h
 )
 
 add_executable(${PROJECT_NAME}Test_2
@@ -104,7 +101,6 @@ add_executable(${PROJECT_NAME}Test_2
         1_2/test/DuckTest.cpp
         1_2/test/MockDanceBehavior.h
         1_2/test/MockFlyBehavior.h
-        1_2/test/MockQuackPolicy.h
         1_2/test/MockQuackBehavior.h
 )
 

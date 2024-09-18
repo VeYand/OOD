@@ -9,7 +9,7 @@ class FlyWithWings final : public IFlyBehavior
 public:
 	void Fly() override
 	{
-		m_flyAmmount = GetNextFlightCount();
+		m_flyAmmount++;
 		std::cout << "I'm flying with wings!! Fly ammount: " << m_flyAmmount << std::endl;
 	}
 
@@ -18,10 +18,6 @@ public:
 		return m_flyAmmount;
 	}
 
-	[[nodiscard]] int GetNextFlightCount() const override
-	{
-		return m_flyAmmount + 1;
-	}
 
 private:
 	int m_flyAmmount = 0;

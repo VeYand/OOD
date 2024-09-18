@@ -5,7 +5,6 @@
 #include "Fly/FlyNoWay.h"
 #include "Quack/QuackBehavior.h"
 #include "Dance/NoDanceBehavior.h"
-#include "QuackPolicy/QuackAfterEvenFlights.h"
 
 class ModelDuck final : public Duck
 {
@@ -14,8 +13,7 @@ public:
 		: Duck(
 			std::make_unique<FlyNoWay>(),
 			std::make_unique<QuackBehavior>(),
-			std::make_unique<NoDanceBehavior>(),
-			std::make_unique<QuackAfterEvenFlights>()
+			std::make_unique<NoDanceBehavior>()
 			)
 	{
 	}

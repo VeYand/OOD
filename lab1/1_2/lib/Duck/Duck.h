@@ -4,8 +4,6 @@
 #include "Dance/IDanceBehavior.h"
 #include "Fly/IFlyBehavior.h"
 #include "Quack/IQuackBehavior.h"
-#include "QuackPolicy/IQuackPolicy.h"
-
 #include <cassert>
 #include <iostream>
 #include <memory>
@@ -16,16 +14,13 @@ public:
 	Duck(
 		std::unique_ptr<IFlyBehavior>&& flyBehavior,
 		std::unique_ptr<IQuackBehavior>&& quackBehavior,
-		std::unique_ptr<IDanceBehavior>&& danceBehavior,
-		std::unique_ptr<IQuackPolicy>&& quackPolicy
+		std::unique_ptr<IDanceBehavior>&& danceBehavior
 		)
 		: m_quackBehavior(std::move(quackBehavior)),
-		  m_danceBehavior(std::move(danceBehavior)),
-		  m_quackPolicy(std::move(quackPolicy))
+		  m_danceBehavior(std::move(danceBehavior))
 	{
 		assert(m_quackBehavior);
 		assert(m_danceBehavior);
-		assert(m_quackPolicy);
 		SetFlyBehavior(std::move(flyBehavior));
 	}
 
@@ -63,22 +58,17 @@ private:
 	std::unique_ptr<IFlyBehavior> m_flyBehavior;
 	std::unique_ptr<IQuackBehavior> m_quackBehavior;
 	std::unique_ptr<IDanceBehavior> m_danceBehavior;
-	std::unique_ptr<IQuackPolicy> m_quackPolicy;
 
 	void HandleFlightWithQuack() const
 	{
-		const auto flightCount = m_flyBehavior->GetFlightCount();
-		const auto nextFlightCount = m_flyBehavior->GetNextFlightCount();
-		const auto canFly = flightCount != nextFlightCount;
-
-		if (canFly && m_quackPolicy->ShouldQuack(nextFlightCount, false))
-		{
-			m_quackBehavior->Quack();
-		}
+		const auto flightCountBeforeFly = m_flyBehavior->GetFlightCount();
 
 		m_flyBehavior->Fly();
 
-		if (canFly && m_quackPolicy->ShouldQuack(nextFlightCount, true))
+		const auto flightCountAfterFly = m_flyBehavior->GetFlightCount();
+		const auto canFly = flightCountBeforeFly != flightCountAfterFly;
+
+		if (canFly && flightCountAfterFly % 2 == 0)
 		{
 			m_quackBehavior->Quack();
 		}
