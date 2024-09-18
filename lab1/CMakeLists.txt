@@ -33,6 +33,7 @@ add_executable(${PROJECT_NAME}_1
         1_1/lib/Duck/Dance/DanceWaltzBehavior.h
         1_1/lib/Duck/Dance/IDanceBehavior.h
         1_1/lib/Duck/Dance/NoDanceBehavior.h
+        1_3/lib/Duck/Duck.h
 )
 
 add_executable(${PROJECT_NAME}Test_1
@@ -102,6 +103,20 @@ add_executable(${PROJECT_NAME}Test_2
         1_2/test/MockDanceBehavior.h
         1_2/test/MockFlyBehavior.h
         1_2/test/MockQuackBehavior.h
+)
+
+add_executable(${PROJECT_NAME}_3
+        1_3/lib/Duck/Fly/FlyBehavior.h
+        1_3/lib/Duck/Duck.h
+        1_3/SimUDuck.cpp
+        1_3/lib/Duck/Quack/QuackBehavior.h
+        1_3/lib/Duck/Dance/DanceBehavior.h
+        1_3/lib/Duck/MallardDuck.h
+        1_3/lib/Duck/DecoyDuck.h
+        1_3/lib/Duck/ModelDuck.h
+        1_3/lib/Duck/RedheadDuck.h
+        1_3/lib/Duck/RubberDuck.h
+        1_3/lib/DuckFunctions.h
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1 gtest_main gmock)

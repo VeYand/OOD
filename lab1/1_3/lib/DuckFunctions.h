@@ -1,0 +1,19 @@
+#ifndef DUCKFUNCTIONS_H
+#define DUCKFUNCTIONS_H
+
+#include "Duck/Duck.h"
+#include <iostream>
+
+inline void DrawDuck(Duck const &duck) {
+	duck.Display();
+}
+
+inline void PlayWithDuck(Duck const &duck) {
+	DrawDuck(duck);
+	duck.Quack();
+	duck.Fly();
+	duck.Dance();
+	std::cout << std::endl;
+}
+
+#endif // DUCKFUNCTIONS_H
