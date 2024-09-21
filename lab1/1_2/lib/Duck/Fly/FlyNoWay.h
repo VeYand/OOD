@@ -14,6 +14,11 @@ public:
 	{
 		return 0;
 	}
+
+	[[nodiscard]] bool CanFly() const override
+	{
+		return false;
+	}
 };
 
 #endif // FLYNOWAY_H

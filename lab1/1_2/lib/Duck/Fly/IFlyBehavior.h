@@ -8,6 +8,8 @@ struct IFlyBehavior
 	virtual void Fly() = 0;
 
 	[[nodiscard]] virtual int GetFlightCount() const = 0;
+
+	[[nodiscard]] virtual bool CanFly() const = 0;
 };
 
 #endif // LAB01_SIMUDUCK_IFLYBEHAVIOR_H

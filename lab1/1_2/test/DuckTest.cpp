@@ -51,8 +51,9 @@ TEST(DuckTest, FlyableDuckQuacksAfterEvenFlightTest)
 	auto mockQuackBehavior = std::make_unique<MockQuackBehavior>();
 
 	EXPECT_CALL(*mockFlyBehavior, GetFlightCount())
-		.WillOnce(::testing::Return(0))
 		.WillOnce(::testing::Return(1));
+	EXPECT_CALL(*mockFlyBehavior, CanFly())
+		.WillRepeatedly(testing::Return(true));
 	EXPECT_CALL(*mockFlyBehavior, Fly()).Times(1);
 	EXPECT_CALL(*mockQuackBehavior, Quack()).Times(0);
 
@@ -68,8 +69,9 @@ TEST(DuckTest, FlyableDuckQuacksAfterEvenFlightTest)
 	auto mockQuackBehavior2 = std::make_unique<MockQuackBehavior>();
 
 	EXPECT_CALL(*mockFlyBehavior2, GetFlightCount())
-		.WillOnce(::testing::Return(1))
 		.WillOnce(::testing::Return(2));
+	EXPECT_CALL(*mockFlyBehavior2, CanFly())
+		.WillRepeatedly(testing::Return(true));
 	EXPECT_CALL(*mockFlyBehavior2, Fly()).Times(1);
 	EXPECT_CALL(*mockQuackBehavior2, Quack()).Times(1);
 
@@ -89,6 +91,8 @@ TEST(DuckTest, NotFlyableDuckNotQuacksAfterEvenFlight)
 
 	EXPECT_CALL(*mockFlyBehavior, GetFlightCount())
 		.WillRepeatedly(::testing::Return(0));
+	EXPECT_CALL(*mockFlyBehavior, CanFly())
+		.WillRepeatedly(testing::Return(false));
 	EXPECT_CALL(*mockFlyBehavior, Fly()).Times(2);
 	EXPECT_CALL(*mockQuackBehavior, Quack()).Times(0);
 

@@ -5,7 +5,7 @@ struct IDanceBehavior
 {
 	virtual ~IDanceBehavior() = default;
 
-	virtual void Dance() const = 0;
+	virtual void Dance() = 0; // убарть константность
 };
 
 #endif // LAB01_SIMUDUCK_IDANCEBEHAVIOR_H

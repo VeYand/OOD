@@ -10,6 +10,7 @@ class MockFlyBehavior final : public IFlyBehavior
 public:
 	MOCK_METHOD(void, Fly, (), (override));
 	MOCK_METHOD(int, GetFlightCount, (), (const, override));
+	MOCK_METHOD(bool, CanFly, (), (const, override));
 };
 
 #endif // MOCKFLYBEHAVIOR_H

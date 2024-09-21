@@ -6,7 +6,7 @@
 class NoDanceBehavior final : public IDanceBehavior
 {
 public:
-	void Dance() const override
+	void Dance() override
 	{
 	}
 };

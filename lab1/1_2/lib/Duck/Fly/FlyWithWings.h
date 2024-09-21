@@ -18,6 +18,10 @@ public:
 		return m_flyAmmount;
 	}
 
+	[[nodiscard]] bool CanFly() const override
+	{
+		return true;
+	}
 
 private:
 	int m_flyAmmount = 0;

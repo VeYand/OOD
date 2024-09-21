@@ -61,12 +61,11 @@ private:
 
 	void HandleFlightWithQuack() const
 	{
-		const auto flightCountBeforeFly = m_flyBehavior->GetFlightCount();
+		const auto canFly = m_flyBehavior->CanFly();
 
 		m_flyBehavior->Fly();
 
 		const auto flightCountAfterFly = m_flyBehavior->GetFlightCount();
-		const auto canFly = flightCountBeforeFly != flightCountAfterFly;
 
 		if (canFly && flightCountAfterFly % 2 == 0)
 		{
