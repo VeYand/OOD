@@ -1,0 +1,27 @@
+AddShape ground #b7b7b7 rectangle 0 380 800 500
+AddShape sun #FCC846 circle 45 45 35
+AddShape line1 #FCC846 line 85 45 115 45
+AddShape line2 #FCC846 line 75 75 100 100
+AddShape line3 #FCC846 line 45 85 45 115
+
+AddShape home #EB5757 rectangle 200 200 400 180
+AddShape roof #EB5757 triangle 200 200 400 100 600 200
+AddShape window1 #EB5757 circle 400 155 30
+AddShape window2 #EB5757 rectangle 350 260 100 60
+AddShape window3 #EB5757 line 350 290 450 290
+AddShape window4 #EB5757 line 400 260 400 320
+
+AddShape text #C83D95 text 200 200 40 Hello!
+DrawPicture
+MovePicture 100 100
+ChangeShape text text 0 0 20 World
+ChangeColor sun #000000
+DrawPicture
+
+AddShape new #353535 text 500 200 40 NewShape
+DrawShape new
+
+//Exceptions
+AddShape new #EB5757 rectangle 200 200 400 180
+AddShape line4 #FCC846 line
+...
