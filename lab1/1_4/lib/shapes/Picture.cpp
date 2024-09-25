@@ -4,7 +4,6 @@
 #include "exception/ShapeNotFoundException.h"
 
 #include <iomanip>
-#include <iostream>
 
 void shapes::Picture::AddShape(const std::string& id, std::unique_ptr<Shape>&& shape)
 {
@@ -13,17 +12,7 @@ void shapes::Picture::AddShape(const std::string& id, std::unique_ptr<Shape>&& s
 		throw ShapeAlreadyExistsException();
 	}
 	m_shapes.emplace(id, std::move(shape));
-}
-
-void shapes::Picture::MoveShape(const std::string& id, const double dx, const double dy) const
-{
-	if (!m_shapes.contains(id))
-	{
-		throw ShapeNotFoundException();
-	}
-
-	const auto& shape = m_shapes.at(id);
-	shape->Move(dx, dy);
+	m_shapeIds.emplace_back(id);
 }
 
 void shapes::Picture::DeleteShape(const std::string& id)
@@ -34,23 +23,10 @@ void shapes::Picture::DeleteShape(const std::string& id)
 	}
 
 	m_shapes.erase(id);
-}
-
-void shapes::Picture::List(const std::function<void(const std::string&)>& callback)
-{
-	int count = 1;
-	for (const auto& [id, shape] : m_shapes)
+	auto it = std::remove(m_shapeIds.begin(), m_shapeIds.end(), id);
+	if (it != m_shapeIds.end())
 	{
-		std::ostringstream oss;
-		oss << count << " "
-			<< shape->GetName() << " "
-			<< id << " "
-			<< "#" << std::hex << std::setw(6) << std::setfill('0') << shape->GetColor()
-			<< std::defaultfloat
-			<< " " << shape->ToStringStrategy();
-
-		callback(oss.str());
-		count++;
+		m_shapeIds.erase(it, m_shapeIds.end());
 	}
 }
 
@@ -73,30 +49,33 @@ void shapes::Picture::MovePicture(double dx, double dy) const
 	}
 }
 
-void shapes::Picture::ChangeShape(const std::string& id, std::unique_ptr<IFigureStrategy>&& strategy) const
-{
-	if (!m_shapes.contains(id))
-	{
-		throw ShapeNotFoundException();
-	}
-
-	m_shapes.at(id)->SetDrawingStrategy(std::move(strategy));
-}
-
-void shapes::Picture::DrawShape(const std::string& id, gfx::ICanvas& canvas) const
-{
-	if (!m_shapes.contains(id))
-	{
-		throw ShapeNotFoundException();
-	}
-
-	m_shapes.at(id)->Draw(canvas);
-}
-
 void shapes::Picture::DrawPicture(gfx::ICanvas& canvas)
 {
-	for (const auto& [id, shape] : m_shapes)
+	for (const auto& id : m_shapeIds)
 	{
-		shape->Draw(canvas);
+		GetShape(id)->Draw(canvas);
 	}
+}
+
+shapes::Shape* shapes::Picture::GetShape(const std::string& id) const
+{
+	if (!m_shapes.contains(id))
+	{
+		throw ShapeNotFoundException();
+	}
+
+	return m_shapes.at(id).get();
+}
+
+[[nodiscard]] std::vector<std::pair<std::string, shapes::Shape*> > shapes::Picture::ListShapes() const
+{
+	std::vector<std::pair<std::string, Shape*> > shapeList;
+	shapeList.reserve(m_shapeIds.size());
+
+	for (const auto& id : m_shapeIds)
+	{
+		shapeList.emplace_back(id, GetShape(id));
+	}
+
+	return shapeList;
 }

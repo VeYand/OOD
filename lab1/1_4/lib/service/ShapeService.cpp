@@ -213,7 +213,7 @@ void ShapeService::MoveShape(std::istringstream& iss) const
 		return;
 	}
 
-	m_picture.MoveShape(id, dx, dy);
+	m_picture.GetShape(id)->Move(dx, dy);
 }
 
 void ShapeService::DeleteShape(std::istringstream& iss) const
@@ -230,9 +230,20 @@ void ShapeService::DeleteShape(std::istringstream& iss) const
 
 void ShapeService::ListShape() const
 {
-	m_picture.List([this](const std::string& output) {
-		m_out << output << std::endl;
-	});
+	auto shapes = m_picture.ListShapes();
+
+	int count = 1;
+	for (const auto& [id, shape] : shapes)
+	{
+		m_out << std::dec << count << " "
+			<< shape->GetName() << " "
+			<< id << " "
+			<< "#" << std::hex << std::setw(6) << std::setfill('0') << shape->GetColor()
+			<< std::defaultfloat
+			<< " " << shape->ToStringStrategy() << std::endl;;
+
+		count++;
+	}
 }
 
 void ShapeService::ChangeColor(std::istringstream& iss) const
@@ -280,7 +291,7 @@ void ShapeService::ChangeShape(std::istringstream& iss)
 	auto strategy = CreateDrawStrategyFromStream(iss, type);
 	if (strategy)
 	{
-		m_picture.ChangeShape(id, std::move(strategy));
+		m_picture.GetShape(id)->SetDrawingStrategy(std::move(strategy));
 	}
 	else
 	{
@@ -297,7 +308,7 @@ void ShapeService::DrawShape(std::istringstream& iss)
 		return;
 	}
 
-	m_picture.DrawShape(id, m_canvas);
+	m_picture.GetShape(id)->Draw(m_canvas);
 }
 
 void ShapeService::DrawPicture() const
