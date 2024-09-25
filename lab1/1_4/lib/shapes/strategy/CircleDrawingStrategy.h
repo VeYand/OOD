@@ -1,6 +1,6 @@
 #ifndef CIRCLEDRAWINGSTRATEGY_H
 #define CIRCLEDRAWINGSTRATEGY_H
-#include "IDrawingStrategy.h"
+#include "IFigureStrategy.h"
 #include "../Point.h"
 #include "../../gfx/ICanvas.h"
 
@@ -9,7 +9,7 @@
 
 namespace shapes
 {
-class CircleDrawingStrategy final : public IDrawingStrategy
+class CircleDrawingStrategy final : public IFigureStrategy
 {
 public:
 	CircleDrawingStrategy(

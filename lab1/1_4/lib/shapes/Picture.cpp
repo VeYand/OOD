@@ -73,7 +73,7 @@ void shapes::Picture::MovePicture(double dx, double dy) const
 	}
 }
 
-void shapes::Picture::ChangeShape(const std::string& id, std::unique_ptr<IDrawingStrategy>&& strategy) const
+void shapes::Picture::ChangeShape(const std::string& id, std::unique_ptr<IFigureStrategy>&& strategy) const
 {
 	if (!m_shapes.contains(id))
 	{

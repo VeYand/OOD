@@ -91,7 +91,7 @@ void ShapeService::AddShape(std::istringstream& iss)
 	}
 }
 
-std::unique_ptr<shapes::IDrawingStrategy> ShapeService::CreateDrawStrategyFromStream(std::istringstream& iss, const std::string& type)
+std::unique_ptr<shapes::IFigureStrategy> ShapeService::CreateDrawStrategyFromStream(std::istringstream& iss, const std::string& type)
 {
 	if (type == ConvertShapeTypeToString(ShapeType::RECTANGLE))
 	{

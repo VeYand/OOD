@@ -1,6 +1,6 @@
 #ifndef TEXTDRAWINGSTRATEGY_H
 #define TEXTDRAWINGSTRATEGY_H
-#include "IDrawingStrategy.h"
+#include "IFigureStrategy.h"
 #include "../Point.h"
 #include "../../gfx/ICanvas.h"
 
@@ -8,7 +8,7 @@
 
 namespace shapes
 {
-class TextDrawingStrategy final : public IDrawingStrategy
+class TextDrawingStrategy final : public IFigureStrategy
 {
 public:
 	TextDrawingStrategy(

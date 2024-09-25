@@ -1,14 +1,14 @@
-#ifndef IDRAWINGSTRATEGY_H
-#define IDRAWINGSTRATEGY_H
+#ifndef IFIGURESTRATEGY_H
+#define IFIGURESTRATEGY_H
 #include "../Color.h"
 #include "../../gfx/ICanvas.h"
 
 namespace shapes
 {
-class IDrawingStrategy
+class IFigureStrategy
 {
 public:
-	virtual ~IDrawingStrategy() = default;
+	virtual ~IFigureStrategy() = default;
 
 	virtual void Draw(gfx::ICanvas& canvas, Color color) const = 0;
 
@@ -20,4 +20,4 @@ public:
 };
 }
 
-#endif //IDRAWINGSTRATEGY_H
+#endif //IFIGURESTRATEGY_H

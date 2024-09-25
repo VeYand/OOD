@@ -121,7 +121,7 @@ add_executable(${PROJECT_NAME}_4
         1_4/main.cpp
         1_4/lib/shapes/Shape.h
         1_4/lib/shapes/Picture.h
-        1_4/lib/shapes/strategy/IDrawingStrategy.h
+        1_4/lib/shapes/strategy/IFigureStrategy.h
         1_4/lib/shapes/strategy/RectangleDrawingStrategy.h
         1_4/lib/shapes/strategy/TextDrawingStrategy.h
         1_4/lib/gfx/ICanvas.h

@@ -1,6 +1,6 @@
 #ifndef RECTANGLEDRAWINGSTRATEGY_H
 #define RECTANGLEDRAWINGSTRATEGY_H
-#include "IDrawingStrategy.h"
+#include "IFigureStrategy.h"
 #include "../Point.h"
 #include "../Rect.h"
 #include "../../gfx/ICanvas.h"
@@ -9,7 +9,7 @@
 
 namespace shapes
 {
-class RectangleDrawingStrategy final : public IDrawingStrategy
+class RectangleDrawingStrategy final : public IFigureStrategy
 {
 public:
 	explicit RectangleDrawingStrategy(

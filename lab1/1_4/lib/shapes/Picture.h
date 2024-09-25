@@ -23,7 +23,7 @@ public:
 
 	void ChangeColor(const std::string& id, Color color) const;
 
-	void ChangeShape(const std::string& id, std::unique_ptr<IDrawingStrategy>&& strategy) const;
+	void ChangeShape(const std::string& id, std::unique_ptr<IFigureStrategy>&& strategy) const;
 
 	void DrawShape(const std::string& id, gfx::ICanvas& canvas) const;
 

@@ -1,6 +1,6 @@
 #ifndef LINEDRAWINGSTRATEGY_H
 #define LINEDRAWINGSTRATEGY_H
-#include "IDrawingStrategy.h"
+#include "IFigureStrategy.h"
 #include "../Point.h"
 #include "../../gfx/ICanvas.h"
 
@@ -9,7 +9,7 @@
 
 namespace shapes
 {
-class LineDrawingStrategy final : public IDrawingStrategy
+class LineDrawingStrategy final : public IFigureStrategy
 {
 public:
 	LineDrawingStrategy(

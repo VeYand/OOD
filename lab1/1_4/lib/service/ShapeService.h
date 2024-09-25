@@ -37,7 +37,7 @@ private:
 	void ChangeShape(std::istringstream& iss);
 	void DrawShape(std::istringstream& iss);
 	void DrawPicture() const;
-	std::unique_ptr<shapes::IDrawingStrategy> CreateDrawStrategyFromStream(std::istringstream& iss, const std::string& type);
+	std::unique_ptr<shapes::IFigureStrategy> CreateDrawStrategyFromStream(std::istringstream& iss, const std::string& type);
 
 	static std::string ConvertShapeTypeToString(ShapeType type);
 	static ShapeType ConvertStringToShapeType(const std::string& typeStr);

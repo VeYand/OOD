@@ -1,6 +1,6 @@
 #ifndef TRIANGLEDRAWINGSTRATEGY_H
 #define TRIANGLEDRAWINGSTRATEGY_H
-#include "IDrawingStrategy.h"
+#include "IFigureStrategy.h"
 #include "../Point.h"
 #include "../../gfx/ICanvas.h"
 
@@ -8,7 +8,7 @@
 
 namespace shapes
 {
-class TriangleDrawingStrategy final : public IDrawingStrategy
+class TriangleDrawingStrategy final : public IFigureStrategy
 {
 public:
 	TriangleDrawingStrategy(
