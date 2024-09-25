@@ -32,7 +32,7 @@ public:
 		double y;
 	};
 
-	PNGCanvas(unsigned width, unsigned height)
+	PNGCanvas(const unsigned width, const unsigned height)
 		: m_width(width), m_height(height)
 	{
 		m_pixels.resize(width * height * 4, 255);
@@ -55,30 +55,30 @@ public:
 		m_color = result;
 	}
 
-	void MoveTo(double x, double y) override
+	void MoveTo(const double x, const double y) override
 	{
 		m_currentPosition = { x, y };
 	}
 
-	void LineTo(double x, double y) override
+	void LineTo(const double x, const double y) override
 	{
 		DrawLine(m_currentPosition.x, m_currentPosition.y, x, y);
 		m_currentPosition = { x, y };
 	}
 
-	void DrawEllipse(double cx, double cy, double rx, double ry) override
+	void DrawEllipse(const double cx, const double cy, const double rx, const double ry) override
 	{
-		int segments = 100;
-		double angleStep = 2 * M_PI / segments;
+		constexpr int segments = 100;
+		constexpr double angleStep = 2 * M_PI / segments;
 
 		double prevX = cx + rx;
 		double prevY = cy;
 
 		for (int i = 1; i <= segments; ++i)
 		{
-			double angle = i * angleStep;
-			double newX = cx + rx * cos(angle);
-			double newY = cy + ry * sin(angle);
+			const double angle = i * angleStep;
+			const double newX = cx + rx * cos(angle);
+			const double newY = cy + ry * sin(angle);
 			DrawLine(prevX, prevY, newX, newY);
 			prevX = newX;
 			prevY = newY;
@@ -104,9 +104,9 @@ public:
 			std::cerr << "Failed to load font!" << std::endl;
 			return;
 		}
-		float scale = stbtt_ScaleForPixelHeight(&font, fontSize);
-		float x = left;
-		float y = top;
+		float scale = stbtt_ScaleForPixelHeight(&font, static_cast<float>(fontSize));
+		auto x = static_cast<float>(left);
+		auto y = static_cast<float>(top);
 		int ascent, descent, lineGap;
 		stbtt_GetFontVMetrics(&font, &ascent, &descent, &lineGap);
 		ascent *= scale;

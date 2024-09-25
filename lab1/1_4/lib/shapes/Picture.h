@@ -23,10 +23,10 @@ public:
 
 	[[nodiscard]] Shape* GetShape(const std::string& id) const;
 
-	[[nodiscard]] std::vector<std::pair<std::string, Shape*>> ListShapes() const;
+	[[nodiscard]] std::vector<std::pair<std::string, Shape*> > ListShapes() const;
 
 private:
-	std::map<std::string, std::unique_ptr<Shape>> m_shapes = {};
+	std::map<std::string, std::unique_ptr<Shape> > m_shapes = {};
 	std::vector<std::string> m_shapeIds = {};
 };
 }
