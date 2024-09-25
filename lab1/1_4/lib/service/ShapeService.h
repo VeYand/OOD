@@ -15,7 +15,7 @@ class ShapeService
 public:
 	ShapeService(std::istream& in, std::ostream& out, shapes::Picture& picture, gfx::ICanvas& canvas);
 
-	void Run();
+	void Run() const;
 
 private:
 	std::istream& m_in;
@@ -28,16 +28,16 @@ private:
 
 	void RegisterCommands();
 
-	void AddShape(std::istringstream& iss);
+	void AddShape(std::istringstream& iss) const;
 	void MoveShape(std::istringstream& iss) const;
 	void DeleteShape(std::istringstream& iss) const;
-	void ListShape() const;
+	void ListShapes() const;
 	void ChangeColor(std::istringstream& iss) const;
 	void MovePicture(std::istringstream& iss) const;
 	void ChangeShape(std::istringstream& iss);
-	void DrawShape(std::istringstream& iss);
+	void DrawShape(std::istringstream& iss) const;
 	void DrawPicture() const;
-	std::unique_ptr<shapes::IFigureStrategy> CreateDrawStrategyFromStream(std::istringstream& iss, const std::string& type);
+	std::unique_ptr<shapes::IFigureStrategy> CreateDrawStrategyFromStream(std::istringstream& iss, const std::string& type) const;
 
 	static std::string ConvertShapeTypeToString(ShapeType type);
 	static ShapeType ConvertStringToShapeType(const std::string& typeStr);

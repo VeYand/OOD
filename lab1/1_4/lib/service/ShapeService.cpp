@@ -19,7 +19,7 @@ void ShapeService::RegisterCommands()
 	m_commands["AddShape"] = [this](std::istringstream& iss) { AddShape(iss); };
 	m_commands["MoveShape"] = [this](std::istringstream& iss) { MoveShape(iss); };
 	m_commands["DeleteShape"] = [this](std::istringstream& iss) { DeleteShape(iss); };
-	m_commands["List"] = [this](std::istringstream&) { ListShape(); };
+	m_commands["List"] = [this](std::istringstream&) { ListShapes(); };
 	m_commands["ChangeColor"] = [this](std::istringstream& iss) { ChangeColor(iss); };
 	m_commands["MovePicture"] = [this](std::istringstream& iss) { MovePicture(iss); };
 	m_commands["ChangeShape"] = [this](std::istringstream& iss) { ChangeShape(iss); };
@@ -27,7 +27,7 @@ void ShapeService::RegisterCommands()
 	m_commands["DrawPicture"] = [this](std::istringstream&) { DrawPicture(); };
 }
 
-void ShapeService::Run()
+void ShapeService::Run() const
 {
 	std::string line;
 	while (std::getline(m_in, line))
@@ -44,26 +44,24 @@ void ShapeService::Run()
 			break;
 		}
 
-		auto it = m_commands.find(commandName);
-		if (it != m_commands.end())
-		{
-			try
-			{
-				it->second(iss);
-			}
-			catch (const std::exception& e)
-			{
-				m_out << e.what() << std::endl;
-			}
-		}
-		else
+		if (!m_commands.contains(commandName))
 		{
 			m_out << "Unknown command: " << commandName << std::endl;
+			continue;
+		}
+
+		try
+		{
+			m_commands.at(commandName)(iss);
+		}
+		catch (const std::exception& e)
+		{
+			m_out << e.what() << std::endl;
 		}
 	}
 }
 
-void ShapeService::AddShape(std::istringstream& iss)
+void ShapeService::AddShape(std::istringstream& iss) const
 {
 	std::string id, colorStr, type;
 	shapes::Color color;
@@ -91,7 +89,7 @@ void ShapeService::AddShape(std::istringstream& iss)
 	}
 }
 
-std::unique_ptr<shapes::IFigureStrategy> ShapeService::CreateDrawStrategyFromStream(std::istringstream& iss, const std::string& type)
+std::unique_ptr<shapes::IFigureStrategy> ShapeService::CreateDrawStrategyFromStream(std::istringstream& iss, const std::string& type) const
 {
 	if (type == ConvertShapeTypeToString(ShapeType::RECTANGLE))
 	{
@@ -228,7 +226,7 @@ void ShapeService::DeleteShape(std::istringstream& iss) const
 	m_picture.DeleteShape(id);
 }
 
-void ShapeService::ListShape() const
+void ShapeService::ListShapes() const
 {
 	auto shapes = m_picture.ListShapes();
 
@@ -282,7 +280,7 @@ void ShapeService::ChangeShape(std::istringstream& iss)
 {
 	std::string id, type;
 
-	iss >> id  >> type;
+	iss >> id >> type;
 	if (id.empty() || type.empty())
 	{
 		throw std::invalid_argument("Insufficient arguments for AddShape command");
@@ -299,7 +297,7 @@ void ShapeService::ChangeShape(std::istringstream& iss)
 	}
 }
 
-void ShapeService::DrawShape(std::istringstream& iss)
+void ShapeService::DrawShape(std::istringstream& iss) const
 {
 	std::string id;
 	if (!(iss >> id))
