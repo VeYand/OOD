@@ -122,16 +122,16 @@ add_executable(${PROJECT_NAME}_4
         1_4/lib/shapes/Shape.h
         1_4/lib/shapes/Picture.h
         1_4/lib/shapes/strategy/IFigureStrategy.h
-        1_4/lib/shapes/strategy/RectangleDrawingStrategy.h
-        1_4/lib/shapes/strategy/TextDrawingStrategy.h
+        1_4/lib/shapes/strategy/RectangleFigureStrategy.h
+        1_4/lib/shapes/strategy/TextFigureStrategy.h
         1_4/lib/gfx/ICanvas.h
         1_4/lib/shapes/Point.h
         1_4/lib/shapes/Rect.h
         1_4/lib/shapes/exception/ShapeNotFoundException.h
         1_4/lib/gfx/PNGCanvas.h
-        1_4/lib/shapes/strategy/TriangleDrawingStrategy.h
-        1_4/lib/shapes/strategy/LineDrawingStrategy.h
-        1_4/lib/shapes/strategy/CircleDrawingStrategy.h
+        1_4/lib/shapes/strategy/TriangleFigureStrategy.h
+        1_4/lib/shapes/strategy/LineFigureStrategy.h
+        1_4/lib/shapes/strategy/CircleFigureStrategy.h
         1_4/lib/service/ShapeService.h
         1_4/lib/service/ShapeService.cpp
         1_4/lib/service/ShapeType.h

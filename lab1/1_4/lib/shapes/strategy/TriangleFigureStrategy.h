@@ -8,10 +8,10 @@
 
 namespace shapes
 {
-class TriangleDrawingStrategy final : public IFigureStrategy
+class TriangleFigureStrategy final : public IFigureStrategy
 {
 public:
-	TriangleDrawingStrategy(
+	TriangleFigureStrategy(
 		const Point firstAngle,
 		const Point secondAngle,
 		const Point thirdAngle

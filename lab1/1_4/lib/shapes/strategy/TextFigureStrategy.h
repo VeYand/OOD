@@ -8,10 +8,10 @@
 
 namespace shapes
 {
-class TextDrawingStrategy final : public IFigureStrategy
+class TextFigureStrategy final : public IFigureStrategy
 {
 public:
-	TextDrawingStrategy(
+	TextFigureStrategy(
 		const Point leftTop,
 		const double font,
 		std::string text

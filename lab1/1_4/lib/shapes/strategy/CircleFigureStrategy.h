@@ -9,10 +9,10 @@
 
 namespace shapes
 {
-class CircleDrawingStrategy final : public IFigureStrategy
+class CircleFigureStrategy final : public IFigureStrategy
 {
 public:
-	CircleDrawingStrategy(
+	CircleFigureStrategy(
 		const Point center,
 		const double radius
 		)

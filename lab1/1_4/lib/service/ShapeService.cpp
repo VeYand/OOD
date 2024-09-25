@@ -1,9 +1,9 @@
 #include "ShapeService.h"
-#include "../shapes/strategy/CircleDrawingStrategy.h"
-#include "../shapes/strategy/LineDrawingStrategy.h"
-#include "../shapes/strategy/RectangleDrawingStrategy.h"
-#include "../shapes/strategy/TextDrawingStrategy.h"
-#include "../shapes/strategy/TriangleDrawingStrategy.h"
+#include "../shapes/strategy/CircleFigureStrategy.h"
+#include "../shapes/strategy/LineFigureStrategy.h"
+#include "../shapes/strategy/RectangleFigureStrategy.h"
+#include "../shapes/strategy/TextFigureStrategy.h"
+#include "../shapes/strategy/TriangleFigureStrategy.h"
 #include <sstream>
 #include <stdexcept>
 #include <iomanip>
@@ -107,7 +107,7 @@ std::unique_ptr<shapes::IFigureStrategy> ShapeService::CreateDrawStrategyFromStr
 			return nullptr;
 		}
 
-		return std::move(std::make_unique<shapes::RectangleDrawingStrategy>(
+		return std::move(std::make_unique<shapes::RectangleFigureStrategy>(
 			shapes::Rect(shapes::Point(leftTopX, leftTopY), shapes::Point(leftTopX + width, leftTopY + height))
 			));
 	}
@@ -126,7 +126,7 @@ std::unique_ptr<shapes::IFigureStrategy> ShapeService::CreateDrawStrategyFromStr
 			return nullptr;
 		}
 
-		return std::move(std::make_unique<shapes::CircleDrawingStrategy>(shapes::Point(centerX, centerY), radius));
+		return std::move(std::make_unique<shapes::CircleFigureStrategy>(shapes::Point(centerX, centerY), radius));
 	}
 
 	if (type == ConvertShapeTypeToString(ShapeType::TRIANGLE))
@@ -138,7 +138,7 @@ std::unique_ptr<shapes::IFigureStrategy> ShapeService::CreateDrawStrategyFromStr
 			return nullptr;
 		}
 
-		return std::move(std::make_unique<shapes::TriangleDrawingStrategy>(
+		return std::move(std::make_unique<shapes::TriangleFigureStrategy>(
 			shapes::Point(x1, y1), shapes::Point(x2, y2), shapes::Point(x3, y3)
 			));
 	}
@@ -152,7 +152,7 @@ std::unique_ptr<shapes::IFigureStrategy> ShapeService::CreateDrawStrategyFromStr
 			return nullptr;
 		}
 
-		return std::move(std::make_unique<shapes::LineDrawingStrategy>(
+		return std::move(std::make_unique<shapes::LineFigureStrategy>(
 			shapes::Point(x1, y1), shapes::Point(x2, y2)
 			));
 	}
@@ -177,7 +177,7 @@ std::unique_ptr<shapes::IFigureStrategy> ShapeService::CreateDrawStrategyFromStr
 			text.erase(0, 1);
 		}
 
-		return std::move(std::make_unique<shapes::TextDrawingStrategy>(
+		return std::move(std::make_unique<shapes::TextFigureStrategy>(
 			shapes::Point(leftTopX, leftTopY), fontSize, text
 			));
 	}

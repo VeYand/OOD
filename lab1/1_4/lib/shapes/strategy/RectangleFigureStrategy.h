@@ -9,10 +9,10 @@
 
 namespace shapes
 {
-class RectangleDrawingStrategy final : public IFigureStrategy
+class RectangleFigureStrategy final : public IFigureStrategy
 {
 public:
-	explicit RectangleDrawingStrategy(
+	explicit RectangleFigureStrategy(
 		const Rect& bounds
 		)
 		: m_bounds(bounds)

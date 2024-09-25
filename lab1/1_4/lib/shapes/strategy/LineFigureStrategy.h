@@ -9,10 +9,10 @@
 
 namespace shapes
 {
-class LineDrawingStrategy final : public IFigureStrategy
+class LineFigureStrategy final : public IFigureStrategy
 {
 public:
-	LineDrawingStrategy(
+	LineFigureStrategy(
 		const Point start,
 		const Point end
 		)
