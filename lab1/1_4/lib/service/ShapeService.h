@@ -22,19 +22,17 @@ private:
 	std::ostream& m_out;
 	shapes::Picture& m_picture;
 	gfx::ICanvas& m_canvas;
-
 	using CommandHandler = std::function<void(std::istringstream&)>;
 	std::unordered_map<std::string, CommandHandler> m_commands;
 
 	void RegisterCommands();
-
 	void AddShape(std::istringstream& iss) const;
 	void MoveShape(std::istringstream& iss) const;
 	void DeleteShape(std::istringstream& iss) const;
 	void ListShapes() const;
 	void ChangeColor(std::istringstream& iss) const;
 	void MovePicture(std::istringstream& iss) const;
-	void ChangeShape(std::istringstream& iss);
+	void ChangeShape(std::istringstream& iss) const;
 	void DrawShape(std::istringstream& iss) const;
 	void DrawPicture() const;
 	std::unique_ptr<shapes::IFigureStrategy> CreateDrawStrategyFromStream(std::istringstream& iss, const std::string& type) const;
@@ -42,7 +40,6 @@ private:
 	static std::string ConvertShapeTypeToString(ShapeType type);
 	static ShapeType ConvertStringToShapeType(const std::string& typeStr);
 	static bool ParseColor(std::string colorStr, shapes::Color& color);
-
 };
 
 #endif // SHAPESERVICE_H

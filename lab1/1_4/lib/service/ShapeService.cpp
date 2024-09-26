@@ -276,7 +276,7 @@ void ShapeService::MovePicture(std::istringstream& iss) const
 	m_picture.MovePicture(dx, dy);
 }
 
-void ShapeService::ChangeShape(std::istringstream& iss)
+void ShapeService::ChangeShape(std::istringstream& iss) const
 {
 	std::string id, type;
 

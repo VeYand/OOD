@@ -12,6 +12,7 @@ void shapes::Picture::AddShape(const std::string& id, std::unique_ptr<Shape>&& s
 		throw ShapeAlreadyExistsException();
 	}
 	m_shapes.emplace(id, std::move(shape));
+	// TODO Метод не безопасен к возникновению исключения
 	m_shapeIds.emplace_back(id);
 }
 
@@ -24,12 +25,14 @@ void shapes::Picture::DeleteShape(const std::string& id)
 
 	m_shapes.erase(id);
 	auto it = std::remove(m_shapeIds.begin(), m_shapeIds.end(), id);
+	// TODO Подумать над этим условием
 	if (it != m_shapeIds.end())
 	{
 		m_shapeIds.erase(it, m_shapeIds.end());
 	}
 }
 
+// TODO Убрать ChangeColor
 void shapes::Picture::ChangeColor(const std::string& id, const Color color) const
 {
 	if (!m_shapes.contains(id))
@@ -53,7 +56,7 @@ void shapes::Picture::DrawPicture(gfx::ICanvas& canvas)
 {
 	for (const auto& id : m_shapeIds)
 	{
-		GetShape(id)->Draw(canvas);
+		GetShape(id)->Draw(canvas); // TODO Сделать o(n)
 	}
 }
 
