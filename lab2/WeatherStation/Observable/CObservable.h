@@ -16,7 +16,8 @@ public:
 
     void NotifyObservers() override {
         T data = GetChangedData();
-        for (auto &observer: m_observers) {
+        auto observers = m_observers;
+        for (auto &observer: observers) {
             observer->Update(data);
         }
     }
@@ -31,7 +32,7 @@ protected:
     virtual T GetChangedData() const = 0;
 
 private:
-    std::set<ObserverType *> m_observers;
+    std::set<ObserverType*> m_observers;
 };
 
 #endif //COBSERVABLE_H
