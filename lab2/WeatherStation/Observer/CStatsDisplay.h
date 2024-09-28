@@ -2,8 +2,8 @@
 #define CSTATSDISPLAY_H
 
 #include <iostream>
-#include <limits>
 
+#include "CStatistics.h"
 #include "IObserver.h"
 #include "../Model/SWeatherInfo.h"
 
@@ -13,25 +13,28 @@ class CStatsDisplay final : public IObserver<SWeatherInfo> {
     остается публичным
     */
     void Update(SWeatherInfo const &data) override {
-        if (m_minTemperature > data.temperature) {
-            m_minTemperature = data.temperature;
-        }
-        if (m_maxTemperature < data.temperature) {
-            m_maxTemperature = data.temperature;
-        }
-        m_accTemperature += data.temperature;
-        ++m_countAcc;
+        m_temperatureStatistics.AddValue(data.temperature);
+        m_humidityStatistics.AddValue(data.humidity);
+        m_pressureStatistics.AddValue(data.pressure);
 
-        std::cout << "Max Temp " << m_maxTemperature << std::endl;
-        std::cout << "Min Temp " << m_minTemperature << std::endl;
-        std::cout << "Average Temp " << (m_accTemperature / m_countAcc) << std::endl;
+        std::cout << "Max Temp " << m_temperatureStatistics.GetMax() << std::endl;
+        std::cout << "Min Temp " << m_temperatureStatistics.GetMin() << std::endl;
+        std::cout << "Average Temp " << m_temperatureStatistics.GetAverage() << std::endl;
+
+        std::cout << "Max Hum " << m_humidityStatistics.GetMax() << std::endl;
+        std::cout << "Min Hum " << m_humidityStatistics.GetMin() << std::endl;
+        std::cout << "Average Hum " << m_humidityStatistics.GetAverage() << std::endl;
+
+        std::cout << "Max Pressure " << m_pressureStatistics.GetMax() << std::endl;
+        std::cout << "Min Pressure " << m_pressureStatistics.GetMin() << std::endl;
+        std::cout << "Average Pressure " << m_pressureStatistics.GetAverage() << std::endl;
+
         std::cout << "----------------" << std::endl;
     }
 
-    double m_minTemperature = std::numeric_limits<double>::infinity();
-    double m_maxTemperature = -std::numeric_limits<double>::infinity();
-    double m_accTemperature = 0;
-    unsigned m_countAcc = 0;
+    CStatistics m_temperatureStatistics{};
+    CStatistics m_humidityStatistics{};
+    CStatistics m_pressureStatistics{};
 };
 
 #endif //CSTATSDISPLAY_H

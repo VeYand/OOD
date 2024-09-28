@@ -1,4 +1,4 @@
-#include "Observarble/CWeatherData.h"
+#include "Observable/CWeatherData.h"
 #include "Observer/CDisplay.h"
 #include "Observer/CStatsDisplay.h"
 
