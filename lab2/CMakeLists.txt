@@ -6,6 +6,11 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
 
 add_executable(${PROJECT_NAME}_1
         WeatherStation/main.cpp
-        WeatherStation/Observer.h
-        WeatherStation/WeatherData.h
+        WeatherStation/Observer/IObserver.h
+        WeatherStation/Observarble/IObservable.h
+        WeatherStation/Observarble/CObservable.h
+        WeatherStation/Observer/CDisplay.h
+        WeatherStation/Model/SWeatherInfo.h
+        WeatherStation/Observer/CStatsDisplay.h
+        WeatherStation/Observarble/CWeatherData.h
 )
