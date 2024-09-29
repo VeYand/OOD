@@ -12,30 +12,56 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-add_executable(${PROJECT_NAME}_1
-        WeatherStation/main.cpp
-        WeatherStation/Observer/IObserver.h
-        WeatherStation/Observable/IObservable.h
-        WeatherStation/Observable/CObservable.h
-        WeatherStation/Observer/CDisplay.h
-        WeatherStation/Model/SWeatherInfo.h
-        WeatherStation/Observer/CStatsDisplay.h
-        WeatherStation/Observable/CWeatherData.h
-        WeatherStation/Observer/CStatistics.h
+add_executable(${PROJECT_NAME}_1-2
+        1-2/WeatherStation/main.cpp
+        1-2/WeatherStation/Observer/IObserver.h
+        1-2/WeatherStation/Observable/IObservable.h
+        1-2/WeatherStation/Observable/CObservable.h
+        1-2/WeatherStation/Observer/CDisplay.h
+        1-2/WeatherStation/Model/SWeatherInfo.h
+        1-2/WeatherStation/Observer/CStatsDisplay.h
+        1-2/WeatherStation/Observable/CWeatherData.h
+        1-2/WeatherStation/Observer/CStatistics.h
 )
 
-add_executable(${PROJECT_NAME}Test_1
-        WeatherStation/Observer/IObserver.h
-        WeatherStation/Observable/IObservable.h
-        WeatherStation/Observable/CObservable.h
-        WeatherStation/Observer/CDisplay.h
-        WeatherStation/Model/SWeatherInfo.h
-        WeatherStation/Observer/CStatsDisplay.h
-        WeatherStation/Observable/CWeatherData.h
-        WeatherStation/Observer/CStatistics.h
-        test/Test.cpp
+add_executable(${PROJECT_NAME}_3
+        3/WeatherStation/main.cpp
+        3/WeatherStation/Observer/IObserver.h
+        3/WeatherStation/Observable/IObservable.h
+        3/WeatherStation/Observable/CObservable.h
+        3/WeatherStation/Observer/CDisplay.h
+        3/WeatherStation/Model/SWeatherInfo.h
+        3/WeatherStation/Observer/CStatsDisplay.h
+        3/WeatherStation/Observable/CWeatherData.h
+        3/WeatherStation/Observer/CStatistics.h
 )
 
-target_link_libraries(${PROJECT_NAME}Test_1 gtest_main gmock)
+add_executable(${PROJECT_NAME}Test_1-2
+        1-2/WeatherStation/Observer/IObserver.h
+        1-2/WeatherStation/Observable/IObservable.h
+        1-2/WeatherStation/Observable/CObservable.h
+        1-2/WeatherStation/Observer/CDisplay.h
+        1-2/WeatherStation/Model/SWeatherInfo.h
+        1-2/WeatherStation/Observer/CStatsDisplay.h
+        1-2/WeatherStation/Observable/CWeatherData.h
+        1-2/WeatherStation/Observer/CStatistics.h
+        1-2/test/Test.cpp
+)
+
+add_executable(${PROJECT_NAME}Test_3
+        3/WeatherStation/Observer/IObserver.h
+        3/WeatherStation/Observable/IObservable.h
+        3/WeatherStation/Observable/CObservable.h
+        3/WeatherStation/Observer/CDisplay.h
+        3/WeatherStation/Model/SWeatherInfo.h
+        3/WeatherStation/Observer/CStatsDisplay.h
+        3/WeatherStation/Observable/CWeatherData.h
+        3/WeatherStation/Observer/CStatistics.h
+        3/test/Test.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
+target_link_libraries(${PROJECT_NAME}Test_3 gtest_main gmock)
 enable_testing()
-add_test(NAME ${PROJECT_NAME}Test_1 COMMAND ${PROJECT_NAME}Test_1)
+add_test(NAME ${PROJECT_NAME}Test_1-2 COMMAND ${PROJECT_NAME}Test_1-2)
+add_test(NAME ${PROJECT_NAME}Test_3 COMMAND ${PROJECT_NAME}Test_3)
