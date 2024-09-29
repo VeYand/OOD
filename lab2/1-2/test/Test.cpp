@@ -19,7 +19,7 @@ private:
     CObservable<SWeatherInfo> &m_observable;
 };
 
-TEST(ObserverTest, SelfRemovingObserverRemovesSelfTest) {
+TEST(CObservableTest, SelfRemovingObserverRemovesSelfTest) {
     CWeatherData wd;
 
     SelfRemovingObserver selfRemovingObserver(wd);
@@ -33,6 +33,25 @@ TEST(ObserverTest, SelfRemovingObserverRemovesSelfTest) {
 
     std::cout << "Second change" << std::endl;
     wd.SetMeasurements(-10, 0.8, 761);
+}
+
+TEST(CObservableTest, MultipleSelfRemovingObservers) {
+    CWeatherData weatherData;
+
+    SelfRemovingObserver selfRemovingObserver1(weatherData);
+    SelfRemovingObserver selfRemovingObserver2(weatherData);
+
+    weatherData.RegisterObserver(selfRemovingObserver1);
+    weatherData.RegisterObserver(selfRemovingObserver2);
+
+    CDisplay display;
+    weatherData.RegisterObserver(display);
+
+    std::cout << "First change" << std::endl;
+    weatherData.SetMeasurements(5, 70, 765);
+
+    std::cout << "Second change" << std::endl;
+    weatherData.SetMeasurements(10, 75, 770);
 }
 
 GTEST_API_ int main(int argc, char **argv) {
