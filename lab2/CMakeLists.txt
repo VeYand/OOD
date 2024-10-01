@@ -81,7 +81,9 @@ add_executable(${PROJECT_NAME}Test_4
         4/WeatherStation/Observer/CStatsDisplay.h
         4/WeatherStation/Observable/CWeatherData.h
         4/WeatherStation/Observer/CStatistics.h
-        4/test/Test.cpp
+        4/test/CObservableTest.cpp
+        4/test/DuoWeatherStationDisplayTest.cpp
+        4/test/main.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)

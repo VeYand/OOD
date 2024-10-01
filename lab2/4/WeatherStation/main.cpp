@@ -5,11 +5,11 @@
 int main() {
     CWeatherData wd;
 
-    CDisplay display;
-    wd.RegisterObserver(2, display);
+    CDisplay display(&wd, &wd);
+    wd.RegisterObserver(1, display);
 
-    CStatsDisplay statsDisplay;
-    wd.RegisterObserver(1, statsDisplay);
+    CStatsDisplay statsDisplay(&wd, &wd);
+    wd.RegisterObserver(2, statsDisplay);
 
     wd.SetMeasurements(3, 0.7, 760);
     wd.SetMeasurements(4, 0.8, 761);

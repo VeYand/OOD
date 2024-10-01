@@ -1,15 +1,14 @@
 #include <gtest/gtest.h>
-#include "../WeatherStation/Model/SWeatherInfo.h"
-#include "../WeatherStation/Observable/CObservable.h"
 #include "../WeatherStation/Observable/CWeatherData.h"
 #include "../WeatherStation/Observer/CDisplay.h"
+#include "../WeatherStation/Observer/CStatsDisplay.h"
 
 class SelfRemovingObserver final : public IObserver<SWeatherInfo> {
 public:
     explicit SelfRemovingObserver(CObservable<SWeatherInfo> &observable) : m_observable(observable) {
     }
 
-    void Update(SWeatherInfo const &data) override {
+    void Update(SWeatherInfo const &data, IObservable<SWeatherInfo> *observable) override {
         std::cout << "SelfRemovingObserver received update" << std::endl;
         m_observable.RemoveObserver(*this);
     }
@@ -20,9 +19,10 @@ private:
 
 class MockObserver final : public IObserver<SWeatherInfo> {
 public:
-    explicit MockObserver(std::string name) : m_name(std::move(name)) {}
+    explicit MockObserver(std::string name) : m_name(std::move(name)) {
+    }
 
-    void Update(SWeatherInfo const &data) override {
+    void Update(SWeatherInfo const &data, IObservable<SWeatherInfo> *observable) override {
         m_order.push_back(m_name);
     }
 
@@ -138,10 +138,4 @@ TEST(CObservableTest, NotifyAfterObserverRemoval) {
 
     expectedOrder = {"Observer2"};
     ASSERT_EQ(MockObserver::GetOrder(), expectedOrder);
-}
-
-GTEST_API_ int main(int argc, char **argv) {
-    std::cout << "Running tests" << std::endl;
-    testing::InitGoogleTest(&argc, argv);
-    return RUN_ALL_TESTS();
 }
