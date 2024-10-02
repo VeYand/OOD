@@ -2,7 +2,8 @@
 #include "Observer/CDisplay.h"
 #include "Observer/CStatsDisplay.h"
 
-int main() {
+int main()
+{
     CWeatherData wd;
 
     CDisplay display;

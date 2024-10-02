@@ -2,14 +2,16 @@
 #include "../WeatherStation/Observable/CWeatherData.h"
 #include <gmock/gmock.h>
 
-class MockDisplay final : public IObserver<SWeatherInfo> {
+class MockDisplay final : public IObserver<SWeatherInfo>
+{
 public:
     MOCK_METHOD(void, Update, (const SWeatherInfo& data, IObservable<SWeatherInfo>* observable), (override));
 
     MockDisplay() = default;
 };
 
-TEST(DuoWeatherStationDisplay, MockObserverReceivesUpdates) {
+TEST(DuoWeatherStationDisplay, MockObserverReceivesUpdates)
+{
     CWeatherData weatherDataIn;
     CWeatherData weatherDataOut;
     MockDisplay mockDisplay;

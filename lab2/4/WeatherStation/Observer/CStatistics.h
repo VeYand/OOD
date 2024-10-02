@@ -4,28 +4,35 @@
 #include <iostream>
 #include <limits>
 
-class CStatistics {
+class CStatistics
+{
 public:
-    void AddValue(const double value) {
-        if (m_minValue > value) {
+    void AddValue(const double value)
+    {
+        if (m_minValue > value)
+        {
             m_minValue = value;
         }
-        if (m_maxValue < value) {
+        if (m_maxValue < value)
+        {
             m_maxValue = value;
         }
         m_accValue += value;
         ++m_countAcc;
     }
 
-    [[nodiscard]] double GetAverage() const {
+    [[nodiscard]] double GetAverage() const
+    {
         return m_accValue / m_countAcc;
     }
 
-    [[nodiscard]] double GetMin() const {
+    [[nodiscard]] double GetMin() const
+    {
         return m_minValue;
     }
 
-    [[nodiscard]] double GetMax() const {
+    [[nodiscard]] double GetMax() const
+    {
         return m_maxValue;
     }
 

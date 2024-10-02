@@ -7,12 +7,14 @@
 #include "IObserver.h"
 #include "../Model/SWeatherInfo.h"
 
-class CStatsDisplay final : public IObserver<SWeatherInfo> {
+class CStatsDisplay final : public IObserver<SWeatherInfo>
+{
 public:
     CStatsDisplay(
         IObservable<SWeatherInfo> *inStation,
         IObservable<SWeatherInfo> *outStation
-    ): m_inStation(inStation), m_outStation(outStation) {
+    ): m_inStation(inStation), m_outStation(outStation)
+    {
     }
 
 private:
@@ -23,16 +25,22 @@ private:
     Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
     остается публичным
     */
-    void Update(SWeatherInfo const &data, IObservable<SWeatherInfo> *observable) override {
+    void Update(SWeatherInfo const &data, IObservable<SWeatherInfo> *observable) override
+    {
         m_temperatureStatistics.AddValue(data.temperature);
         m_humidityStatistics.AddValue(data.humidity);
         m_pressureStatistics.AddValue(data.pressure);
 
-        if (observable == m_inStation) {
+        if (observable == m_inStation)
+        {
             std::cout << "Inside station" << std::endl;
-        } else if (observable == m_outStation) {
+        }
+        else if (observable == m_outStation)
+        {
             std::cout << "Outside station" << std::endl;
-        } else {
+        }
+        else
+        {
             std::cout << "Unknown station" << std::endl;
         }
 

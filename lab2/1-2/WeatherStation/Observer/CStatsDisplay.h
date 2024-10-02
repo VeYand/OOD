@@ -7,12 +7,14 @@
 #include "IObserver.h"
 #include "../Model/SWeatherInfo.h"
 
-class CStatsDisplay final : public IObserver<SWeatherInfo> {
+class CStatsDisplay final : public IObserver<SWeatherInfo>
+{
     /* Метод Update сделан приватным, чтобы ограничить возможность его вызова напрямую
     Классу CObservable он будет доступен все равно, т.к. в интерфейсе IObserver он
     остается публичным
     */
-    void Update(SWeatherInfo const &data) override {
+    void Update(SWeatherInfo const &data) override
+    {
         m_temperatureStatistics.AddValue(data.temperature);
         m_humidityStatistics.AddValue(data.humidity);
         m_pressureStatistics.AddValue(data.pressure);

@@ -4,12 +4,15 @@
 #include "../WeatherStation/Observable/CWeatherData.h"
 #include "../WeatherStation/Observer/CDisplay.h"
 
-class SelfRemovingObserver final : public IObserver<SWeatherInfo> {
+class SelfRemovingObserver final : public IObserver<SWeatherInfo>
+{
 public:
-    explicit SelfRemovingObserver(CObservable<SWeatherInfo> &observable) : m_observable(observable) {
+    explicit SelfRemovingObserver(CObservable<SWeatherInfo> &observable) : m_observable(observable)
+    {
     }
 
-    void Update(SWeatherInfo const &data) override {
+    void Update(SWeatherInfo const &data) override
+    {
         std::cout << "SelfRemovingObserver received update" << std::endl;
         m_observable.RemoveObserver(*this);
     }
@@ -18,19 +21,25 @@ private:
     CObservable<SWeatherInfo> &m_observable;
 };
 
-class MockObserver final : public IObserver<SWeatherInfo> {
+class MockObserver final : public IObserver<SWeatherInfo>
+{
 public:
-    explicit MockObserver(std::string name) : m_name(std::move(name)) {}
+    explicit MockObserver(std::string name) : m_name(std::move(name))
+    {
+    }
 
-    void Update(SWeatherInfo const &data) override {
+    void Update(SWeatherInfo const &data) override
+    {
         m_order.push_back(m_name);
     }
 
-    static void ResetOrder() {
+    static void ResetOrder()
+    {
         m_order.clear();
     }
 
-    static std::vector<std::string> GetOrder() {
+    static std::vector<std::string> GetOrder()
+    {
         return m_order;
     }
 
@@ -41,7 +50,8 @@ private:
 
 std::vector<std::string> MockObserver::m_order = {};
 
-TEST(CObservableTest, SelfRemovingObserverRemovesSelfTest) {
+TEST(CObservableTest, SelfRemovingObserverRemovesSelfTest)
+{
     CWeatherData wd;
 
     SelfRemovingObserver selfRemovingObserver(wd);
@@ -57,7 +67,8 @@ TEST(CObservableTest, SelfRemovingObserverRemovesSelfTest) {
     wd.SetMeasurements(-10, .8, 761);
 }
 
-TEST(CObservableTest, MultipleSelfRemovingObservers) {
+TEST(CObservableTest, MultipleSelfRemovingObservers)
+{
     CWeatherData weatherData;
 
     SelfRemovingObserver selfRemovingObserver1(weatherData);
@@ -76,7 +87,8 @@ TEST(CObservableTest, MultipleSelfRemovingObservers) {
     weatherData.SetMeasurements(10, 75, 770);
 }
 
-TEST(CObservableTest, NotifyObserversWithPriority) {
+TEST(CObservableTest, NotifyObserversWithPriority)
+{
     CWeatherData weatherData;
 
     MockObserver observer1("Observer1");
@@ -95,7 +107,8 @@ TEST(CObservableTest, NotifyObserversWithPriority) {
     ASSERT_EQ(MockObserver::GetOrder(), expectedOrder);
 }
 
-TEST(CObservableTest, NotifyObserversWithSamePriority) {
+TEST(CObservableTest, NotifyObserversWithSamePriority)
+{
     CWeatherData weatherData;
 
     MockObserver observer1("Observer1");
@@ -114,7 +127,8 @@ TEST(CObservableTest, NotifyObserversWithSamePriority) {
     ASSERT_EQ(MockObserver::GetOrder(), expectedOrder);
 }
 
-TEST(CObservableTest, NotifyAfterObserverRemoval) {
+TEST(CObservableTest, NotifyAfterObserverRemoval)
+{
     CWeatherData weatherData;
 
     MockObserver observer1("Observer1");
@@ -140,7 +154,8 @@ TEST(CObservableTest, NotifyAfterObserverRemoval) {
     ASSERT_EQ(MockObserver::GetOrder(), expectedOrder);
 }
 
-GTEST_API_ int main(int argc, char **argv) {
+GTEST_API_ int main(int argc, char **argv)
+{
     std::cout << "Running tests" << std::endl;
     testing::InitGoogleTest(&argc, argv);
     return RUN_ALL_TESTS();

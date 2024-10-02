@@ -3,28 +3,34 @@
 #include "CObservable.h"
 #include "../Model/SWeatherInfo.h"
 
-class CWeatherData final : public CObservable<SWeatherInfo> {
+class CWeatherData final : public CObservable<SWeatherInfo>
+{
 public:
     // Температура в градусах Цельсия
-    [[nodiscard]] double GetTemperature() const {
+    [[nodiscard]] double GetTemperature() const
+    {
         return m_temperature;
     }
 
     // Относительная влажность (0...100)
-    [[nodiscard]] double GetHumidity() const {
+    [[nodiscard]] double GetHumidity() const
+    {
         return m_humidity;
     }
 
     // Атмосферное давление (в мм.рт.ст)
-    [[nodiscard]] double GetPressure() const {
+    [[nodiscard]] double GetPressure() const
+    {
         return m_pressure;
     }
 
-    void MeasurementsChanged() {
+    void MeasurementsChanged()
+    {
         NotifyObservers();
     }
 
-    void SetMeasurements(const double temp, const double humidity, const double pressure) {
+    void SetMeasurements(const double temp, const double humidity, const double pressure)
+    {
         m_humidity = humidity;
         m_temperature = temp;
         m_pressure = pressure;
@@ -33,7 +39,8 @@ public:
     }
 
 protected:
-    [[nodiscard]] SWeatherInfo GetChangedData() const override {
+    [[nodiscard]] SWeatherInfo GetChangedData() const override
+    {
         SWeatherInfo info;
         info.temperature = GetTemperature();
         info.humidity = GetHumidity();

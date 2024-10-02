@@ -9,7 +9,8 @@
 */
 
 template<typename T>
-class IObserver {
+class IObserver
+{
 public:
     virtual void Update(T const &data) = 0;
 

@@ -1,34 +1,50 @@
 #ifndef COBSERVABLE_H
 #define COBSERVABLE_H
 
+#include <unordered_map>
 #include <map>
 #include "IObservable.h"
 
 // Реализация интерфейса IObservable
 template<class T>
-class CObservable : public IObservable<T> {
+class CObservable : public IObservable<T>
+{
 public:
     typedef IObserver<T> ObserverType;
 
-    void RegisterObserver(unsigned priority, ObserverType &observer) override {
-        m_observers.insert({priority, &observer});
+    void RegisterObserver(unsigned priority, ObserverType &observer) override
+    {
+        m_observersByPriority.insert({priority, &observer});
+        m_observerPriorityMap[&observer] = priority;
     }
 
-    void NotifyObservers() override {
+    void NotifyObservers() override
+    {
         T data = GetChangedData();
-        auto observers = m_observers;
-        for (auto &[priority, observer] : observers) {
+        auto observers = m_observersByPriority;
+        for (auto &[priority, observer]: observers)
+        {
             observer->Update(data);
         }
     }
 
-    void RemoveObserver(ObserverType &observer) override {
-        for (auto it = m_observers.begin(); it != m_observers.end();) {
-            if (it->second == &observer) {
-                it = m_observers.erase(it);
-            } else {
-                ++it;
+    void RemoveObserver(ObserverType &observer) override
+    // Todo сделать за время лучше лимнейного . Нужно искать по ключу (наблюдатель)
+    {
+        if (auto observerIt = m_observerPriorityMap.find(&observer); observerIt != m_observerPriorityMap.end())
+        {
+            auto priority = observerIt->second;
+            auto [first, last] = m_observersByPriority.equal_range(priority);
+
+            for (auto observerPriorityIt = first; observerPriorityIt != last; ++observerPriorityIt)
+            {
+                if (observerPriorityIt->second == &observer)
+                {
+                    m_observersByPriority.erase(observerPriorityIt);
+                    break;
+                }
             }
+            m_observerPriorityMap.erase(observerIt);
         }
     }
 
@@ -38,7 +54,8 @@ protected:
     virtual T GetChangedData() const = 0;
 
 private:
-    std::multimap<unsigned, ObserverType*> m_observers;
+    std::multimap<unsigned, ObserverType *> m_observersByPriority;
+    std::unordered_map<ObserverType *, unsigned> m_observerPriorityMap;
 };
 
-#endif //COBSERVABLE_H
+#endif // COBSERVABLE_H

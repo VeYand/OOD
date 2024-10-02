@@ -7,7 +7,8 @@
 инициировать рассылку уведомлений зарегистрированным наблюдателям.
 */
 template<typename T>
-class IObservable {
+class IObservable
+{
 public:
     virtual ~IObservable() = default;
 
