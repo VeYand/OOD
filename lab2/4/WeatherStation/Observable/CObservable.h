@@ -1,6 +1,7 @@
 #ifndef COBSERVABLE_H
 #define COBSERVABLE_H
 
+#include <unordered_map>
 #include <map>
 #include "IObservable.h"
 
@@ -13,31 +14,36 @@ public:
 
     void RegisterObserver(unsigned priority, ObserverType &observer) override
     {
-        m_observers.insert({priority, &observer});
+        m_observersByPriority.insert({priority, &observer});
+        m_observerPriorityMap[&observer] = priority;
     }
 
     void NotifyObservers() override
     {
         T data = GetChangedData();
-        auto observers = m_observers;
+        auto observers = m_observersByPriority;
         for (auto &[priority, observer]: observers)
         {
-            observer->Update(data, this);
+            observer->Update(data);
         }
     }
 
     void RemoveObserver(ObserverType &observer) override
     {
-        for (auto it = m_observers.begin(); it != m_observers.end();)
+        if (auto observerIt = m_observerPriorityMap.find(&observer); observerIt != m_observerPriorityMap.end())
         {
-            if (it->second == &observer)
+            auto priority = observerIt->second;
+            auto [first, last] = m_observersByPriority.equal_range(priority);
+
+            for (auto observerPriorityIt = first; observerPriorityIt != last; ++observerPriorityIt)
             {
-                it = m_observers.erase(it);
+                if (observerPriorityIt->second == &observer)
+                {
+                    m_observersByPriority.erase(observerPriorityIt);
+                    break;
+                }
             }
-            else
-            {
-                ++it;
-            }
+            m_observerPriorityMap.erase(observerIt);
         }
     }
 
@@ -47,7 +53,8 @@ protected:
     virtual T GetChangedData() const = 0;
 
 private:
-    std::multimap<unsigned, ObserverType *> m_observers;
+    std::multimap<unsigned, ObserverType *> m_observersByPriority;
+    std::unordered_map<ObserverType *, unsigned> m_observerPriorityMap;
 };
 
 #endif //COBSERVABLE_H

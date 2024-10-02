@@ -29,7 +29,6 @@ public:
     }
 
     void RemoveObserver(ObserverType &observer) override
-    // Todo сделать за время лучше лимнейного . Нужно искать по ключу (наблюдатель)
     {
         if (auto observerIt = m_observerPriorityMap.find(&observer); observerIt != m_observerPriorityMap.end())
         {
@@ -58,4 +57,4 @@ private:
     std::unordered_map<ObserverType *, unsigned> m_observerPriorityMap;
 };
 
-#endif // COBSERVABLE_H
+#endif //COBSERVABLE_H
