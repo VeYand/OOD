@@ -24,7 +24,7 @@ public:
         auto observers = m_observersByPriority;
         for (auto &[priority, observer]: observers)
         {
-            observer->Update(data);
+            observer->Update(data, this);
         }
     }
 

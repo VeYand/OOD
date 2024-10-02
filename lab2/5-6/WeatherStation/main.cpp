@@ -6,10 +6,10 @@ int main()
 {
     CWeatherData wd;
 
-    CDisplay display;
+    CDisplay display(&wd, &wd);
     wd.RegisterObserver(1, display);
 
-    CStatsDisplay statsDisplay;
+    CStatsDisplay statsDisplay(&wd, &wd);
     wd.RegisterObserver(2, statsDisplay);
 
     wd.SetMeasurements(3, 0.7, 760, {10, 10});

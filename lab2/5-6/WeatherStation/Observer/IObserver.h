@@ -7,12 +7,14 @@
 Параметром шаблона является тип аргумента,
 передаваемого Наблюдателю в метод Update
 */
+template<typename T>
+class IObservable;
 
 template<typename T>
 class IObserver
 {
 public:
-    virtual void Update(T const &data) = 0;
+    virtual void Update(T const &data, IObservable<T> *observable) = 0;
 
     virtual ~IObserver() = default;
 };
