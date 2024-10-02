@@ -48,6 +48,18 @@ add_executable(${PROJECT_NAME}_4
         4/WeatherStation/Observer/CStatistics.h
 )
 
+add_executable(${PROJECT_NAME}_5
+        5/WeatherStation/main.cpp
+        5/WeatherStation/Observer/IObserver.h
+        5/WeatherStation/Observable/IObservable.h
+        5/WeatherStation/Observable/CObservable.h
+        5/WeatherStation/Observer/CDisplay.h
+        5/WeatherStation/Model/SWeatherInfo.h
+        5/WeatherStation/Observer/CStatsDisplay.h
+        5/WeatherStation/Observable/CWeatherData.h
+        5/WeatherStation/Observer/CStatistics.h
+)
+
 add_executable(${PROJECT_NAME}Test_1-2
         1-2/WeatherStation/Observer/IObserver.h
         1-2/WeatherStation/Observable/IObservable.h
@@ -86,10 +98,24 @@ add_executable(${PROJECT_NAME}Test_4
         4/test/main.cpp
 )
 
+add_executable(${PROJECT_NAME}Test_5
+        5/WeatherStation/Observer/IObserver.h
+        5/WeatherStation/Observable/IObservable.h
+        5/WeatherStation/Observable/CObservable.h
+        5/WeatherStation/Observer/CDisplay.h
+        5/WeatherStation/Model/SWeatherInfo.h
+        5/WeatherStation/Observer/CStatsDisplay.h
+        5/WeatherStation/Observable/CWeatherData.h
+        5/WeatherStation/Observer/CStatistics.h
+        5/test/Test.cpp
+)
+
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_3 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_4 gtest_main gmock)
+target_link_libraries(${PROJECT_NAME}Test_5 gtest_main gmock)
 enable_testing()
 add_test(NAME ${PROJECT_NAME}Test_1-2 COMMAND ${PROJECT_NAME}Test_1-2)
 add_test(NAME ${PROJECT_NAME}Test_3 COMMAND ${PROJECT_NAME}Test_3)
 add_test(NAME ${PROJECT_NAME}Test_4 COMMAND ${PROJECT_NAME}Test_4)
+add_test(NAME ${PROJECT_NAME}Test_5 COMMAND ${PROJECT_NAME}Test_5)
