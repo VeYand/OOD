@@ -40,6 +40,8 @@ private:
         std::cout << "Current Temp " << data.temperature << std::endl;
         std::cout << "Current Hum " << data.humidity << std::endl;
         std::cout << "Current Pressure " << data.pressure << std::endl;
+        std::cout << "Current wind speed " << data.wind.speed << std::endl;
+        std::cout << "Current wind direction " << data.wind.direction << " degrees" << std::endl;
         std::cout << "----------------" << std::endl;
     }
 };
