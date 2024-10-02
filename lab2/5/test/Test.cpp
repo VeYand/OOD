@@ -61,10 +61,10 @@ TEST(CObservableTest, SelfRemovingObserverRemovesSelfTest)
     wd.RegisterObserver(1, display);
 
     std::cout << "First change" << std::endl;
-    wd.SetMeasurements(3, .7, 760);
+    wd.SetMeasurements(3, .7, 760, {1, 1});
 
     std::cout << "Second change" << std::endl;
-    wd.SetMeasurements(-10, .8, 761);
+    wd.SetMeasurements(-10, .8, 761, {1, 1});
 }
 
 TEST(CObservableTest, MultipleSelfRemovingObservers)
@@ -81,10 +81,10 @@ TEST(CObservableTest, MultipleSelfRemovingObservers)
     weatherData.RegisterObserver(3, display);
 
     std::cout << "First change" << std::endl;
-    weatherData.SetMeasurements(5, 70, 765);
+    weatherData.SetMeasurements(5, 70, 765, {1, 1});
 
     std::cout << "Second change" << std::endl;
-    weatherData.SetMeasurements(10, 75, 770);
+    weatherData.SetMeasurements(10, 75, 770, {1, 1});
 }
 
 TEST(CObservableTest, NotifyObserversWithPriority)
@@ -101,7 +101,7 @@ TEST(CObservableTest, NotifyObserversWithPriority)
 
     MockObserver::ResetOrder();
 
-    weatherData.SetMeasurements(25, 65, 760);
+    weatherData.SetMeasurements(25, 65, 760, {1, 1});
 
     const std::vector<std::string> expectedOrder = {"Observer1", "Observer2", "Observer3"};
     ASSERT_EQ(MockObserver::GetOrder(), expectedOrder);
@@ -121,7 +121,7 @@ TEST(CObservableTest, NotifyObserversWithSamePriority)
 
     MockObserver::ResetOrder();
 
-    weatherData.SetMeasurements(22, 60, 755);
+    weatherData.SetMeasurements(22, 60, 755, {1, 1});
 
     const std::vector<std::string> expectedOrder = {"Observer1", "Observer2", "Observer3"};
     ASSERT_EQ(MockObserver::GetOrder(), expectedOrder);
@@ -139,7 +139,7 @@ TEST(CObservableTest, NotifyAfterObserverRemoval)
 
     MockObserver::ResetOrder();
 
-    weatherData.SetMeasurements(20, 65, 760);
+    weatherData.SetMeasurements(20, 65, 760, {1, 1});
 
     std::vector<std::string> expectedOrder = {"Observer1", "Observer2"};
     ASSERT_EQ(MockObserver::GetOrder(), expectedOrder);
@@ -148,7 +148,7 @@ TEST(CObservableTest, NotifyAfterObserverRemoval)
 
     MockObserver::ResetOrder();
 
-    weatherData.SetMeasurements(30, 70, 765);
+    weatherData.SetMeasurements(30, 70, 765, {1, 1});
 
     expectedOrder = {"Observer2"};
     ASSERT_EQ(MockObserver::GetOrder(), expectedOrder);

@@ -58,6 +58,8 @@ add_executable(${PROJECT_NAME}_5
         5/WeatherStation/Observer/CStatsDisplay.h
         5/WeatherStation/Observable/CWeatherData.h
         5/WeatherStation/Observer/CStatistics.h
+        5/WeatherStation/Observer/CWindStatistics.h
+        5/WeatherStation/Model/SWindInfo.h
 )
 
 add_executable(${PROJECT_NAME}Test_1-2
@@ -108,6 +110,8 @@ add_executable(${PROJECT_NAME}Test_5
         5/WeatherStation/Observable/CWeatherData.h
         5/WeatherStation/Observer/CStatistics.h
         5/test/Test.cpp
+        5/WeatherStation/Observer/CWindStatistics.h
+        5/WeatherStation/Model/SWindInfo.h
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
