@@ -14,6 +14,7 @@ public:
 
     void RegisterObserver(unsigned priority, ObserverType &observer) override
     {
+        // todo код не безопасен к возниконвению искл
         m_observersByPriority.insert({priority, &observer});
         m_observerPriorityMap[&observer] = priority;
     }
@@ -54,7 +55,7 @@ protected:
 
 private:
     std::multimap<unsigned, ObserverType *> m_observersByPriority;
-    std::unordered_map<ObserverType *, unsigned> m_observerPriorityMap;
+    std::unordered_map<ObserverType *, unsigned> m_observerPriorityMap; // todo хранить итератор
 };
 
 #endif //COBSERVABLE_H

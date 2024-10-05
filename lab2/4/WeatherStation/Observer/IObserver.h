@@ -10,7 +10,7 @@
 template<typename T>
 class IObservable;
 
-template<typename T>
+template<typename T> // todo перенсети в Observable
 class IObserver
 {
 public:
