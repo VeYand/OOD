@@ -6,14 +6,16 @@
 class CBeverage : public IBeverage
 {
 public:
-	CBeverage(const std::string & description)
-		:m_description(description)
-	{}
+	explicit CBeverage(std::string description)
+		: m_description(std::move(description))
+	{
+	}
 
-	std::string GetDescription()const override final
+	[[nodiscard]] std::string GetDescription() const final
 	{
 		return m_description;
 	}
+
 private:
 	std::string m_description;
 };
@@ -22,68 +24,135 @@ private:
 class CCoffee : public CBeverage
 {
 public:
-	CCoffee(const std::string& description = "Coffee")
-		:CBeverage(description) 
-	{}
-
-	double GetCost() const override 
+	explicit CCoffee(const std::string &description = "Coffee")
+		: CBeverage(description)
 	{
-		return 60; 
+	}
+
+	[[nodiscard]] double GetCost() const override
+	{
+		return 60;
 	}
 };
 
 // Капуччино
-class CCappuccino : public CCoffee
+class CCappuccino final : public CCoffee
 {
 public:
-	CCappuccino() 
-		:CCoffee("Cappuccino") 
-	{}
-
-	double GetCost() const override 
+	explicit CCappuccino(bool isDoublePortion = false)
+		: CCoffee(isDoublePortion ? "Double Cappuccino" : "Standard Cappuccino"),
+		  m_isDoublePortion(isDoublePortion)
 	{
-		return 80; 
 	}
+
+	[[nodiscard]] double GetCost() const override
+	{
+		return m_isDoublePortion
+			       ? 120
+			       : 80;
+	}
+
+private:
+	bool m_isDoublePortion;
 };
 
 // Латте
-class CLatte : public CCoffee
+class CLatte final : public CCoffee
 {
 public:
-	CLatte() 
-		:CCoffee("Latte") 
-	{}
-
-	double GetCost() const override 
+	explicit CLatte(const bool isDoublePortion = false)
+		: CCoffee(isDoublePortion ? "Double Latte" : "Standard Latte"),
+		  m_isDoublePortion(isDoublePortion)
 	{
-		return 90; 
 	}
+
+	[[nodiscard]] double GetCost() const override
+	{
+		return m_isDoublePortion
+			       ? 130
+			       : 90;
+	}
+
+private:
+	bool m_isDoublePortion;
 };
+
+enum class TeaType
+{
+	BLACK = 1,
+	OOLONG,
+	WHITE,
+	YELLOW,
+};
+
+inline std::string TeaTypeToString(const TeaType teaType)
+{
+	switch (teaType)
+	{
+		case TeaType::BLACK: return "Black";
+		case TeaType::OOLONG: return "Oolong";
+		case TeaType::WHITE: return "White";
+		case TeaType::YELLOW: return "Yellow";
+		default: return "Unknown TeaType";
+	}
+}
 
 // Чай
-class CTea : public CBeverage
+class CTea final : public CBeverage
 {
 public:
-	CTea() 
-		:CBeverage("Tea") 
-	{}
-
-	double GetCost() const override 
+	explicit CTea(const TeaType teaType)
+		: CBeverage(TeaTypeToString(teaType) + " Tea")
 	{
-		return 30; 
+	}
+
+	[[nodiscard]] double GetCost() const override
+	{
+		return 30;
 	}
 };
 
+enum class MilkshakeSize
+{
+	SMALL = 1,
+	MEDIUM,
+	LARGE,
+};
+
+inline std::string MilkshakeSizeTypeToString(const MilkshakeSize sizeType)
+{
+	switch (sizeType)
+	{
+		case MilkshakeSize::SMALL: return "Small";
+		case MilkshakeSize::MEDIUM: return "Medium";
+		case MilkshakeSize::LARGE: return "Large";
+		default: return "Unknown MilkshakeSizeType";
+	}
+}
+
+
 // Молочный коктейль
-class CMilkshake : public CBeverage
+class CMilkshake final : public CBeverage
 {
 public:
-	CMilkshake() 
-		:CBeverage("Milkshake") 
-	{}
-
-	double GetCost() const override 
-	{ 
-		return 80; 
+	explicit CMilkshake(const MilkshakeSize sizeType)
+		: CBeverage(MilkshakeSizeTypeToString(sizeType) + " Milkshake"),
+		  m_size(sizeType)
+	{
 	}
+
+	[[nodiscard]] double GetCost() const override
+	{
+		switch (m_size)
+		{
+			case MilkshakeSize::SMALL: return 50;
+			case MilkshakeSize::MEDIUM: return 60;
+			case MilkshakeSize::LARGE: return 80;
+		}
+
+		return 0;
+	}
+
+private:
+	MilkshakeSize m_size;
 };
