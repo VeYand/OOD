@@ -200,8 +200,8 @@ bool CompleteCondimentChoice(unique_ptr<IBeverage> &beverage, const int condimen
 			beverage = std::move(beverage) << MakeCondiment<CIceCubes>(
 				           2,
 				           cubeChoice == 1
-					           ? IceCubeType::Water
-					           : IceCubeType::Dry
+					           ? IceCubeType::WATER
+					           : IceCubeType::DRY
 			           );
 			return true;
 		case 4:
@@ -223,8 +223,8 @@ bool CompleteCondimentChoice(unique_ptr<IBeverage> &beverage, const int condimen
 
 			beverage = std::move(beverage) << MakeCondiment<CSyrup>(
 				           syrupChoice == 1
-					           ? SyrupType::Maple
-					           : SyrupType::Chocolate
+					           ? SyrupType::MAPLE
+					           : SyrupType::CHOCOLATE
 			           );
 			return true;
 		case 7:

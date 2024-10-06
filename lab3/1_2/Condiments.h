@@ -82,8 +82,8 @@ private:
 
 enum class IceCubeType
 {
-	Dry, // Сухой лед (для суровых сибирских мужиков)
-	Water // Обычные кубики из воды
+	DRY, // Сухой лед (для суровых сибирских мужиков)
+	WATER // Обычные кубики из воды
 };
 
 // Добавка "Кубики льда". Определяется типом и количеством кубиков, что влияет на стоимость
@@ -91,7 +91,7 @@ enum class IceCubeType
 class CIceCubes final : public CCondimentDecorator
 {
 public:
-	CIceCubes(IBeveragePtr &&beverage, unsigned quantity, IceCubeType type = IceCubeType::Water)
+	CIceCubes(IBeveragePtr &&beverage, const unsigned quantity, const IceCubeType type = IceCubeType::WATER)
 		: CCondimentDecorator(move(beverage))
 		  , m_quantity(quantity)
 		  , m_type(type)
@@ -103,12 +103,12 @@ protected:
 	{
 		// Чем больше кубиков, тем больше стоимость.
 		// Сухой лед стоит дороже
-		return (m_type == IceCubeType::Dry ? 10 : 5) * m_quantity;
+		return (m_type == IceCubeType::DRY ? 10 : 5) * m_quantity;
 	}
 
 	[[nodiscard]] std::string GetCondimentDescription() const override
 	{
-		return std::string(m_type == IceCubeType::Dry ? "Dry" : "Water")
+		return std::string(m_type == IceCubeType::DRY ? "Dry" : "Water")
 		       + " ice cubes x " + std::to_string(m_quantity);
 	}
 
@@ -120,8 +120,8 @@ private:
 // Тип сиропа
 enum class SyrupType
 {
-	Chocolate, // Шоколадный
-	Maple, // Кленовый
+	CHOCOLATE, // Шоколадный
+	MAPLE, // Кленовый
 };
 
 // Добавка "Сироп"
@@ -142,7 +142,7 @@ protected:
 
 	[[nodiscard]] std::string GetCondimentDescription() const override
 	{
-		return std::string(m_syrupType == SyrupType::Chocolate ? "Chocolate" : "Maple")
+		return std::string(m_syrupType == SyrupType::CHOCOLATE ? "Chocolate" : "Maple")
 		       + " syrup";
 	}
 
@@ -154,7 +154,7 @@ private:
 class CChocolateCrumbs final : public CCondimentDecorator
 {
 public:
-	CChocolateCrumbs(IBeveragePtr &&beverage, unsigned mass)
+	CChocolateCrumbs(IBeveragePtr &&beverage, const unsigned mass)
 		: CCondimentDecorator(move(beverage))
 		  , m_mass(mass)
 	{
@@ -179,7 +179,7 @@ private:
 class CCoconutFlakes final : public CCondimentDecorator
 {
 public:
-	CCoconutFlakes(IBeveragePtr &&beverage, unsigned mass)
+	CCoconutFlakes(IBeveragePtr &&beverage, const unsigned mass)
 		: CCondimentDecorator(move(beverage))
 		  , m_mass(mass)
 	{
@@ -271,7 +271,7 @@ inline std::string convertLiquorTypeToString(const LiquorType liqueurType)
 class CLiquor final : public CCondimentDecorator
 {
 public:
-	CLiquor(IBeveragePtr &&beverage, LiquorType type)
+	CLiquor(IBeveragePtr &&beverage, const LiquorType type)
 		: CCondimentDecorator(std::move(beverage)), m_type(type)
 	{
 	}
