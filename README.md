@@ -1,0 +1,1 @@
+UML диаграммы - https://drive.google.com/file/d/107ZQc-uY94X4llGKwvwaU6yTqDMGlrG0/view?usp=sharing
