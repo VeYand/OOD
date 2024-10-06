@@ -22,6 +22,8 @@ add_executable(${PROJECT_NAME}Test_1-2
         1_2/IBeverage.h
         1_2/Condiments.h
         1_2/Beverages.h
+        test/main.cpp
+        test/1_2/Test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
