@@ -160,6 +160,7 @@ public:
 	{
 	}
 
+protected:
 	[[nodiscard]] double GetCondimentCost() const override
 	{
 		return 2.0 * m_mass;
@@ -197,4 +198,95 @@ protected:
 
 private:
 	unsigned m_mass;
+};
+
+class CCream final : public CCondimentDecorator
+{
+public:
+	explicit CCream(IBeveragePtr &&beverage)
+		: CCondimentDecorator(move(beverage))
+	{
+	}
+
+protected:
+	[[nodiscard]] double GetCondimentCost() const override
+	{
+		return 25;
+	}
+
+	[[nodiscard]] std::string GetCondimentDescription() const override
+	{
+		return "Cream";
+	}
+};
+
+class CChocolate final : public CCondimentDecorator
+{
+public:
+	explicit CChocolate(IBeveragePtr &&beverage, const unsigned slices)
+		: CCondimentDecorator(move(beverage))
+	{
+		if (slices > MAX_SLICES)
+		{
+			throw std::invalid_argument("Invalid slices count. Max slices: " + std::to_string(MAX_SLICES));
+		}
+
+		m_slices = slices;
+	}
+
+protected:
+	[[nodiscard]] double GetCondimentCost() const override
+	{
+		return m_slices * SLICE_COST;
+	}
+
+	[[nodiscard]] std::string GetCondimentDescription() const override
+	{
+		return std::to_string(m_slices) + " chocolate slices";
+	}
+
+private:
+	const unsigned SLICE_COST = 10;
+	const unsigned MAX_SLICES = 5;
+
+	unsigned m_slices;
+};
+
+enum class LiquorType
+{
+	CHOCOLATE,
+	NUTTY
+};
+
+inline std::string convertLiquorTypeToString(const LiquorType liqueurType)
+{
+	switch (liqueurType)
+	{
+		case LiquorType::CHOCOLATE: return "Chocolate";
+		case LiquorType::NUTTY: return "Nutty";
+		default: return "Unknown LiquorType";
+	}
+}
+
+class CLiquor final : public CCondimentDecorator
+{
+public:
+	CLiquor(IBeveragePtr &&beverage, LiquorType type)
+		: CCondimentDecorator(std::move(beverage)), m_type(type)
+	{
+	}
+
+protected:
+	[[nodiscard]] double GetCondimentCost() const override
+	{
+		return 50;
+	}
+
+	[[nodiscard]] std::string GetCondimentDescription() const override
+	{
+		return convertLiquorTypeToString(m_type) + " Liquor";
+	}
+
+private:
+	LiquorType m_type;
 };

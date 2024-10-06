@@ -215,7 +215,7 @@ bool CompleteCondimentChoice(unique_ptr<IBeverage> &beverage, const int condimen
 			int syrupChoice;
 
 			cin >> syrupChoice;
-			if (syrupChoice > 2 or syrupChoice < 1)
+			if (syrupChoice < 1 || syrupChoice > 2)
 			{
 				cout << "Invalid  choice";
 				return false;
@@ -226,6 +226,41 @@ bool CompleteCondimentChoice(unique_ptr<IBeverage> &beverage, const int condimen
 					           ? SyrupType::Maple
 					           : SyrupType::Chocolate
 			           );
+			return true;
+		case 7:
+			beverage = std::move(beverage) << MakeCondiment<CCream>();
+			return true;
+		case 8:
+			int liquorChoice;
+			cout << "1 - Chocolate liquor, 2 - Nutty liquor" << endl;
+			cin >> liquorChoice;
+			if (liquorChoice < 1 || liquorChoice > 2)
+			{
+				cout << "Invalid choice";
+				return false;
+			}
+
+			beverage = std::move(beverage) << MakeCondiment<CLiquor>(
+				           liquorChoice == 1
+					           ? LiquorType::CHOCOLATE
+					           : LiquorType::NUTTY
+			           );
+			return true;
+		case 9:
+			cout << "Choose chocolate slices count (max 5)" << endl;
+			int slicesCount;
+
+			cin >> slicesCount;
+			try
+			{
+				beverage = std::move(beverage) << MakeCondiment<CChocolate>(slicesCount);
+			}
+			catch (const std::invalid_argument &e)
+			{
+				cout << e.what() << std::endl;
+				return false;
+			}
+
 			return true;
 		case 0:
 			cout << beverage->GetDescription() << ", cost: " << beverage->GetCost() << endl;
@@ -261,6 +296,9 @@ void DialogWithUser()
 			cout << "4 - Chocolate Crumbs" << endl;
 			cout << "5 - Coconut Flakes" << endl;
 			cout << "6 - Syrup" << endl;
+			cout << "7 - Cream" << endl;
+			cout << "8 - Liquor" << endl;
+			cout << "9 - Chocolate" << endl;
 			cout << "0 - Checkout" << endl;
 
 			int condimentChoice;

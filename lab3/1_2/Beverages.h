@@ -85,7 +85,7 @@ enum class TeaType
 	YELLOW,
 };
 
-inline std::string TeaTypeToString(const TeaType teaType)
+inline std::string convertTeaTypeToString(const TeaType teaType)
 {
 	switch (teaType)
 	{
@@ -102,7 +102,7 @@ class CTea final : public CBeverage
 {
 public:
 	explicit CTea(const TeaType teaType)
-		: CBeverage(TeaTypeToString(teaType) + " Tea")
+		: CBeverage(convertTeaTypeToString(teaType) + " Tea")
 	{
 	}
 
@@ -119,7 +119,7 @@ enum class MilkshakeSize
 	LARGE,
 };
 
-inline std::string MilkshakeSizeTypeToString(const MilkshakeSize sizeType)
+inline std::string convertMilkshakeSizeTypeToString(const MilkshakeSize sizeType)
 {
 	switch (sizeType)
 	{
@@ -136,7 +136,7 @@ class CMilkshake final : public CBeverage
 {
 public:
 	explicit CMilkshake(const MilkshakeSize sizeType)
-		: CBeverage(MilkshakeSizeTypeToString(sizeType) + " Milkshake"),
+		: CBeverage(convertMilkshakeSizeTypeToString(sizeType) + " Milkshake"),
 		  m_size(sizeType)
 	{
 	}
