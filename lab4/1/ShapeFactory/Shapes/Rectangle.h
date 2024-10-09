@@ -25,7 +25,7 @@ public:
 
 	[[nodiscard]] Point GetLeftTop() const
 	{
-		return m_leftTop;
+		return m_bounds.leftTop;
 	}
 
 	[[nodiscard]] double GetWidth() const
@@ -35,11 +35,10 @@ public:
 
 	[[nodiscard]] double GetHeight() const
 	{
-		return m_bounds.leftTop.y - m_bounds.rightBottom.y;
+		return m_bounds.rightBottom.y - m_bounds.leftTop.y;
 	}
 
 private:
-	Point m_leftTop;
 	Rect m_bounds;
 };
 

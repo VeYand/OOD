@@ -28,7 +28,7 @@ public:
 		canvas.MoveTo(m_firstAngle.x, m_firstAngle.y);
 		canvas.LineTo(m_secondAngle.x, m_secondAngle.y);
 		canvas.LineTo(m_thirdAngle.x, m_thirdAngle.y);
-		canvas.LineTo(m_firstAngle.x, m_thirdAngle.y);
+		canvas.LineTo(m_firstAngle.x, m_firstAngle.y);
 	}
 
 	[[nodiscard]] Point GetFirstAngle() const
