@@ -23,10 +23,10 @@ public:
 	uint8_t ReadByte() override
 	{
 		char byte;
-
-		if (!m_file.read(&byte, 1) || m_file.bad())
+		m_file.read(&byte, 1);
+		if (m_file.bad())
 		{
-			throw std::runtime_error("Failed to read file");
+			throw std::runtime_error("Failed to read file 1");
 		}
 
 		return byte;
@@ -34,9 +34,10 @@ public:
 
 	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override
 	{
-		if (!m_file.read(static_cast<char *>(dstBuffer), size) || m_file.bad())
+		m_file.read(static_cast<char *>(dstBuffer), size);
+		if (m_file.bad())
 		{
-			throw std::runtime_error("Failed to read file");
+			throw std::runtime_error("Failed to read file 2");
 		}
 		return m_file.gcount();
 	}

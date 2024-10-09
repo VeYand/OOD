@@ -3,6 +3,7 @@ project(lab3)
 
 set(CMAKE_CXX_STANDARD 20)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
+set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static")
 
 include(FetchContent)
 
@@ -40,6 +41,7 @@ add_executable(${PROJECT_NAME}_3
         3/OutputStream/Decorator/CCompressOutputStream.h
         3/OutputStream/Decorator/CEncryptOutputStream.h
         3/InputStream/Decorator/CDecryptInputStream.h
+        3/EncryptUtils/CByteSubstitutionTable.h
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
