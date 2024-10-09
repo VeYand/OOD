@@ -34,6 +34,12 @@ add_executable(${PROJECT_NAME}_3
         3/InputStream/CFileInputStream.h
         3/InputStream/CMemoryInputStream.h
         3/OutputStream/CMemoryOutputStream.h
+        3/InputStream/Decorator/CInputStreamDecorator.h
+        3/InputStream/Decorator/CDecompressInputStream.h
+        3/OutputStream/Decorator/COutputStreamDecorator.h
+        3/OutputStream/Decorator/CCompressOutputStream.h
+        3/OutputStream/Decorator/CEncryptOutputStream.h
+        3/InputStream/Decorator/CDecryptInputStream.h
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)

@@ -2,6 +2,7 @@
 #define IOUTPUTDATASTREAM_H
 #include <cstdint>
 #include <ios>
+#include <memory>
 
 class IOutputDataStream
 {
@@ -20,5 +21,7 @@ public:
 
 	virtual ~IOutputDataStream() = default;
 };
+
+using IOutputDataStreamPtr = std::unique_ptr<IOutputDataStream>;
 
 #endif //IOUTPUTDATASTREAM_H
