@@ -14,16 +14,27 @@ FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME}_1
         1/Designer/IDesigner.h
-        1/Shape/IShapeFactory.h
-        1/Shape/Shape.cpp
-        1/Shape/Shape.h
-        1/Painter/Painter.cpp
+        1/ShapeFactory/IShapeFactory.h
+        1/ShapeFactory/Shapes/Shape.h
+        1/main.cpp
         1/Designer/PictureDraft.h
-        1/Designer/CDesigner.h
+        1/Designer/Designer.h
         1/Canvas/ICanvas.h
-        1/Canvas/PNGCanvas/stb_truetype.h
         1/Canvas/PNGCanvas/stb_image_write.h
         1/Canvas/PNGCanvas/PNGCanvas.h
+        1/Painter/IPainter.h
+        1/Painter/Painter.h
+        1/ShapeFactory/Shapes/Color.h
+        1/ShapeFactory/Shapes/Ellipse.h
+        1/ShapeFactory/Shapes/Point.h
+        1/ShapeFactory/Shapes/Rectangle.h
+        1/ShapeFactory/Shapes/RegularPolygon.h
+        1/ShapeFactory/Shapes/Triangle.h
+        1/ShapeFactory/ShapeFactory.h
+        1/ShapeFactory/Shapes/Rect.h
+        1/Client.h
+        1/ShapeFactory/Shapes/ShapeType.h
+        1/ShapeFactory/Shapes/Line.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp

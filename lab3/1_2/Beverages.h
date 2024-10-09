@@ -119,6 +119,7 @@ enum class MilkshakeSize
 	LARGE,
 };
 
+// Иимена функция с заглавной
 inline std::string convertMilkshakeSizeTypeToString(const MilkshakeSize sizeType)
 {
 	switch (sizeType)
