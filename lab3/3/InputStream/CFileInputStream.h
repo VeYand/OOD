@@ -1,17 +1,56 @@
 #ifndef CFILEINPUTSTREAM_H
 #define CFILEINPUTSTREAM_H
+#include <fstream>
 #include "IInputDataStream.h"
 
 class CFileInputStream final : public IInputDataStream
 {
 public:
-	[[nodiscard]] bool IsEOF() const override;
+	explicit CFileInputStream(const std::string &fileName)
+		: m_file(fileName, std::ios::binary)
+	{
+		if (!m_file.is_open() || m_file.bad())
+		{
+			throw std::invalid_argument("Failed to open file");
+		}
+	}
 
-	uint8_t ReadByte() override;
+	[[nodiscard]] bool IsEOF() const override
+	{
+		return m_file.eof();
+	}
 
-	std::streamsize ReadBlock(void *dstBuffer, std::streamsize size) override;
+	uint8_t ReadByte() override
+	{
+		char byte;
 
-	void Close() override;
+		if (!m_file.read(&byte, 1) || m_file.bad())
+		{
+			throw std::runtime_error("Failed to read file");
+		}
+
+		return byte;
+	}
+
+	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override
+	{
+		if (!m_file.read(static_cast<char *>(dstBuffer), size) || m_file.bad())
+		{
+			throw std::runtime_error("Failed to read file");
+		}
+		return m_file.gcount();
+	}
+
+	void Close() override
+	{
+		if (m_file.is_open())
+		{
+			m_file.close();
+		}
+	}
+
+private:
+	std::ifstream m_file;
 };
 
 #endif //CFILEINPUTSTREAM_H
