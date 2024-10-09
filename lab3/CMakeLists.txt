@@ -26,6 +26,16 @@ add_executable(${PROJECT_NAME}Test_1-2
         test/1_2/Test.cpp
 )
 
+add_executable(${PROJECT_NAME}_3
+        3/OutputStream/IOutputDataStream.h
+        3/OutputStream/CFileOutputStream.h
+        3/main.cpp
+        3/InputStream/IInputDataStream.h
+        3/InputStream/CFileInputStream.h
+        3/InputStream/CMemoryInputStream.h
+        3/OutputStream/CMemoryOutputStream.h
+)
+
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
 enable_testing()
 add_test(NAME ${PROJECT_NAME}Test_1-2 COMMAND ${PROJECT_NAME}Test_1-2)
