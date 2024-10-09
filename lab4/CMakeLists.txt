@@ -20,6 +20,10 @@ add_executable(${PROJECT_NAME}_1
         1/Painter/Painter.cpp
         1/Designer/PictureDraft.h
         1/Designer/CDesigner.h
+        1/Canvas/ICanvas.h
+        1/Canvas/PNGCanvas/stb_truetype.h
+        1/Canvas/PNGCanvas/stb_image_write.h
+        1/Canvas/PNGCanvas/PNGCanvas.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
