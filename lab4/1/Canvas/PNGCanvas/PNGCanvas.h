@@ -34,11 +34,6 @@ public:
 		m_pixels.resize(width * height * 4, 255);
 	}
 
-	~PNGCanvas() override
-	{
-		SaveToFile("output.png");
-	}
-
 	void SetColor(const Color color) override
 	{
 		ColorStruct result{};
@@ -115,12 +110,12 @@ private:
 	{
 		int ix1 = static_cast<int>(std::round(x1));
 		int iy1 = static_cast<int>(std::round(y1));
-		int ix2 = static_cast<int>(std::round(x2));
-		int iy2 = static_cast<int>(std::round(y2));
+		const int ix2 = static_cast<int>(std::round(x2));
+		const int iy2 = static_cast<int>(std::round(y2));
 
 		int dx = std::abs(ix2 - ix1), dy = std::abs(iy2 - iy1);
-		int sx = (ix1 < ix2) ? 1 : -1;
-		int sy = (iy1 < iy2) ? 1 : -1;
+		const int sx = (ix1 < ix2) ? 1 : -1;
+		const int sy = (iy1 < iy2) ? 1 : -1;
 		int err = dx - dy;
 
 		while (true)

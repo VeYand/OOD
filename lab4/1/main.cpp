@@ -17,6 +17,7 @@ int main()
 	Painter painter;
 	const Client client(designer);
 	client.HandleCommand(std::cin, canvas, painter);
+	canvas.SaveToFile('output.txt');
 
 	return EXIT_SUCCESS;
 }
