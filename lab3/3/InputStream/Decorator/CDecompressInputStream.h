@@ -7,38 +7,39 @@ class CDecompressInputStream final : public CInputStreamDecorator
 {
 public:
 	explicit CDecompressInputStream(IInputDataStreamPtr &&inputStream)
-		: CInputStreamDecorator(std::move(inputStream)), m_runLength(0)
+		: CInputStreamDecorator(std::move(inputStream))
 	{
 	}
 
 	[[nodiscard]] bool IsEOF() const override
 	{
-		return m_runLength == 0 && m_inputStream->IsEOF();
+		return m_inputStream->IsEOF();
 	}
 
 	uint8_t ReadByte() override
 	{
-		if (m_runLength == 0)
-		{
-			m_currentByte = m_inputStream->ReadByte();
-			m_runLength = m_inputStream->ReadByte();
-		}
-		--m_runLength;
-		return m_currentByte;
+		uint8_t byte;
+		ReadDecompressedByte(byte);
+		return byte;
 	}
 
 	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override
 	{
-		auto *buffer = static_cast<uint8_t *>(dstBuffer);
-		for (std::streamsize i = 0; i < size; ++i)
+		const auto buffer = static_cast<uint8_t *>(dstBuffer);
+
+		std::streamsize readedBytes = 0;
+		for (;readedBytes < size; ++readedBytes)
 		{
-			if (IsEOF())
+			uint8_t byte;
+			if (m_inputStream->IsEOF() || !ReadDecompressedByte(byte))
 			{
-				return i;
+				break;
 			}
-			buffer[i] = ReadByte();
+
+			buffer[readedBytes] = byte;
 		}
-		return size;
+
+		return readedBytes;
 	}
 
 	void Close() override
@@ -48,7 +49,30 @@ public:
 
 private:
 	uint8_t m_currentByte{};
-	uint8_t m_runLength;
+	int m_currentCount = 0;
+	int m_readCount = 0;
+
+	bool ReadDecompressedByte(uint8_t& byte)
+	{
+		if (m_currentCount <= 0)
+		{
+			uint8_t buffer[2];
+			const auto readedCount = m_inputStream->ReadBlock(buffer, sizeof(buffer));
+			if (sizeof(buffer) != readedCount)
+			{
+				return false;
+			}
+
+
+			m_currentCount = static_cast<int>(buffer[0]);
+			m_currentByte = buffer[1];
+		}
+
+		m_currentCount--;
+
+		byte = m_currentByte;
+		return true;
+	}
 };
 
 #endif //CDECOMPRESSINPUTSTREAM_H

@@ -40,6 +40,11 @@ public:
 		}
 	}
 
+	~CFileOutputStream() override
+	{
+		Close();
+	}
+
 private:
 	std::ofstream m_file;
 };

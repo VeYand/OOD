@@ -21,14 +21,13 @@ auto MakeDecorator(const Args &... args)
 template<typename Component, typename Decorator>
 auto operator<<(Component &&component, const Decorator &decorate)
 {
-	return decorate(std::forward<Component>(component)); // Используем std::move для перемещения уникального указателя
+	return decorate(std::forward<Component>(component));
 }
 
 
-// Функция для вывода справки
-void ShowUsage()
+void ShowUsage(const std::string& name)
 {
-	std::cout << "Usage: transform [options] <input-file> <output-file>\n"
+	std::cout << "Usage: " << name << " [options] <input-file> <output-file>\n"
 			<< "Options:\n"
 			<< "--encrypt <key>    : Adds an encryption step using the given key\n"
 			<< "--decrypt <key>    : Adds a decryption step using the given key\n"
@@ -40,11 +39,10 @@ int main(const int argc, char *argv[])
 {
 	if (argc < 3)
 	{
-		ShowUsage();
+		ShowUsage(argv[0]);
 		return 1;
 	}
 
-	// Векторы для хранения шагов декораторов
 	std::vector<std::function<std::unique_ptr<IInputDataStream>(std::unique_ptr<IInputDataStream>)> > inputDecorators;
 	std::vector<std::function<std::unique_ptr<IOutputDataStream>(std::unique_ptr<IOutputDataStream>)> >
 			outputDecorators;
@@ -52,7 +50,6 @@ int main(const int argc, char *argv[])
 	const char *inputFile = nullptr;
 	const char *outputFile = nullptr;
 
-	// Парсинг аргументов командной строки
 	for (int i = 1; i < argc; ++i)
 	{
 		if (strcmp(argv[i], "--encrypt") == 0 && i + 1 < argc)
@@ -83,14 +80,14 @@ int main(const int argc, char *argv[])
 		}
 		else
 		{
-			ShowUsage();
+			ShowUsage(argv[0]);
 			return 1;
 		}
 	}
 
 	if (!inputFile || !outputFile)
 	{
-		ShowUsage();
+		ShowUsage(argv[0]);
 		return 1;
 	}
 
@@ -100,19 +97,25 @@ int main(const int argc, char *argv[])
 
 	for (const auto &decorator: inputDecorators)
 	{
-		inputStream = std::move(inputStream) << decorator; // Передача владения с использованием std::move
+		inputStream = std::move(inputStream) << decorator;
 	}
 
 	for (const auto &decorator: outputDecorators)
 	{
-		outputStream = std::move(outputStream) << decorator; // Передача владения с использованием std::move
+		outputStream = std::move(outputStream) << decorator;
 	}
 
-	char buffer[4096];
+	char buffer[2];
 	while (!inputStream->IsEOF())
 	{
-		size_t bytesRead = inputStream->ReadBlock(buffer, sizeof(buffer));
+		const auto bytesRead = inputStream->ReadBlock(buffer, sizeof(buffer));
 		outputStream->WriteBlock(buffer, bytesRead);
+
+		if (!inputStream->IsEOF())
+		{
+			const auto ch = inputStream->ReadByte();
+			outputStream->WriteByte(ch);
+		}
 	}
 
 	return 0;

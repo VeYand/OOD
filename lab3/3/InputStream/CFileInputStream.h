@@ -26,7 +26,7 @@ public:
 		m_file.read(&byte, 1);
 		if (m_file.bad())
 		{
-			throw std::runtime_error("Failed to read file 1");
+			throw std::runtime_error("Failed to read file");
 		}
 
 		return byte;
@@ -37,7 +37,7 @@ public:
 		m_file.read(static_cast<char *>(dstBuffer), size);
 		if (m_file.bad())
 		{
-			throw std::runtime_error("Failed to read file 2");
+			throw std::runtime_error("Failed to read file");
 		}
 		return m_file.gcount();
 	}
@@ -48,6 +48,11 @@ public:
 		{
 			m_file.close();
 		}
+	}
+
+	~CFileInputStream() override
+	{
+		Close();
 	}
 
 private:

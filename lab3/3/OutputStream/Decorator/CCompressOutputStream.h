@@ -7,56 +7,74 @@ class CCompressOutputStream final : public COutputStreamDecorator
 {
 public:
 	explicit CCompressOutputStream(IOutputDataStreamPtr &&outputStream)
-		: COutputStreamDecorator(std::move(outputStream)), m_prevByte(0), m_runLength(0)
+		: COutputStreamDecorator(std::move(outputStream))
 	{
 	}
 
 	void WriteByte(const uint8_t data) override
 	{
-		if (m_runLength == 0)
+		if (data == m_currentByte)
 		{
-			m_prevByte = data;
-			m_runLength = 1;
-		}
-		else if (m_prevByte == data && m_runLength < 255)
-		{
-			++m_runLength;
+			m_currentCount++;
 		}
 		else
 		{
-			FlushRun();
-			m_prevByte = data;
-			m_runLength = 1;
+			Flush();
+			m_currentCount = 1;
+			m_currentByte = data;
 		}
 	}
 
 	void WriteBlock(const void *srcData, const std::streamsize size) override
 	{
-		const uint8_t *data = static_cast<const uint8_t *>(srcData);
+		if (size == 0) { return; }
+		const auto data = static_cast<const uint8_t *>(srcData);
+
 		for (std::streamsize i = 0; i < size; ++i)
 		{
-			WriteByte(data[i]);
+			uint8_t currentByte = data[i];
+
+			if (currentByte == m_currentByte)
+			{
+				m_currentCount++;
+			}
+			else
+			{
+				Flush();
+				m_currentCount = 1;
+				m_currentByte = currentByte;
+			}
 		}
 	}
 
 	void Close() override
 	{
-		if (m_runLength > 0)
-		{
-			FlushRun();
-		}
+		Flush();
 		m_outputStream->Close();
 	}
 
-private:
-	void FlushRun()
+	~CCompressOutputStream() override
 	{
-		m_outputStream->WriteByte(m_prevByte);
-		m_outputStream->WriteByte(m_runLength);
+		Close();
 	}
 
-	uint8_t m_prevByte;
-	uint8_t m_runLength;
+private:
+	uint8_t m_currentByte{};
+	int m_currentCount = 0;
+
+	void Flush()
+	{
+		WriteRunLength(m_currentByte, m_currentCount);
+		m_currentByte = {};
+		m_currentCount = 0;
+	}
+
+	void WriteRunLength(const uint8_t byte, const int count) const
+	{
+		if (count <= 0) { return; }
+		m_outputStream->WriteByte(static_cast<uint8_t>(count));
+		m_outputStream->WriteByte(byte);
+	}
 };
 
 #endif //CCOMPRESSOUTPUTSTREAM_H
