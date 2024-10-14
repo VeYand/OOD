@@ -19,13 +19,6 @@ add_executable(${PROJECT_NAME}_1-2
         1_2/Condiments.h
         1_2/Beverages.h
 )
-add_executable(${PROJECT_NAME}Test_1-2
-        1_2/IBeverage.h
-        1_2/Condiments.h
-        1_2/Beverages.h
-        test/main.cpp
-        test/1_2/Test.cpp
-)
 
 add_executable(${PROJECT_NAME}_3
         3/OutputStream/IOutputDataStream.h
@@ -44,7 +37,25 @@ add_executable(${PROJECT_NAME}_3
         3/EncryptUtils/CByteSubstitutionTable.h
 )
 
-target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
+add_executable(${PROJECT_NAME}Test_3
+        3/OutputStream/IOutputDataStream.h
+        3/OutputStream/CFileOutputStream.h
+        3/InputStream/IInputDataStream.h
+        3/InputStream/CFileInputStream.h
+        3/InputStream/CMemoryInputStream.h
+        3/OutputStream/CMemoryOutputStream.h
+        3/InputStream/Decorator/CInputStreamDecorator.h
+        3/InputStream/Decorator/CDecompressInputStream.h
+        3/OutputStream/Decorator/COutputStreamDecorator.h
+        3/OutputStream/Decorator/CCompressOutputStream.h
+        3/OutputStream/Decorator/CEncryptOutputStream.h
+        3/InputStream/Decorator/CDecryptInputStream.h
+        3/EncryptUtils/CByteSubstitutionTable.h
+        test/main.cpp
+        test/3/Test.cpp
+)
+
+target_link_libraries(${PROJECT_NAME}Test_3 gtest_main gmock)
 enable_testing()
-add_test(NAME ${PROJECT_NAME}Test_1-2 COMMAND ${PROJECT_NAME}Test_1-2)
+add_test(NAME ${PROJECT_NAME}Test_3 COMMAND ${PROJECT_NAME}Test_3)
 

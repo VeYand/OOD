@@ -11,24 +11,26 @@ public:
 	{
 		if (!m_file.is_open() || m_file.bad())
 		{
-			throw std::invalid_argument("Failed to open file");
+			throw std::ios_base::failure("Failed to open file");
 		}
 	}
 
 	void WriteByte(const uint8_t data) override
 	{
+		AssertFileOpened();
 		const auto byte = static_cast<char>(data);
 		if (!m_file.write(&byte, 1) || m_file.bad())
 		{
-			throw std::runtime_error("Failed to write byte");
+			throw std::ios_base::failure("Failed to write byte");
 		}
 	}
 
 	void WriteBlock(const void *srcData, const std::streamsize size) override
 	{
+		AssertFileOpened();
 		if (!m_file.write(static_cast<const char *>(srcData), size) || m_file.bad())
 		{
-			throw std::runtime_error("Failed to write block");
+			throw std::ios_base::failure("Failed to write block");
 		}
 	}
 
@@ -47,6 +49,14 @@ public:
 
 private:
 	std::ofstream m_file;
+
+	void AssertFileOpened() const
+	{
+		if (m_file.is_open())
+		{
+			throw std::logic_error("Cannot operate on closed file");
+		}
+	}
 };
 
 #endif //CFILEOUTPUTSTREAM_H

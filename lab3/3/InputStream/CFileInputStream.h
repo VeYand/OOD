@@ -11,22 +11,24 @@ public:
 	{
 		if (!m_file.is_open() || m_file.bad())
 		{
-			throw std::invalid_argument("Failed to open file");
+			throw std::ios_base::failure("Failed to open file");
 		}
 	}
 
 	[[nodiscard]] bool IsEOF() override
 	{
+		AssertFileOpened();
 		return m_file.peek() == EOF;
 	}
 
 	uint8_t ReadByte() override
 	{
+		AssertFileOpened();
 		char byte;
 		m_file.read(&byte, 1);
 		if (m_file.bad())
 		{
-			throw std::runtime_error("Failed to read file");
+			throw std::ios_base::failure("Failed to read file");
 		}
 
 		return byte;
@@ -34,10 +36,11 @@ public:
 
 	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override
 	{
+		AssertFileOpened();
 		m_file.read(static_cast<char *>(dstBuffer), size);
 		if (m_file.bad())
 		{
-			throw std::runtime_error("Failed to read file");
+			throw std::ios_base::failure("Failed to read file");
 		}
 		return m_file.gcount();
 	}
@@ -57,6 +60,14 @@ public:
 
 private:
 	std::ifstream m_file;
+
+	void AssertFileOpened() const
+	{
+		if (m_file.is_open())
+		{
+			throw std::logic_error("Cannot operate on closed file");
+		}
+	}
 };
 
 #endif //CFILEINPUTSTREAM_H

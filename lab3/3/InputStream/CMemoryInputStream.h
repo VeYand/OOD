@@ -21,9 +21,10 @@ public:
 
 	uint8_t ReadByte() override
 	{
+		AssertFileOpened();
 		if (IsEOF())
 		{
-			throw std::runtime_error("End of stream");
+			throw std::ios_base::failure("End of stream");
 		}
 
 		return m_data[m_position++];
@@ -31,9 +32,10 @@ public:
 
 	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override
 	{
+		AssertFileOpened();
 		if (IsEOF())
 		{
-			throw std::runtime_error("End of stream");
+			throw std::ios_base::failure("End of stream");
 		}
 
 		const std::streamsize bytesToRead = std::min(size, static_cast<std::streamsize>(m_data.size() - m_position));
@@ -46,11 +48,21 @@ public:
 	{
 		m_data.clear();
 		m_position = 0;
+		m_closed = true;
 	}
 
 private:
+	bool m_closed = false;
 	std::vector<uint8_t> m_data;
 	std::size_t m_position;
+
+	void AssertFileOpened() const
+	{
+		if (m_closed)
+		{
+			throw std::logic_error("Cannot operate on closed stream");
+		}
+	}
 };
 
 #endif //CMEMORYINPUTSTREAM_H
