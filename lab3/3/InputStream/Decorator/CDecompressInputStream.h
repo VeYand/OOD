@@ -31,7 +31,7 @@ public:
 		for (;readedBytes < size; ++readedBytes)
 		{
 			uint8_t byte;
-			if (m_inputStream->IsEOF() || !ReadDecompressedByte(byte))
+			if (m_currentCount <= 0 && m_inputStream->IsEOF() || !ReadDecompressedByte(byte))
 			{
 				break;
 			}

@@ -17,7 +17,7 @@ public:
 
 	void WriteByte(const uint8_t data) override
 	{
-		AssertFileOpened();
+		AssertStreamOpened();
 		const auto byte = static_cast<char>(data);
 		if (!m_file.write(&byte, 1) || m_file.bad())
 		{
@@ -27,7 +27,7 @@ public:
 
 	void WriteBlock(const void *srcData, const std::streamsize size) override
 	{
-		AssertFileOpened();
+		AssertStreamOpened();
 		if (!m_file.write(static_cast<const char *>(srcData), size) || m_file.bad())
 		{
 			throw std::ios_base::failure("Failed to write block");
@@ -50,7 +50,7 @@ public:
 private:
 	std::ofstream m_file;
 
-	void AssertFileOpened() const
+	void AssertStreamOpened() const
 	{
 		if (m_file.is_open())
 		{

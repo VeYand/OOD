@@ -17,13 +17,13 @@ public:
 
 	[[nodiscard]] bool IsEOF() override
 	{
-		AssertFileOpened();
+		AssertStreamOpened();
 		return m_file.peek() == EOF;
 	}
 
 	uint8_t ReadByte() override
 	{
-		AssertFileOpened();
+		AssertStreamOpened();
 		char byte;
 		m_file.read(&byte, 1);
 		if (m_file.bad())
@@ -36,7 +36,7 @@ public:
 
 	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override
 	{
-		AssertFileOpened();
+		AssertStreamOpened();
 		m_file.read(static_cast<char *>(dstBuffer), size);
 		if (m_file.bad())
 		{
@@ -61,7 +61,7 @@ public:
 private:
 	std::ifstream m_file;
 
-	void AssertFileOpened() const
+	void AssertStreamOpened() const
 	{
 		if (m_file.is_open())
 		{
