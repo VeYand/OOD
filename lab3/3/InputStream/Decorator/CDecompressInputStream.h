@@ -11,7 +11,7 @@ public:
 	{
 	}
 
-	[[nodiscard]] bool IsEOF() const override
+	[[nodiscard]] bool IsEOF() override
 	{
 		return m_inputStream->IsEOF();
 	}
@@ -62,7 +62,6 @@ private:
 			{
 				return false;
 			}
-
 
 			m_currentCount = static_cast<int>(buffer[0]);
 			m_currentByte = buffer[1];

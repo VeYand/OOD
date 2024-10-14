@@ -118,5 +118,18 @@ int main(const int argc, char *argv[])
 		}
 	}
 
+	// while (!inputStream->IsEOF())
+	// {
+	// 	const auto ch = inputStream->ReadByte();
+	// 	outputStream->WriteByte(ch);
+	// }
+
+	// char buffer[2];
+	// while (!inputStream->IsEOF())
+	// {
+	// 	const auto bytesRead = inputStream->ReadBlock(buffer, sizeof(buffer));
+	// 	outputStream->WriteBlock(buffer, bytesRead);
+	// }
+
 	return 0;
 }

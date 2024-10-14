@@ -13,7 +13,7 @@ public:
 	{
 	}
 
-	[[nodiscard]] bool IsEOF() const override
+	[[nodiscard]] bool IsEOF() override
 	{
 		return m_inputStream->IsEOF();
 	}

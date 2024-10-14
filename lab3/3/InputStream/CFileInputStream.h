@@ -15,9 +15,9 @@ public:
 		}
 	}
 
-	[[nodiscard]] bool IsEOF() const override
+	[[nodiscard]] bool IsEOF() override
 	{
-		return m_file.eof();
+		return m_file.peek() == EOF;
 	}
 
 	uint8_t ReadByte() override
