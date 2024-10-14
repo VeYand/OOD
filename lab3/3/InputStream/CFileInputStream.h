@@ -63,7 +63,7 @@ private:
 
 	void AssertStreamOpened() const
 	{
-		if (m_file.is_open())
+		if (!m_file.is_open())
 		{
 			throw std::logic_error("Cannot operate on closed file");
 		}
