@@ -13,7 +13,7 @@ public:
 
 	void WriteByte(const uint8_t data) override
 	{
-		if (data == m_currentByte)
+		if (data == m_currentByte && m_currentCount < 255)
 		{
 			m_currentCount++;
 		}
@@ -64,14 +64,16 @@ private:
 
 	void Flush()
 	{
-		WriteRunLength(m_currentByte, m_currentCount);
-		m_currentByte = {};
-		m_currentCount = 0;
+		if (m_currentCount > 0)
+		{
+			WriteRunLength(m_currentByte, m_currentCount);
+			m_currentByte = 0;
+			m_currentCount = 0;
+		}
 	}
 
 	void WriteRunLength(const uint8_t byte, const int count) const
 	{
-		if (count <= 0) { return; }
 		m_outputStream->WriteByte(static_cast<uint8_t>(count));
 		m_outputStream->WriteByte(byte);
 	}

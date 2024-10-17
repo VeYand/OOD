@@ -25,7 +25,7 @@ public:
 	{
 		AssertStreamOpened();
 		char byte;
-		m_file.read(&byte, 1);
+		m_file.read(&byte, sizeof(byte));
 		if (m_file.bad())
 		{
 			throw std::ios_base::failure("Failed to read file");
