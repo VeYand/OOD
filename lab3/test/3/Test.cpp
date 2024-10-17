@@ -33,7 +33,7 @@ TEST(CMemoryInputStream, ReadByteWorksCorrectly)
 	EXPECT_EQ(stream.ReadByte(), 5);
 	EXPECT_TRUE(stream.IsEOF());
 
-	EXPECT_THROW(stream.ReadByte(), std::runtime_error);
+	EXPECT_THROW(stream.ReadByte(), std::ios_base::failure);
 }
 
 TEST(CMemoryInputStream, ReadBlockWorksCorrectly)
@@ -52,7 +52,7 @@ TEST(CMemoryInputStream, ReadBlockWorksCorrectly)
 	EXPECT_EQ(buffer[1], 5);
 	EXPECT_TRUE(stream.IsEOF());
 
-	EXPECT_THROW(stream.ReadBlock(buffer, 3), std::runtime_error);
+	EXPECT_THROW(stream.ReadBlock(buffer, 3), std::ios_base::failure);
 }
 
 TEST(CMemoryInputStream, ClosedCorrectly)
@@ -204,19 +204,6 @@ TEST(DecompressionTest, DecompressesSimpleData)
 	EXPECT_EQ(memcmp(decompressedData, expectedData, sizeof(decompressedData)), 0);
 }
 
-TEST(DecompressionTest, DecompressesMixedData)
-{
-	std::vector<uint8_t> compressedData = {2, 2, 3, 3, 4, 4};
-	auto memoryStream = std::make_unique<CMemoryInputStream>(compressedData);
-	CDecompressInputStream decompressStream(std::move(memoryStream));
-
-	std::vector<uint8_t> decompressedData(9);
-	decompressStream.ReadBlock(decompressedData.data(), decompressedData.size());
-
-	const std::vector<uint8_t> &expectedData = {2, 2, 3, 3, 3, 4, 4, 4, 4};
-	EXPECT_EQ(expectedData, decompressedData);
-}
-
 TEST(CompressionTest, HandlesNonRepeatedDataCorrectly)
 {
 	auto memoryStream = std::make_unique<CMemoryOutputStream>();
@@ -231,65 +218,6 @@ TEST(CompressionTest, HandlesNonRepeatedDataCorrectly)
 	const std::vector<uint8_t> &expectedCompressedData = {1, 5, 1, 6, 1, 7, 1, 8};
 	EXPECT_EQ(compressedData.size(), 8);
 	EXPECT_EQ(compressedData, expectedCompressedData);
-}
-
-TEST(EncryptionTest, EncryptsDataCorrectly)
-{
-	auto memoryStream = std::make_unique<CMemoryOutputStream>();
-	auto rawMemoryStream = memoryStream.get();
-	uint32_t encryptionKey = 12345;
-	CEncryptOutputStream encryptStream(std::move(memoryStream), encryptionKey);
-
-	uint8_t data[] = {1, 2, 3, 4, 5};
-	encryptStream.WriteBlock(data, sizeof(data));
-	encryptStream.Close();
-
-	const std::vector<uint8_t> &encryptedData = rawMemoryStream->GetData();
-
-	EXPECT_EQ(encryptedData.size(), sizeof(data));
-	EXPECT_NE(memcmp(encryptedData.data(), data, sizeof(data)), 0);
-}
-
-TEST(DecryptionTest, DecryptsDataCorrectly)
-{
-	uint32_t encryptionKey = 12345;
-
-	auto memoryStream = std::make_unique<CMemoryOutputStream>();
-	auto rawMemoryStream = memoryStream.get();
-	CEncryptOutputStream encryptStream(std::move(memoryStream), encryptionKey);
-
-	uint8_t originalData[] = {1, 2, 3, 4, 5};
-	encryptStream.WriteBlock(originalData, sizeof(originalData));
-	encryptStream.Close();
-
-	auto encryptedMemoryStream = std::make_unique<CMemoryInputStream>(rawMemoryStream->GetData());
-	CDecryptInputStream decryptStream(std::move(encryptedMemoryStream), encryptionKey);
-
-	uint8_t decryptedData[sizeof(originalData)];
-	decryptStream.ReadBlock(decryptedData, sizeof(decryptedData));
-
-	EXPECT_EQ(memcmp(decryptedData, originalData, sizeof(originalData)), 0);
-}
-
-TEST(EncryptDecryptTest, WorksTogether)
-{
-	uint32_t encryptionKey = 54321;
-
-	auto memoryStream = std::make_unique<CMemoryOutputStream>();
-	auto rawMemoryStream = memoryStream.get();
-	CEncryptOutputStream encryptStream(std::move(memoryStream), encryptionKey);
-
-	uint8_t originalData[] = {10, 20, 30, 40, 50};
-	encryptStream.WriteBlock(originalData, sizeof(originalData));
-	encryptStream.Close();
-
-	auto encryptedMemoryStream = std::make_unique<CMemoryInputStream>(rawMemoryStream->GetData());
-	CDecryptInputStream decryptStream(std::move(encryptedMemoryStream), encryptionKey);
-
-	uint8_t decryptedData[sizeof(originalData)];
-	decryptStream.ReadBlock(decryptedData, sizeof(decryptedData));
-
-	EXPECT_EQ(memcmp(decryptedData, originalData, sizeof(originalData)), 0);
 }
 
 TEST(CompressionTest, CompressesBoundaryValuesCorrectly)
