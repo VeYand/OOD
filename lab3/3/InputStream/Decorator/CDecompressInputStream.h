@@ -11,16 +11,9 @@ public:
 	{
 	}
 
-	[[nodiscard]] bool IsEOF() override
+	bool ReadByte(uint8_t& byte) override
 	{
-		return m_inputStream->IsEOF();
-	}
-
-	uint8_t ReadByte() override
-	{
-		uint8_t byte;
-		ReadDecompressedByte(byte);
-		return byte;
+		return ReadDecompressedByte(byte);
 	}
 
 	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override
@@ -40,11 +33,6 @@ public:
 		}
 
 		return readedBytes;
-	}
-
-	void Close() override
-	{
-		m_inputStream->Close();
 	}
 
 private:

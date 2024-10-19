@@ -15,23 +15,30 @@ public:
 		}
 	}
 
-	[[nodiscard]] bool IsEOF() override
+	[[nodiscard]] bool IsEOF() const override
 	{
 		AssertStreamOpened();
-		return m_file.peek() == EOF;
+		return m_file.eof();
 	}
 
-	uint8_t ReadByte() override
+	bool ReadByte(uint8_t& byte) override
 	{
 		AssertStreamOpened();
-		char byte;
-		m_file.read(&byte, sizeof(byte));
+		char byte2;
+		m_file.read(&byte2, sizeof(byte));
+
+		if (IsEOF())
+		{
+			return false;
+		}
+
 		if (m_file.bad())
 		{
 			throw std::ios_base::failure("Failed to read file");
 		}
 
-		return byte;
+		byte = byte2;
+		return true;
 	}
 
 	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override

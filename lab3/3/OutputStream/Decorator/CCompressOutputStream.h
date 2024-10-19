@@ -13,7 +13,7 @@ public:
 
 	void WriteByte(const uint8_t data) override
 	{
-		if (data == m_currentByte && m_currentCount < 255)
+		if (data == m_currentByte && m_currentCount < std::numeric_limits<uint8_t>::max())
 		{
 			m_currentCount++;
 		}
@@ -34,7 +34,7 @@ public:
 		{
 			uint8_t currentByte = data[i];
 
-			if (currentByte == m_currentByte)
+			if (currentByte == m_currentByte && m_currentCount < std::numeric_limits<uint8_t>::max())
 			{
 				m_currentCount++;
 			}

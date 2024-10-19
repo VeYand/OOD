@@ -9,26 +9,26 @@
 class CMemoryInputStream final : public IInputDataStream
 {
 public:
-	explicit CMemoryInputStream(const std::vector<uint8_t>& data)
+	explicit CMemoryInputStream(const std::vector<uint8_t> &data)
 		: m_data(data), m_position(0)
 	{
 	}
 
-	[[nodiscard]] bool IsEOF() override
+	[[nodiscard]] bool IsEOF() const override
 	{
 		AssertStreamOpened();
 		return m_position >= m_data.size();
 	}
 
-	uint8_t ReadByte() override
+	bool ReadByte(uint8_t &byte) override
 	{
 		AssertStreamOpened();
 		if (IsEOF())
 		{
 			throw std::ios_base::failure("End of stream");
 		}
-
-		return m_data[m_position++];
+		byte = m_data[m_position++];
+		return true;
 	}
 
 	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override

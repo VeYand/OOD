@@ -108,13 +108,16 @@ int main(const int argc, char *argv[])
 	char buffer[2];
 	while (!inputStream->IsEOF())
 	{
-		const auto bytesRead = inputStream->ReadBlock(buffer, sizeof(buffer));
-		outputStream->WriteBlock(buffer, bytesRead);
+		// const auto bytesRead = inputStream->ReadBlock(buffer, sizeof(buffer));
+		// outputStream->WriteBlock(buffer, bytesRead);
 
 		if (!inputStream->IsEOF())
 		{
-			const auto ch = inputStream->ReadByte();
-			outputStream->WriteByte(ch);
+			uint8_t byte;
+			if (inputStream->ReadByte(byte))
+			{
+				outputStream->WriteByte(byte);
+			}
 		}
 	}
 

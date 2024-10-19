@@ -9,6 +9,16 @@ protected:
 	{
 	}
 
+	[[nodiscard]] bool IsEOF() const override
+	{
+		return m_inputStream->IsEOF();
+	}
+
+	void Close() override
+	{
+		m_inputStream->Close();
+	}
+
 	IInputDataStreamPtr m_inputStream;
 };
 

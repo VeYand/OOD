@@ -21,19 +21,27 @@ auto operator<<(Component &&component, const Decorator &decorate)
 	return decorate(std::forward<Component>(component));
 }
 
+void AssertRead(IInputDataStream& stream, const uint8_t exprectedByte)
+{
+	uint8_t byte;
+	stream.ReadByte(byte);
+	EXPECT_EQ(byte, exprectedByte);
+}
+
 TEST(CMemoryInputStream, ReadByteWorksCorrectly)
 {
 	const std::vector<uint8_t> data = {1, 2, 3, 4, 5};
 	CMemoryInputStream stream(data);
 
-	EXPECT_EQ(stream.ReadByte(), 1);
-	EXPECT_EQ(stream.ReadByte(), 2);
-	EXPECT_EQ(stream.ReadByte(), 3);
-	EXPECT_EQ(stream.ReadByte(), 4);
-	EXPECT_EQ(stream.ReadByte(), 5);
+	AssertRead(stream, 1);
+	AssertRead(stream, 2);
+	AssertRead(stream, 3);
+	AssertRead(stream, 4);
+	AssertRead(stream, 5);
 	EXPECT_TRUE(stream.IsEOF());
 
-	EXPECT_THROW(stream.ReadByte(), std::ios_base::failure);
+	uint8_t byte;
+	EXPECT_THROW(stream.ReadByte(byte), std::ios_base::failure);
 }
 
 TEST(CMemoryInputStream, ReadBlockWorksCorrectly)
@@ -62,7 +70,8 @@ TEST(CMemoryInputStream, ClosedCorrectly)
 
 	stream.Close();
 
-	EXPECT_THROW(stream.ReadByte(), std::logic_error);
+	uint8_t byte;
+	EXPECT_THROW(stream.ReadByte(byte), std::logic_error);
 	EXPECT_THROW(stream.ReadBlock(nullptr, 1), std::logic_error);
 	EXPECT_THROW(stream.IsEOF(), std::logic_error);
 }
@@ -117,9 +126,9 @@ TEST(CompressStream, CompressByteCorrectly)
 	std::unique_ptr<IInputDataStream> inputStream = std::make_unique<CMemoryInputStream>(rawMemoryStream->GetData());
 	inputStream = std::move(inputStream) << MakeDecorator<CDecompressInputStream>();
 
-	EXPECT_EQ(inputStream->ReadByte(), 10);
-	EXPECT_EQ(inputStream->ReadByte(), 10);
-	EXPECT_EQ(inputStream->ReadByte(), 20);
+	AssertRead(*inputStream, 10);
+	AssertRead(*inputStream, 10);
+	AssertRead(*inputStream, 20);
 }
 
 TEST(CompressStream, CompressBlockCorrectly)
@@ -152,8 +161,8 @@ TEST(EncryptStream, EncryptByteCorrectly)
 	auto decryptedStream = MakeDecorator<CDecryptInputStream>(key)(
 		std::make_unique<CMemoryInputStream>(rawMemoryStream->GetData()));
 
-	EXPECT_EQ(decryptedStream->ReadByte(), 42);
-	EXPECT_EQ(decryptedStream->ReadByte(), 43);
+	AssertRead(*decryptedStream, 42);
+	AssertRead(*decryptedStream, 43);
 }
 
 TEST(EncryptStream, EncryptBlockCorrectly)
@@ -286,3 +295,25 @@ TEST(DecryptionTest, DecryptsBoundaryValuesCorrectly)
 
 	EXPECT_EQ(memcmp(decryptedData, originalData, sizeof(originalData)), 0);
 }
+
+TEST(CompressStream, CompressOferflowByteCountCorrectly)
+{
+	auto memoryStream = std::make_unique<CMemoryOutputStream>();
+	auto rawMemoryStream = memoryStream.get();
+	CCompressOutputStream compressedStream(std::move(memoryStream));
+
+	for (int i = 0; i < 300; ++i)
+	{
+		compressedStream.WriteByte(10);
+	}
+	compressedStream.Close();
+
+	std::unique_ptr<IInputDataStream> inputStream = std::make_unique<CMemoryInputStream>(rawMemoryStream->GetData());
+	inputStream = std::move(inputStream) << MakeDecorator<CDecompressInputStream>();
+
+	for (int i = 0; i < 300; ++i)
+	{
+		AssertRead(*inputStream, 10);
+	}
+}
+

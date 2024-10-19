@@ -13,14 +13,11 @@ public:
 	{
 	}
 
-	[[nodiscard]] bool IsEOF() override
+	bool ReadByte(uint8_t& byte) override
 	{
-		return m_inputStream->IsEOF();
-	}
-
-	uint8_t ReadByte() override
-	{
-		return m_substitutionTable.Decrypt(m_inputStream->ReadByte());
+		m_inputStream->ReadByte(byte);
+		byte = m_substitutionTable.Decrypt(byte);
+		return true;
 	}
 
 	std::streamsize ReadBlock(void *dstBuffer, const std::streamsize size) override
@@ -32,11 +29,6 @@ public:
 			data[i] = m_substitutionTable.Decrypt(data[i]);
 		}
 		return bytesRead;
-	}
-
-	void Close() override
-	{
-		m_inputStream->Close();
 	}
 
 private:
