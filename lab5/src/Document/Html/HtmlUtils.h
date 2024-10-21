@@ -33,8 +33,8 @@ public:
 
 			if (image != nullptr)
 			{
-				output << "<img src=\"" << HtmlEncode(image->GetPath())
-						<< "\" width=" << image->GetWidth()
+				output << "<img src=\"" << HtmlEncode(image->GetPath()) << "\" "
+						<< "width=" << image->GetWidth() << " "
 						<< "height=" << image->GetHeight()
 						<< " />";
 			}
