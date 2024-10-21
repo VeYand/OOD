@@ -8,6 +8,7 @@
 #include "Command/InsertImageCommand.h"
 #include "Command/InsertParagraphCommand.h"
 #include "Command/ReplaceTextCommand.h"
+#include "Command/ResizeImageCommand.h"
 #include "Command/SetTitleCommand.h"
 #include "Html/HtmlUtils.h"
 
@@ -32,9 +33,8 @@ public:
 
 	void ResizeImage(size_t position, unsigned width, unsigned height) override
 	{
-
+		m_history.AddAndExecuteCommand(std::make_unique<ResizeImageCommand>(position, width, height, m_items));
 	}
-
 
 	[[nodiscard]] size_t GetItemsCount() const override
 	{
@@ -100,7 +100,7 @@ public:
 	{
 		std::vector<CConstDocumentItem> constItems{};
 
-		for (const auto& item: m_items)
+		for (const auto &item: m_items)
 		{
 			constItems.emplace_back(static_cast<CConstDocumentItem>(item));
 		}

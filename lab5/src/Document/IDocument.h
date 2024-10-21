@@ -11,7 +11,7 @@ public:
 	// Вставляет параграф текста в указанную позицию (сдвигая последующие элементы)
 	// Если параметр position не указан, вставка происходит в конец документа
 	virtual void InsertParagraph(const std::string &text,
-	                             std::optional<size_t> position = std::nullopt) = 0;
+	                             std::optional<size_t> position) = 0;
 
 	virtual void ReplaceText(const std::string &text, size_t position) = 0;
 
@@ -20,7 +20,7 @@ public:
 	// При вставке изображение должно копироваться в подкаталог images
 	// под автоматически сгенерированным именем
 	virtual void InsertImage(const Path &path, unsigned width, unsigned height,
-	                         std::optional<size_t> position = std::nullopt) = 0;
+	                         std::optional<size_t> position) = 0;
 
 	virtual void ResizeImage(size_t position, unsigned width, unsigned height) = 0;
 

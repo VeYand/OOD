@@ -28,11 +28,14 @@ public:
 
 		auto item = m_items.at(m_position);
 		const auto paragraph = item.GetParagraph();
-		if (paragraph != nullptr)
+
+		if (paragraph == nullptr)
 		{
-			m_previousText = paragraph->GetText();
-			paragraph->SetText(m_newText);
+			throw std::invalid_argument("This item is not a text");
 		}
+
+		m_previousText = paragraph->GetText();
+		paragraph->SetText(m_newText);
 	}
 
 	void DoUnexecute() override
@@ -45,10 +48,13 @@ public:
 		auto item = m_items.at(m_position);
 		const auto paragraph = item.GetParagraph();
 
-		if (paragraph != nullptr)
+		if (paragraph == nullptr)
 		{
-			paragraph->SetText(m_previousText);
+			throw std::invalid_argument("This item is not a text");
 		}
+
+		m_newText = paragraph->GetText();
+		paragraph->SetText(m_previousText);
 	}
 
 private:

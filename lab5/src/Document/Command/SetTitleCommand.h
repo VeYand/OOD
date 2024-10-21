@@ -4,7 +4,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "../CDocumentItem.h"
 #include "AbstractCommand.h"
 
 class SetTitleCommand final : public AbstractCommand

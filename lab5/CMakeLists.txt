@@ -35,6 +35,7 @@ add_executable(${PROJECT_NAME}
         src/Document/Command/SetTitleCommand.h
         src/Document/Command/ReplaceTextCommand.h
         src/Document/Html/HtmlUtils.h
+        src/Document/Command/ResizeImageCommand.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
