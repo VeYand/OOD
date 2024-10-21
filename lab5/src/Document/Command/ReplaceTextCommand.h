@@ -57,6 +57,10 @@ public:
 		paragraph->SetText(m_previousText);
 	}
 
+	void Destroy() override
+	{
+	}
+
 private:
 	std::string m_previousText{};
 	std::string m_newText;

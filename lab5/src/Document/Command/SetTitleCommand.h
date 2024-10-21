@@ -27,6 +27,10 @@ public:
 		std::swap(m_newTitle, m_currentTitle);
 	}
 
+	void Destroy() override
+	{
+	}
+
 private:
 	std::string &m_currentTitle;
 	std::string m_newTitle;

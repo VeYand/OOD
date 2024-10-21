@@ -61,6 +61,10 @@ public:
 		image->Resize(m_previousWidth, m_previousHeight);
 	}
 
+	void Destroy() override
+	{
+	}
+
 private:
 	unsigned m_previousWidth{};
 	unsigned m_newWidth;

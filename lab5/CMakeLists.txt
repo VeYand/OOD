@@ -23,7 +23,6 @@ add_executable(${PROJECT_NAME}
         src/Document/Command/ICommand.h
         src/Document/Command/CompoundCommand.h
         src/Document/Command/AbstractCommand.h
-        src/Document/Command/ConcreteCommand.h
         src/Document/CDocument.h
         src/Document/Image/СImage.h
         src/Document/Path.h
@@ -36,6 +35,7 @@ add_executable(${PROJECT_NAME}
         src/Document/Command/ReplaceTextCommand.h
         src/Document/Html/HtmlUtils.h
         src/Document/Command/ResizeImageCommand.h
+        src/Document/Utils/FileUtils.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp

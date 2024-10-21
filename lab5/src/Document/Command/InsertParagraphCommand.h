@@ -64,6 +64,10 @@ public:
 		}
 	}
 
+	void Destroy() override
+	{
+	}
+
 private:
 	std::string m_text;
 	std::optional<size_t> m_position;

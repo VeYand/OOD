@@ -1,7 +1,6 @@
 #ifndef DELETEITEMCOMMAND_H
 #define DELETEITEMCOMMAND_H
 
-#include <string>
 #include <vector>
 #include "../CDocumentItem.h"
 #include "AbstractCommand.h"
@@ -41,6 +40,10 @@ public:
 			*m_currentItem);
 
 		m_currentItem = nullptr;
+	}
+
+	void Destroy() override
+	{
 	}
 
 private:

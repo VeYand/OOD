@@ -7,9 +7,17 @@
 class CompoundCommand final : public ICommand
 {
 public:
-	void Execute() override;
+	void Execute() override
+	{
+	}
 
-	void Unexecute() override;
+	void Unexecute() override
+	{
+	}
+
+	void Destroy() override
+	{
+	}
 
 private:
 	std::vector<ICommand> m_commands;
