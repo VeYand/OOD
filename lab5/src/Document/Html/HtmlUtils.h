@@ -17,7 +17,7 @@ public:
 			throw std::runtime_error("Unable to open output file");
 		}
 
-		output << "<!DOCTYPE html>\n<html>\n<head>\n";
+		output << "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n";
 		output << "<title>" << HtmlEncode(title) << "</title>\n";
 		output << "</head>\n<body>\n";
 

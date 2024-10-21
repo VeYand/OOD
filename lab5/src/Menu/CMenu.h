@@ -37,7 +37,7 @@ public:
 		std::cout << "Commands list:\n";
 		for (auto &item: m_items)
 		{
-			std::cout << "  " << item.shortcut << ": " << item.description << std::endl;
+			std::cout << "  " << item.shortcut << ". " << item.description << std::endl;
 		}
 	}
 

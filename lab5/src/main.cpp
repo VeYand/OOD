@@ -8,134 +8,223 @@ int main()
 	CMenu menu;
 	CDocument document;
 
-	menu.AddItem("InsertParagraph", "123", [&](std::istringstream &params) {
-		std::string postition;
-		std::string text;
+	menu.AddItem(
+		"InsertParagraph",
+		"Usage: InsertParagraph <position>|end <text>. Inserts a paragraph into the specified position.",
+		[&](std::istringstream &params) {
+			std::string positionInput;
+			std::string text;
 
-		params >> postition >> text;
-
-		std::optional<size_t> position2 = std::nullopt;
-		if (postition != "end")
-		{
-			position2 = std::stoi(postition);
-		}
-
-		document.InsertParagraph(text, position2);
-	});
-
-	menu.AddItem("InsertImage", "123", [&](std::istringstream &params) {
-		std::string postition;
-		unsigned width;
-		unsigned height;
-		std::string path;
-
-
-		params >> postition >> width >> height >> path;
-
-		std::optional<size_t> position2 = std::nullopt;
-		if (postition != "end")
-		{
-			position2 = std::stoi(postition);
-		}
-
-		document.InsertImage(path, width, height, position2);
-	});
-
-	menu.AddItem("SetTitle", "123", [&](std::istringstream &params) {
-		std::string newTitle;
-		params >> newTitle;
-		document.SetTitle(newTitle);
-	});
-
-	menu.AddItem("List", "123", [&](std::istringstream &params) {
-		const auto title = document.GetTitle();
-		const auto itemsCount = document.GetItemsCount();
-
-		std::cout << "Title: " << title << std::endl;
-		for (int i = 0; i < itemsCount; ++i)
-		{
-			auto item = document.GetItem(i);
-			auto image = item.GetImage();
-			auto paragraph = item.GetParagraph();
-			std::string description{};
-
-			if (image != nullptr)
+			if (!(params >> positionInput >> text))
 			{
-				description = std::format("Image: {} {} {}", image->GetWidth(), image->GetHeight(), image->GetPath());
+				std::cerr << "Invalid arguments." << std::endl;
+				return;
 			}
 
-			if (paragraph != nullptr)
+			std::optional<size_t> position = std::nullopt;
+			if (positionInput != "end")
 			{
-				description = std::format("Paragraph: {}", paragraph->GetText());
+				try
+				{
+					position = std::stoi(positionInput);
+				}
+				catch (std::invalid_argument &)
+				{
+					std::cerr << "Error: The position must be an uint or 'end'." << std::endl;
+					return;
+				}
 			}
 
-			std::cout << i + 1 << ". " << description << std::endl;
+			document.InsertParagraph(text, position);
 		}
-	});
+	);
 
-	menu.AddItem("ReplaceText", "123", [&](std::istringstream &params) {
-		size_t position;
-		std::string text;
+	menu.AddItem(
+		"InsertImage",
+		"Usage: InsertImage <position>|end <width> <height> <image-path>. Inserts an image with the specified width and height.",
+		[&](std::istringstream &params) {
+			std::string positionInput;
+			unsigned width;
+			unsigned height;
+			std::string imagePath;
 
-		params >> position >> text;
-		document.ReplaceText(text, position);
-	});
+			if (!(params >> positionInput >> width >> height >> imagePath))
+			{
+				std::cerr << "Invalid arguments." << std::endl;
+				return;
+			}
 
-	menu.AddItem("ResizeImage", "123", [&](std::istringstream &params) {
-		size_t position;
-		unsigned width;
-		unsigned height;
+			std::optional<size_t> position = std::nullopt;
+			if (positionInput != "end")
+			{
+				try
+				{
+					position = std::stoi(positionInput);
+				}
+				catch (std::invalid_argument &)
+				{
+					std::cerr << "Error: The position must be an integer or 'end'." << std::endl;;
+					return;
+				}
+			}
 
-
-		params >> position >> width >> height;
-
-		document.ResizeImage(position, width, height);
-	});
-
-	menu.AddItem("DeleteItem", "123", [&](std::istringstream &params) {
-		size_t postition;
-		params >> postition;
-		document.DeleteItem(postition);
-	});
-
-	menu.AddItem("Help", "123", [&](std::istringstream &params) {
-		menu.ShowInstructions();
-	});
-
-	menu.AddItem("Undo", "123", [&](std::istringstream &params) {
-		const auto canUndo = document.CanUndo();
-
-		if (!canUndo)
-		{
-			std::cout << "!" << std::endl;
-			return;
+			document.InsertImage(imagePath, width, height, position);
 		}
+	);
 
-		document.Undo();
-	});
-
-	menu.AddItem("Redo", "123", [&](std::istringstream &params) {
-		const auto canRedo = document.CanRedo();
-
-		if (!canRedo)
-		{
-			std::cout << "!" << std::endl;
-			return;
+	menu.AddItem(
+		"SetTitle",
+		"Usage: SetTitle <title>. Sets the document title.",
+		[&](std::istringstream &params) {
+			std::string newTitle;
+			params >> newTitle;
+			document.SetTitle(newTitle);
 		}
+	);
 
-		document.Redo();
-	});
+	menu.AddItem(
+		"List",
+		"Usage: List. Displays the title and list of document elements.",
+		[&](std::istringstream &params) {
+			const auto title = document.GetTitle();
+			const auto itemCount = document.GetItemsCount();
 
-	menu.AddItem("Save", "123", [&](std::istringstream &params) {
-		std::string path;
-		params >> path;
-		document.Save(path);
-	});
+			std::cout << "Title: " << title << std::endl;
+			for (int i = 0; i < itemCount; ++i)
+			{
+				auto item = document.GetItem(i);
+				auto image = item.GetImage();
+				auto paragraph = item.GetParagraph();
+				std::string description{};
 
-	menu.AddItem("Exit", "123", [&](std::istringstream &params) {
-		menu.Exit();
-	});
+				if (image != nullptr)
+				{
+					description = std::format("Image: {} {} {}", image->GetWidth(), image->GetHeight(),
+					                          image->GetPath());
+				}
 
+				if (paragraph != nullptr)
+				{
+					description = std::format("Paragraph: {}", paragraph->GetText());
+				}
+
+				std::cout << i + 1 << ". " << description << std::endl;
+			}
+		}
+	);
+
+	menu.AddItem(
+		"ReplaceText",
+		"Usage: ReplaceText <position> <text>. Replaces the text in the paragraph by the specified position.",
+		[&](std::istringstream &params) {
+			size_t position;
+			std::string newText;
+
+			if (!(params >> position >> newText))
+			{
+				std::cerr << "Invalid arguments." << std::endl;
+				return;
+			}
+
+			if (newText.empty())
+			{
+				std::cerr << "Error: text cannot be empty." << std::endl;
+				return;
+			}
+
+			document.ReplaceText(newText, position);
+		}
+	);
+
+	menu.AddItem(
+		"ResizeImage",
+		"Usage: ResizeImage <position> <width> <height>. Resizes the image at the specified position.",
+		[&](std::istringstream &params) {
+			size_t position;
+			unsigned newWidth;
+			unsigned newHeight;
+
+			if (!(params >> position >> newWidth >> newHeight))
+			{
+				std::cerr << "Invalid arguments." << std::endl;
+				return;
+			}
+
+
+			document.ResizeImage(position, newWidth, newHeight);
+		}
+	);
+
+	menu.AddItem(
+		"DeleteItem",
+		"Usage: DeleteItem <position>. Deletes an item at the specified position.",
+		[&](std::istringstream &params) {
+			size_t position;
+			if (!(params >> position))
+			{
+				std::cerr << "Invalid arguments." << std::endl;
+				return;
+			}
+			document.DeleteItem(position);
+		}
+	);
+
+	menu.AddItem(
+		"Help",
+		"Usage: Help. Shows the available commands.", [&](std::istringstream &params) {
+			menu.ShowInstructions();
+		}
+	);
+
+	menu.AddItem(
+		"Undo",
+		"Usage: Undo. Cancels the last action.",
+		[&](std::istringstream &params) {
+			if (!document.CanUndo())
+			{
+				std::cout << "Cancellation is not possible!" << std::endl;
+				return;
+			}
+
+			document.Undo();
+		}
+	);
+
+	menu.AddItem(
+		"Redo",
+		"Usage: Redo. Repeats the last canceled action.",
+		[&](std::istringstream &params) {
+			if (!document.CanRedo())
+			{
+				std::cout << "Repeat is not possible!" << std::endl;
+				return;
+			}
+
+			document.Redo();
+		}
+	);
+
+	menu.AddItem(
+		"Save",
+		"Usage: Save <path>. Saves the document to a file.",
+		[&](std::istringstream &params) {
+			std::string filePath;
+			if (!(params >> filePath))
+			{
+				std::cerr << "Invalid arguments." << std::endl;
+				return;
+			}
+			document.Save(filePath);
+		}
+	);
+
+	menu.AddItem(
+		"Exit",
+		"Usage: Exit. Exits the program.",
+		[&](std::istringstream &params) {
+			menu.Exit();
+		}
+	);
 
 	menu.Run();
 }
