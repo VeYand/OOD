@@ -10,7 +10,7 @@
 class CMenu
 {
 public:
-	using Command = std::function<void(std::istringstream&)>;
+	using Command = std::function<void(std::istringstream &)>;
 
 	void AddItem(
 		const std::string &shortcut,
@@ -58,13 +58,20 @@ private:
 		const auto it = std::ranges::find_if(m_items, [&](const Item &item) {
 			return item.shortcut == name;
 		});
-		if (it != m_items.end())
+
+		if (it == m_items.end())
+		{
+			std::cout << "Unknown command" << std::endl;
+			return !m_exit;
+		}
+
+		try
 		{
 			it->command(iss);
 		}
-		else
+		catch (const std::exception &e)
 		{
-			std::cout << "Unknown command" << std::endl;
+			std::cerr << e.what() << std::endl;
 		}
 
 		return !m_exit;
