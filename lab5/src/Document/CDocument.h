@@ -88,7 +88,7 @@ public:
 
 	[[nodiscard]] bool CanRedo() const override
 	{
-		return m_history.CanUndo();
+		return m_history.CanRedo();
 	}
 
 	void Redo() override
