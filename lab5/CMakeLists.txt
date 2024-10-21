@@ -21,7 +21,6 @@ add_executable(${PROJECT_NAME}
         src/Document/CDocumentItem.h
         src/Menu/CMenu.h
         src/Document/Command/ICommand.h
-        src/Document/Command/CompoundCommand.h
         src/Document/Command/AbstractCommand.h
         src/Document/CDocument.h
         src/Document/Image/СImage.h
