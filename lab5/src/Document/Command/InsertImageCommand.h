@@ -2,6 +2,7 @@
 #define INSERTIMAGECOMMAND_H
 #include <chrono>
 #include <format>
+#include <iostream>
 #include <optional>
 #include <string>
 #include <utility>
@@ -30,8 +31,12 @@ public:
 
 	void DoExecute() override
 	{
-		m_newPath = SaveTempImage(m_usrPath);
-		const auto image = std::make_shared<CImage>(m_newPath, m_width, m_height);
+		if (!m_newPath.has_value())
+		{
+			m_newPath = SaveTempImage(m_usrPath);
+		}
+
+		const auto image = std::make_shared<CImage>(m_newPath.value(), m_width, m_height);
 		const CDocumentItem documentItem(image);
 
 		if (!m_position.has_value())
@@ -74,42 +79,29 @@ public:
 
 	void Destroy() override
 	{
-		FileUtils::DeleteFileIfExists(m_newPath);
+		if (m_newPath.has_value())
+		{
+			FileUtils::DeleteFileIfExists(m_newPath.value());
+		}
+	}
+
+	~InsertImageCommand() override
+	{
+		Destroy();
 	}
 
 private:
-	static std::string GetFileExtension(const Path &path)
-	{
-		size_t dotPosition = path.find_last_of('.');
-
-		if (dotPosition != std::string::npos && dotPosition != 0)
-		{
-			return path.substr(dotPosition + 1);
-		}
-
-		return "";
-	}
-
-	static std::string GenerateRandomFileName(const std::string &extension)
-	{
-		const auto now = std::chrono::system_clock::now();
-		const auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
-
-		return std::format("file_{}.{}", nowMs, extension);
-	}
-
 	static Path SaveTempImage(const Path &path)
 	{
-		const auto extension = GetFileExtension(path);
-		const auto newFilePath = std::format("images/{}", GenerateRandomFileName(extension));
+		const auto extension = FileUtils::GetFileExtension(path);
 
-		FileUtils::CopyFiles(path, newFilePath);
-
+		const auto newFilePath = std::format("temp/{}", FileUtils::GenerateRandomFileName(extension));
+		FileUtils::CopyFile(path, newFilePath);
 		return newFilePath;
 	}
 
 	Path m_usrPath;
-	Path m_newPath{};
+	std::optional<Path> m_newPath = std::nullopt;
 	unsigned m_width;
 	unsigned m_height;
 	std::optional<size_t> m_position;

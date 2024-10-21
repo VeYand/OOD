@@ -3,6 +3,7 @@
 #include <fstream>
 #include <vector>
 
+#include "../Utils/FileUtils.h"
 #include "../CConstDocumentItem.h"
 
 class HtmlUtils
@@ -33,6 +34,10 @@ public:
 
 			if (image != nullptr)
 			{
+				const auto imageName = FileUtils::GetFileName(image->GetPath());
+				const auto newImagePath = std::format("images/{}", imageName);
+				FileUtils::CopyFile(image->GetPath(), newImagePath);
+
 				output << "<img src=\"" << HtmlEncode(image->GetPath()) << "\" "
 						<< "width=" << image->GetWidth() << " "
 						<< "height=" << image->GetHeight()

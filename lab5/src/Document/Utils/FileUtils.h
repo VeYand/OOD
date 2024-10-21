@@ -8,7 +8,39 @@
 class FileUtils
 {
 public:
-	static void CopyFiles(const std::string &inputFilePath, const std::string &outputFilePath)
+	static std::string GetFileName(const Path &path)
+	{
+		size_t slashPosition = path.find_last_of('/');
+
+		if (slashPosition != std::string::npos && slashPosition != 0)
+		{
+			return path.substr(slashPosition + 1);
+		}
+
+		return "";
+	}
+
+	static std::string GetFileExtension(const Path &path)
+	{
+		size_t dotPosition = path.find_last_of('.');
+
+		if (dotPosition != std::string::npos && dotPosition != 0)
+		{
+			return path.substr(dotPosition + 1);
+		}
+
+		return "";
+	}
+
+	static std::string GenerateRandomFileName(const std::string &extension)
+	{
+		const auto now = std::chrono::system_clock::now();
+		const auto nowMs = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+
+		return std::format("file_{}.{}", nowMs, extension);
+	}
+
+	static void CopyFile(const std::string &inputFilePath, const std::string &outputFilePath)
 	{
 		std::ifstream inputFile(inputFilePath);
 		if (!inputFile.is_open())
