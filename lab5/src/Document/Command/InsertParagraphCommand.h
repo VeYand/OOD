@@ -8,7 +8,7 @@
 #include "AbstractCommand.h"
 #include "../Paragraph/CParagraph.h"
 
-class InsertParagraphCommand final : public AbstractCommand
+class InsertParagraphCommand : public AbstractCommand
 {
 public:
 	InsertParagraphCommand(
@@ -34,7 +34,7 @@ public:
 
 		const size_t position = m_position.value();
 
-		if (position >= m_items.size())
+		if (position > m_items.size())
 		{
 			throw std::invalid_argument("Position out of range");
 		}

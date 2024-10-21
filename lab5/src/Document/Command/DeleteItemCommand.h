@@ -5,7 +5,7 @@
 #include "../CDocumentItem.h"
 #include "AbstractCommand.h"
 
-class DeleteItemCommand final : public AbstractCommand
+class DeleteItemCommand : public AbstractCommand
 {
 public:
 	DeleteItemCommand(

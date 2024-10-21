@@ -1,428 +1,533 @@
 #include <gtest/gtest.h>
-#include <gmock/gmock.h>
-#include "../../1/ShapeFactory/Shapes/Rectangle.h"
-#include "../../1/ShapeFactory/Shapes/Ellipse.h"
-#include "../../1/ShapeFactory/Shapes/Triangle.h"
-#include "../../1/ShapeFactory/Shapes/RegularPolygon.h"
-#include "../../1/ShapeFactory/ShapeFactory.h"
-#include "../../1/Designer/PictureDraft.h"
-#include "../../1/Designer/Designer.h"
-#include "../../1/Painter/Painter.h"
-#include "../../1/Client.h"
+#include "../src/Document/Command/InsertParagraphCommand.h"
+#include "../src/Document/Command/ReplaceTextCommand.h"
+#include "../src/Document/Command/DeleteItemCommand.h"
+#include "../src/Document/Command/SetTitleCommand.h"
+#include "../src/Document/Command/InsertImageCommand.h"
+#include "../src/Document/CDocument.h"
 
-using ::testing::_;
-using ::testing::Return;
+const std::string IMAGE_PATH = "cat1.jpg";
 
-class MockShape final : public Shape
+bool AssertDirectoryIsNotEmpty(const std::string &path)
+{
+	std::filesystem::path dirPath(path);
+	if (!exists(dirPath) || !is_directory(dirPath))
+	{
+		return false;
+	}
+
+	return std::any_of(std::filesystem::directory_iterator(dirPath), std::filesystem::directory_iterator{},
+	                   [](const std::filesystem::directory_entry &) {
+		                   return true;
+	                   });
+}
+
+std::string GetFirstFileOnDirectory(const std::string &path)
+{
+	std::filesystem::path dirPath(path);
+	if (!exists(dirPath) || !is_directory(dirPath))
+	{
+		return "";
+	}
+
+	for (const auto &entry: std::filesystem::directory_iterator(dirPath))
+	{
+		if (is_regular_file(entry.status()))
+		{
+			return entry.path().filename().string();
+		}
+	}
+
+	return "";
+}
+
+bool AssertFilesAreEqual(const std::string &path1, const std::string &path2)
+{
+	std::ifstream file1(path1, std::ios::binary);
+	std::ifstream file2(path2, std::ios::binary);
+
+	if (!file1.is_open() || !file2.is_open())
+	{
+		return false;
+	}
+
+	file1.seekg(0, std::ios::end);
+	file2.seekg(0, std::ios::end);
+
+	if (file1.tellg() != file2.tellg())
+	{
+		return false;
+	}
+
+	file1.seekg(0);
+	file2.seekg(0);
+
+	return std::equal(std::istreambuf_iterator(file1),
+	                  std::istreambuf_iterator<char>(),
+	                  std::istreambuf_iterator(file2));
+}
+
+class InsertParagraphCommandTestable final : public InsertParagraphCommand
 {
 public:
-	explicit MockShape(const Color color) : Shape(color)
+	InsertParagraphCommandTestable(
+		const std::string &text,
+		const std::optional<size_t> position,
+		std::vector<CDocumentItem> &items
+	): InsertParagraphCommand(text, position, items)
 	{
 	}
 
-	MOCK_METHOD(void, Draw, (gfx::ICanvas &canvas), (const, override));
-};
-
-class MockShapeFactory final : public IShapeFactory
-{
-public:
-	MOCK_METHOD(std::unique_ptr<Shape>, CreateShape, (const std::string& description), (override));
-};
-
-class MockDesigner final : public IDesigner
-{
-public:
-	MOCK_METHOD(PictureDraft, CreateDraft, (std::istream & inputData), (override));
-};
-
-class MockPainter final : public IPainter
-{
-public:
-	MOCK_METHOD(void, DrawPicture, (const PictureDraft& draft, gfx::ICanvas& canvas), (override));
-};
-
-class MockCanvas final : public gfx::ICanvas
-{
-public:
-	MOCK_METHOD(void, SetColor, (uint32_t color), (override));
-	MOCK_METHOD(void, MoveTo, (double x, double y), (override));
-	MOCK_METHOD(void, LineTo, (double x, double y), (override));
-	MOCK_METHOD(void, DrawEllipse, (double cx, double cy, double rx, double ry), (override));
-};
-
-void ExpectEqualPoint(const Point expectedPoint, const Point actualPoint)
-{
-	EXPECT_EQ(expectedPoint.x, actualPoint.x);
-	EXPECT_EQ(expectedPoint.y, actualPoint.y);
-}
-
-TEST(RectangleTest, SuccessCreate)
-{
-	constexpr Color color = 0x000000;
-	constexpr Point leftTop(10, 10);
-	constexpr Point rightBottom(40, 20);
-
-	const Rectangle rectangle(color, {leftTop, rightBottom});
-
-	EXPECT_EQ(color, rectangle.GetColor());
-	ExpectEqualPoint(leftTop, rectangle.GetLeftTop());
-	EXPECT_EQ(30, rectangle.GetWidth());
-	EXPECT_EQ(10, rectangle.GetHeight());
-}
-
-TEST(RectangleTest, SuccessDraw)
-{
-	constexpr Color color = 0x000000;
-	constexpr Point leftTop(10, 20);
-	constexpr Point rightBottom(40, 10);
-
-	const Rectangle rectangle(color, Rect(leftTop, rightBottom));
-
-	MockCanvas mockCanvas;
-
-	EXPECT_CALL(mockCanvas, SetColor(color))
-			.Times(1);
-
-	EXPECT_CALL(mockCanvas, MoveTo(10, 20))
-			.Times(1);
-	EXPECT_CALL(mockCanvas, LineTo(rightBottom.x, leftTop.y))
-			.Times(1);
-	EXPECT_CALL(mockCanvas, LineTo(rightBottom.x, rightBottom.y))
-			.Times(1);
-	EXPECT_CALL(mockCanvas, LineTo(leftTop.x, rightBottom.y))
-			.Times(1);
-	EXPECT_CALL(mockCanvas, LineTo(leftTop.x, leftTop.y))
-			.Times(1);
-
-	rectangle.Draw(mockCanvas);
-}
-
-TEST(EllipseTest, SuccessCreate)
-{
-	constexpr Color color = 0x000000;
-	constexpr Point center(50, 50);
-	constexpr double horizontalRadius = 30;
-	constexpr double verticalRadius = 20;
-
-	const Ellipse ellipse(color, center, horizontalRadius, verticalRadius);
-
-	EXPECT_EQ(color, ellipse.GetColor());
-	ExpectEqualPoint(center, ellipse.GetCenter());
-	EXPECT_EQ(horizontalRadius, ellipse.GetHorizontalRadius());
-	EXPECT_EQ(verticalRadius, ellipse.GetVerticalRadius());
-}
-
-TEST(EllipseTest, SuccessDraw)
-{
-	constexpr Color color = 0x000000;
-	constexpr Point center(50, 50);
-	constexpr double horizontalRadius = 30;
-	constexpr double verticalRadius = 20;
-
-	const Ellipse ellipse(color, center, horizontalRadius, verticalRadius);
-
-	MockCanvas mockCanvas;
-
-	EXPECT_CALL(mockCanvas, SetColor(color))
-			.Times(1);
-
-	EXPECT_CALL(mockCanvas, DrawEllipse(center.x, center.y, horizontalRadius, verticalRadius))
-			.Times(1);
-
-	ellipse.Draw(mockCanvas);
-}
-
-TEST(TriangleTest, SuccessCreate)
-{
-	constexpr Color color = 0x000000;
-	constexpr Point firstAngle(10, 20);
-	constexpr Point secondAngle(40, 20);
-	constexpr Point thirdAngle(25, 50);
-
-	const Triangle triangle(color, firstAngle, secondAngle, thirdAngle);
-
-	EXPECT_EQ(color, triangle.GetColor());
-	ExpectEqualPoint(firstAngle, triangle.GetFirstAngle());
-	ExpectEqualPoint(secondAngle, triangle.GetSecondAngle());
-	ExpectEqualPoint(thirdAngle, triangle.GetThirdAngle());
-}
-
-TEST(TriangleTest, SuccessDraw)
-{
-	constexpr Color color = 0x000000;
-	constexpr Point firstAngle(10, 20);
-	constexpr Point secondAngle(40, 20);
-	constexpr Point thirdAngle(25, 50);
-
-	const Triangle triangle(color, firstAngle, secondAngle, thirdAngle);
-
-	MockCanvas mockCanvas;
-
-	EXPECT_CALL(mockCanvas, SetColor(color))
-			.Times(1);
-	EXPECT_CALL(mockCanvas, MoveTo(firstAngle.x, firstAngle.y))
-			.Times(1);
-	EXPECT_CALL(mockCanvas, LineTo(secondAngle.x, secondAngle.y))
-			.Times(1);
-	EXPECT_CALL(mockCanvas, LineTo(thirdAngle.x, thirdAngle.y))
-			.Times(1);
-	EXPECT_CALL(mockCanvas, LineTo(firstAngle.x, firstAngle.y))
-			.Times(1);
-
-	triangle.Draw(mockCanvas);
-}
-
-TEST(RegularPolygonTest, SuccessCreate)
-{
-	constexpr Color color = 0x000000;
-	constexpr Point center(50, 50);
-	constexpr int pointsCount = 5;
-	constexpr double radius = 30.0;
-
-	const RegularPolygon polygon(color, center, pointsCount, radius);
-
-	EXPECT_EQ(color, polygon.GetColor());
-	ExpectEqualPoint(center, polygon.GetCenter());
-	EXPECT_EQ(pointsCount, polygon.GetPointsCount());
-	EXPECT_EQ(radius, polygon.GetRadius());
-}
-
-TEST(RegularPolygonTest, SuccessDraw)
-{
-	constexpr Color color = 0x000000;
-	constexpr Point center(50, 50);
-	constexpr int pointsCount = 5;
-	constexpr double radius = 30.0;
-
-	const RegularPolygon polygon(color, center, pointsCount, radius);
-
-	MockCanvas mockCanvas;
-
-	EXPECT_CALL(mockCanvas, SetColor(color))
-			.Times(1);
-
-	constexpr double angleStep = 2 * M_PI / pointsCount;
-
-	const double startX = center.x + radius * std::cos(0);
-	const double startY = center.y + radius * std::sin(0);
-
-	double prevX = startX;
-	double prevY = startY;
-
-	for (int i = 1; i <= pointsCount; ++i)
+	void TestDoExecute()
 	{
-		const double angle = i * angleStep;
-		const double x = center.x + radius * std::cos(angle);
-		const double y = center.y + radius * std::sin(angle);
-
-		EXPECT_CALL(mockCanvas, MoveTo(prevX, prevY)).Times(1);
-		EXPECT_CALL(mockCanvas, LineTo(x, y)).Times(1);
-
-
-		prevX = x;
-		prevY = y;
+		DoExecute();
 	}
 
-	EXPECT_CALL(mockCanvas, MoveTo(prevX, prevY)).Times(1);
-	EXPECT_CALL(mockCanvas, LineTo(startX, startY)).Times(1);
-
-	polygon.Draw(mockCanvas);
-}
-
-TEST(ShapeFactoryTest, SuccessCreateTriangle)
-{
-	const std::string description = "#EB5757 triangle 200 200 400 100 600 200";
-
-	ShapeFactory shapeFactory;
-	auto shape = shapeFactory.CreateShape(description);
-
-	EXPECT_NE(shape, nullptr);
-	EXPECT_EQ(typeid(*shape), typeid(Triangle));
-
-	auto *triangle = dynamic_cast<Triangle *>(shape.get());
-	ASSERT_NE(triangle, nullptr);
-
-	EXPECT_EQ(triangle->GetColor(), 0xEB5757FF);
-	ExpectEqualPoint(triangle->GetFirstAngle(), Point(200, 200));
-	ExpectEqualPoint(triangle->GetSecondAngle(), Point(400, 100));
-	ExpectEqualPoint(triangle->GetThirdAngle(), Point(600, 200));
-}
-
-TEST(ShapeFactoryTest, SuccessCreateEllipse)
-{
-	const std::string description = "#FCC846 ellipse 45 45 35 35";
-
-	ShapeFactory shapeFactory;
-	auto shape = shapeFactory.CreateShape(description);
-
-	EXPECT_NE(shape, nullptr);
-	EXPECT_EQ(typeid(*shape), typeid(Ellipse));
-
-	auto *ellipse = dynamic_cast<Ellipse *>(shape.get());
-	ASSERT_NE(ellipse, nullptr);
-
-	EXPECT_EQ(ellipse->GetColor(), 0xFCC846FF);
-	ExpectEqualPoint(ellipse->GetCenter(), Point(45, 45));
-	EXPECT_EQ(ellipse->GetHorizontalRadius(), 35);
-	EXPECT_EQ(ellipse->GetVerticalRadius(), 35);
-}
-
-TEST(ShapeFactoryTest, SuccessCreateRectangle)
-{
-	const std::string description = "#EB5757 rectangle 200 200 400 180";
-
-	ShapeFactory shapeFactory;
-	auto shape = shapeFactory.CreateShape(description);
-
-	EXPECT_NE(shape, nullptr);
-	EXPECT_EQ(typeid(*shape), typeid(Rectangle));
-
-	auto *rectangle = dynamic_cast<Rectangle *>(shape.get());
-	ASSERT_NE(rectangle, nullptr);
-
-	EXPECT_EQ(rectangle->GetColor(), 0xEB5757FF);
-	ExpectEqualPoint(rectangle->GetLeftTop(), Point(200, 200));
-	EXPECT_EQ(rectangle->GetWidth(), 400);
-	EXPECT_EQ(rectangle->GetHeight(), 180);
-}
-
-TEST(ShapeFactoryTest, SuccessCreateRegularPolygon)
-{
-	const std::string description = "#FF0000 regular_polygon 400 50 10 30";
-
-	ShapeFactory shapeFactory;
-	auto shape = shapeFactory.CreateShape(description);
-
-	EXPECT_NE(shape, nullptr);
-	EXPECT_EQ(typeid(*shape), typeid(RegularPolygon));
-
-	auto *polygon = dynamic_cast<RegularPolygon *>(shape.get());
-	ASSERT_NE(polygon, nullptr);
-
-	EXPECT_EQ(polygon->GetColor(), 0xFF0000FF);
-	ExpectEqualPoint(polygon->GetCenter(), Point(400, 50));
-	EXPECT_EQ(polygon->GetPointsCount(), 10);
-	EXPECT_EQ(polygon->GetRadius(), 30);
-}
-
-TEST(ShapeFactoryTest, UnknownShapeException)
-{
-	const std::string description = "#FCC846 circle 45 45 35 35";
-
-	ShapeFactory shapeFactory;
-
-	EXPECT_THROW(shapeFactory.CreateShape(description), std::invalid_argument);
-}
-
-TEST(PictureDraftTest, SuccessAddShape)
-{
-	PictureDraft draft;
-
-	auto triangle = std::make_unique<MockShape>(0x000000);
-	auto ellipse = std::make_unique<MockShape>(0x000000);
-	auto rectangle = std::make_unique<MockShape>(0x000000);
-
-	draft.AddShape(std::move(triangle));
-	draft.AddShape(std::move(ellipse));
-	draft.AddShape(std::move(rectangle));
-
-	EXPECT_EQ(std::distance(draft.begin(), draft.end()), 3);
-}
-
-TEST(PictureDraftTest, SuccessIterateShapes)
-{
-	PictureDraft draft;
-
-	auto triangle = std::make_unique<MockShape>(0x000000);
-	auto ellipse = std::make_unique<MockShape>(0x000000);
-
-	draft.AddShape(std::move(triangle));
-	draft.AddShape(std::move(ellipse));
-
-	int count = 0;
-	for (const auto &shape: draft)
+	void TestDoUnexecute()
 	{
-		EXPECT_NE(shape, nullptr);
-		count++;
+		DoUnexecute();
+	}
+};
+
+class ReplaceTextCommandTestable : public ReplaceTextCommand
+{
+public:
+	ReplaceTextCommandTestable(
+		const std::string &newText,
+		size_t position, std::vector<CDocumentItem> &items
+	): ReplaceTextCommand(newText, position, items)
+	{
 	}
 
-	EXPECT_EQ(count, 2);
-
-	count = 0;
-	for (const auto &shape: draft)
+	void TestDoExecute()
 	{
-		EXPECT_NE(shape, nullptr);
-		count++;
+		DoExecute();
 	}
 
-	EXPECT_EQ(count, 2);
+	void TestDoUnexecute()
+	{
+		DoUnexecute();
+	}
+};
+
+class DeleteItemCommandTestable : public DeleteItemCommand
+{
+public:
+	DeleteItemCommandTestable(
+		size_t position,
+		std::vector<CDocumentItem> &items
+	): DeleteItemCommand(position, items)
+	{
+	}
+
+	void TestDoExecute()
+	{
+		DoExecute();
+	}
+
+	void TestDoUnexecute()
+	{
+		DoUnexecute();
+	}
+};
+
+class SetTitleCommandTestable : public SetTitleCommand
+{
+public:
+	SetTitleCommandTestable(
+		std::string &title,
+		const std::string &newTitle
+	): SetTitleCommand(title, newTitle)
+	{
+	}
+
+	void TestDoExecute()
+	{
+		DoExecute();
+	}
+
+	void TestDoUnexecute()
+	{
+		DoUnexecute();
+	}
+};
+
+class InsertImageCommandTestable : public InsertImageCommand
+{
+public:
+	InsertImageCommandTestable(
+		const Path &path,
+		int width,
+		int height,
+		std::optional<size_t> position,
+		std::vector<CDocumentItem> &items
+	): InsertImageCommand(path, width, height, position, items)
+	{
+	}
+
+	void TestDoExecute()
+	{
+		DoExecute();
+	}
+
+	void TestDoUnexecute()
+	{
+		DoUnexecute();
+	}
+};
+
+
+TEST(InsertParagraphCommandTest, InsertAtEndSuccess)
+{
+	std::vector<CDocumentItem> items;
+	std::string text = "New paragraph text";
+
+	InsertParagraphCommandTestable command(text, std::nullopt, items);
+
+	command.TestDoExecute();
+
+	ASSERT_EQ(items.size(), 1);
+
+	auto paragraph = std::dynamic_pointer_cast<CParagraph>(items[0].GetParagraph());
+	ASSERT_NE(paragraph, nullptr);
+	EXPECT_EQ(paragraph->GetText(), text);
+
+	command.TestDoUnexecute();
+
+	EXPECT_TRUE(items.empty());
 }
 
-TEST(DesignerTest, SuccessCreateDraftWithShapes)
+TEST(InsertParagraphCommandTest, InsertAtPositionSuccess)
 {
-	MockShapeFactory mockFactory;
-	Designer designer(mockFactory);
+	std::string text = "Existing paragraph";
+	auto paragraph = std::make_shared<CParagraph>(text);
+	CDocumentItem item(paragraph);
+	std::vector<CDocumentItem> items = {item};
 
-	std::istringstream inputData(
-		"#B7B7B7 rectangle 0 380 800 500\n"
-		"#FCC846 ellipse 45 45 35 35\n"
-		"#FCC846 line 85 45 115 45\n"
-	);
+	std::string textInserted = "Inserted paragraph";
+	size_t position = 0;
 
-	EXPECT_CALL(mockFactory, CreateShape("#B7B7B7 rectangle 0 380 800 500"))
-			.WillOnce(Return(std::make_unique<MockShape>(0xB7B7B7FF)));
+	InsertParagraphCommandTestable command(textInserted, position, items);
 
-	EXPECT_CALL(mockFactory, CreateShape("#FCC846 ellipse 45 45 35 35"))
-			.WillOnce(Return(std::make_unique<MockShape>(0xFCC846FF)));
+	command.TestDoExecute();
 
-	EXPECT_CALL(mockFactory, CreateShape("#FCC846 line 85 45 115 45"))
-			.WillOnce(Return(std::make_unique<MockShape>(0xFCC846FF)));
+	ASSERT_EQ(items.size(), 2);
 
-	PictureDraft draft = designer.CreateDraft(inputData);
+	auto paragraph1 = std::dynamic_pointer_cast<CParagraph>(items[position].GetParagraph());
+	ASSERT_NE(paragraph1, nullptr);
+	EXPECT_EQ(paragraph1->GetText(), textInserted);
 
-	EXPECT_EQ(std::distance(draft.begin(), draft.end()), 3);
+	command.TestDoUnexecute();
+
+	ASSERT_EQ(items.size(), 1);
+	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Existing paragraph");
 }
 
-TEST(PainterTest, SuccessDrawPicture)
+TEST(InsertParagraphCommandTest, InsertAtInvalidPositionError)
 {
-	Painter painter;
-	MockCanvas mockCanvas;
+	std::vector<CDocumentItem> items;
+	std::string text = "Text for invalid position";
+	size_t invalidPosition = 10;
 
-	auto shape1 = std::make_unique<MockShape>(0x000000);
-	auto shape2 = std::make_unique<MockShape>(0xFF0000);
+	InsertParagraphCommandTestable command(text, invalidPosition, items);
 
-	EXPECT_CALL(*shape1, Draw(testing::Ref(mockCanvas))).Times(1);
-	EXPECT_CALL(*shape2, Draw(testing::Ref(mockCanvas))).Times(1);
-
-	PictureDraft draft;
-	draft.AddShape(std::move(shape1));
-	draft.AddShape(std::move(shape2));
-
-	painter.DrawPicture(draft, mockCanvas);
+	EXPECT_THROW(command.TestDoExecute(), std::invalid_argument);
+	EXPECT_TRUE(items.empty());
 }
 
-TEST(ClientTest, SuccessHandleCommand)
+TEST(ReplaceTextCommandTest, DoExecuteReplaceTextAtPositionSuccess)
 {
-	MockDesigner mockDesigner;
-	MockPainter mockPainter;
-	MockCanvas mockCanvas;
+	std::vector<CDocumentItem> items;
+	std::string oldText = "Original text";
+	items.emplace_back(std::make_shared<CParagraph>(oldText));
 
-	Client client(mockDesigner);
+	std::string newText = "Replaced text";
+	size_t position = 0;
 
-	std::istringstream inputData("#FCC846 line 85 45 115 45\n");
+	ReplaceTextCommandTestable command(newText, position, items);
 
-	EXPECT_CALL(mockDesigner, CreateDraft(testing::Ref(inputData)))
-			.WillOnce(Return(PictureDraft()));
+	command.TestDoExecute();
 
-	EXPECT_CALL(mockPainter, DrawPicture(_, testing::Ref(mockCanvas)))
-			.Times(1);
+	auto paragraph = std::dynamic_pointer_cast<CParagraph>(items[position].GetParagraph());
+	ASSERT_NE(paragraph, nullptr);
+	EXPECT_EQ(paragraph->GetText(), newText);
 
-	client.HandleCommand(inputData, mockCanvas, mockPainter);
+	command.TestDoUnexecute();
+
+	EXPECT_EQ(paragraph->GetText(), "Original text");
 }
 
-GTEST_API_ int main(int argc, char **argv)
+TEST(ReplaceTextCommandTest, DoExecuteReplaceTextWithInvalidPositionError)
 {
-	std::cout << "Running tests" << std::endl;
-	testing::InitGoogleTest(&argc, argv);
-	return RUN_ALL_TESTS();
+	std::vector<CDocumentItem> items;
+	std::string newText = "Text for invalid position";
+	size_t invalidPosition = 10;
+
+	ReplaceTextCommandTestable command(newText, invalidPosition, items);
+
+	EXPECT_THROW(command.TestDoExecute(), std::invalid_argument);
+}
+
+TEST(ReplaceTextCommandTest, DoUnexecuteRestoreOriginalTextSuccess)
+{
+	std::vector<CDocumentItem> documentItems;
+	std::string oldText = "Initial text";
+	documentItems.emplace_back(std::make_shared<CParagraph>(oldText));
+
+	std::string newText = "New text";
+	size_t position = 0;
+
+	ReplaceTextCommandTestable command(newText, position, documentItems);
+
+	command.TestDoExecute();
+
+	auto paragraph = std::dynamic_pointer_cast<CParagraph>(documentItems[position].GetParagraph());
+	ASSERT_NE(paragraph, nullptr);
+	EXPECT_EQ(paragraph->GetText(), newText);
+
+	command.TestDoUnexecute();
+
+	EXPECT_EQ(paragraph->GetText(), "Initial text");
+}
+
+
+TEST(DeleteItemCommandTest, DoExecuteDeleteItemAtSpecifiedPositionSuccess)
+{
+	std::vector<CDocumentItem> items;
+	std::string text1 = "Paragraph 1";
+	std::string text2 = "Paragraph 2";
+	items.emplace_back(std::make_shared<CParagraph>(text1));
+	items.emplace_back(std::make_shared<CParagraph>(text2));
+
+	size_t position = 1;
+	DeleteItemCommandTestable command(position, items);
+
+	command.TestDoExecute();
+
+	ASSERT_EQ(items.size(), 1);
+	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Paragraph 1");
+
+	command.TestDoUnexecute();
+
+	ASSERT_EQ(items.size(), 2);
+	EXPECT_EQ(items[1].GetParagraph()->GetText(), "Paragraph 2");
+}
+
+TEST(DeleteItemCommandTest, DoExecuteDeleteItemWithInvalidPositionError)
+{
+	std::vector<CDocumentItem> items;
+	std::string text = "Paragraph 1";
+	items.emplace_back(std::make_shared<CParagraph>(text));
+
+	size_t invalidPosition = 5;
+	DeleteItemCommandTestable command(invalidPosition, items);
+
+	EXPECT_THROW(command.TestDoExecute(), std::invalid_argument);
+}
+
+TEST(DeleteItemCommandTest, DoExecuteDeleteOnlyItemSuccess)
+{
+	std::vector<CDocumentItem> items;
+	std::string text = "Only paragraph";
+	items.emplace_back(std::make_shared<CParagraph>(text));
+
+	size_t position = 0;
+	DeleteItemCommandTestable command(position, items);
+
+	command.TestDoExecute();
+
+	EXPECT_TRUE(items.empty());
+
+	command.TestDoUnexecute();
+
+	ASSERT_EQ(items.size(), 1);
+	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Only paragraph");
+}
+
+
+TEST(DeleteItemCommandTest, DoExecuteDeleteItemAtPositionZeroSuccess)
+{
+	std::vector<CDocumentItem> items;
+	std::string text1 = "Paragraph 1";
+	std::string text2 = "Paragraph 2";
+	std::string text3 = "Paragraph 3";
+	items.emplace_back(std::make_shared<CParagraph>(text1));
+	items.emplace_back(std::make_shared<CParagraph>(text2));
+	items.emplace_back(std::make_shared<CParagraph>(text3));
+
+	size_t position = 0;
+	DeleteItemCommandTestable command(position, items);
+
+	command.TestDoExecute();
+
+	ASSERT_EQ(items.size(), 2);
+	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Paragraph 2");
+
+	command.TestDoUnexecute();
+
+	ASSERT_EQ(items.size(), 3);
+	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Paragraph 1");
+}
+
+TEST(DeleteItemCommandTest, DoUnexecuteOnEmptyListError)
+{
+	std::vector<CDocumentItem> items;
+
+	size_t position = 0;
+	DeleteItemCommandTestable command(position, items);
+
+	EXPECT_NO_THROW(command.TestDoUnexecute());
+
+	EXPECT_TRUE(items.empty());
+}
+
+TEST(SetTitleCommandTest, DoExecuteSetsNewTitleSuccess)
+{
+	std::string title = "Original Title";
+	std::string newTitle = "New Title";
+
+	SetTitleCommandTestable command(title, newTitle);
+
+	command.TestDoExecute();
+
+	EXPECT_EQ(title, "New Title");
+
+	command.TestDoUnexecute();
+
+	EXPECT_EQ(title, "Original Title");
+}
+
+TEST(SetTitleCommandTest, DoUnexecuteRevertsToOldTitleSuccess)
+{
+	std::string title = "Initial Title";
+	std::string newTitle = "Updated Title";
+
+	SetTitleCommandTestable command(title, newTitle);
+
+	command.TestDoExecute();
+
+	EXPECT_EQ(title, "Updated Title");
+
+	command.TestDoUnexecute();
+
+	EXPECT_EQ(title, "Initial Title");
+}
+
+TEST(SetTitleCommandTest, RepeatedExecuteAndUnexecuteSuccess)
+{
+	std::string title = "Start Title";
+	std::string newTitle = "Changed Title";
+
+	SetTitleCommandTestable command(title, newTitle);
+
+	command.TestDoExecute();
+	EXPECT_EQ(title, "Changed Title");
+
+	command.TestDoUnexecute();
+	EXPECT_EQ(title, "Start Title");
+
+	command.TestDoExecute();
+	EXPECT_EQ(title, "Changed Title");
+
+	command.TestDoUnexecute();
+	EXPECT_EQ(title, "Start Title");
+}
+
+TEST(SetTitleCommandTest, DoExecuteWithSameTitleSuccess)
+{
+	std::string title = "Same Title";
+
+	SetTitleCommandTestable command(title, title);
+
+	command.TestDoExecute();
+
+	EXPECT_EQ(title, "Same Title");
+
+	command.TestDoUnexecute();
+
+	EXPECT_EQ(title, "Same Title");
+}
+
+TEST(InsertImageCommandTests, ExecuteInsertsImageAtEndSuccess)
+{
+	std::vector<CDocumentItem> items;
+	std::string imagePath = IMAGE_PATH;
+	int width = 100;
+	int height = 200;
+
+	InsertImageCommandTestable command(imagePath, width, height, std::nullopt, items);
+
+	EXPECT_NO_THROW(command.TestDoExecute());
+
+	ASSERT_EQ(items.size(), 1);
+	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
+	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
+}
+
+TEST(InsertImageCommandTests, ExecuteInsertsImageAtPositionSuccess)
+{
+	std::vector<CDocumentItem> items;
+	std::string imagePath = IMAGE_PATH;
+	int width = 100;
+	int height = 200;
+
+	InsertImageCommandTestable command(imagePath, width, height, 0, items);
+
+	EXPECT_NO_THROW(command.TestDoExecute());
+
+	ASSERT_EQ(items.size(), 1);
+	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
+	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
+}
+
+TEST(InsertImageCommandTests, ExecuteThrowsOnInvalidPositionError)
+{
+	std::vector<CDocumentItem> items;
+	std::string imagePath = IMAGE_PATH;
+	int width = 100;
+	int height = 200;
+
+	InsertImageCommandTestable command(imagePath, width, height, 2, items);
+
+	EXPECT_THROW(command.TestDoExecute(), std::invalid_argument);
+}
+
+TEST(InsertImageCommandTests, UnexecuteRemovesLastInsertedSuccess)
+{
+	std::vector<CDocumentItem> items;
+	std::string imagePath = IMAGE_PATH;
+	int width = 100;
+	int height = 200;
+
+	InsertImageCommandTestable command(imagePath, width, height, std::nullopt, items);
+
+	command.TestDoExecute();
+	ASSERT_EQ(items.size(), 1);
+	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
+	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
+
+	command.TestDoUnexecute();
+	ASSERT_EQ(items.size(), 0);
+	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
+	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
+}
+
+TEST(InsertImageCommandTests, UnexecuteRemovesInsertedAtPosition)
+{
+	std::vector<CDocumentItem> items;
+	std::string imagePath = IMAGE_PATH;
+	int width = 100;
+	int height = 200;
+
+	InsertImageCommandTestable command(imagePath, width, height, 0, items);
+
+	command.TestDoExecute();
+	ASSERT_EQ(items.size(), 1);
+	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
+	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
+
+	command.TestDoUnexecute();
+	ASSERT_EQ(items.size(), 0);
+	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
+	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
 }

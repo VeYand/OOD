@@ -6,7 +6,7 @@
 #include "../CDocumentItem.h"
 #include "AbstractCommand.h"
 
-class ReplaceTextCommand final : public AbstractCommand
+class ReplaceTextCommand : public AbstractCommand
 {
 public:
 	ReplaceTextCommand(

@@ -2,7 +2,6 @@
 #define INSERTIMAGECOMMAND_H
 #include <chrono>
 #include <format>
-#include <iostream>
 #include <optional>
 #include <string>
 #include <utility>
@@ -12,7 +11,7 @@
 #include "../Image/СImage.h"
 #include "../Utils/FileUtils.h"
 
-class InsertImageCommand final : public AbstractCommand
+class InsertImageCommand : public AbstractCommand
 {
 public:
 	InsertImageCommand(
@@ -47,7 +46,7 @@ public:
 
 		const size_t position = m_position.value();
 
-		if (position >= m_items.size())
+		if (position > m_items.size())
 		{
 			throw std::invalid_argument("Position out of range");
 		}
@@ -87,7 +86,7 @@ public:
 
 	~InsertImageCommand() override
 	{
-		Destroy();
+		InsertImageCommand::Destroy();
 	}
 
 private:

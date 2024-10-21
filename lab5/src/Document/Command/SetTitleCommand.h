@@ -6,7 +6,7 @@
 #include <vector>
 #include "AbstractCommand.h"
 
-class SetTitleCommand final : public AbstractCommand
+class SetTitleCommand : public AbstractCommand
 {
 public:
 	explicit SetTitleCommand(
