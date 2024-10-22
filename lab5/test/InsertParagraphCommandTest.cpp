@@ -1,36 +1,14 @@
 #include <gtest/gtest.h>
 #include "../src/Document/Command/InsertParagraphCommand.h"
 
-class InsertParagraphCommandTestable final : public InsertParagraphCommand
-{
-public:
-	InsertParagraphCommandTestable(
-		const std::string &text,
-		const std::optional<size_t> position,
-		std::vector<CDocumentItem> &items
-	): InsertParagraphCommand(text, position, items)
-	{
-	}
-
-	void TestDoExecute()
-	{
-		DoExecute();
-	}
-
-	void TestDoUnexecute()
-	{
-		DoUnexecute();
-	}
-};
-
 TEST(InsertParagraphCommandTest, InsertAtEndSuccess)
 {
 	std::vector<CDocumentItem> items;
 	std::string text = "New paragraph text";
 
-	InsertParagraphCommandTestable command(text, std::nullopt, items);
+	InsertParagraphCommand command(text, std::nullopt, items);
 
-	command.TestDoExecute();
+	command.DoExecute();
 
 	ASSERT_EQ(items.size(), 1);
 
@@ -38,7 +16,7 @@ TEST(InsertParagraphCommandTest, InsertAtEndSuccess)
 	ASSERT_NE(paragraph, nullptr);
 	EXPECT_EQ(paragraph->GetText(), text);
 
-	command.TestDoUnexecute();
+	command.DoUnexecute();
 
 	EXPECT_TRUE(items.empty());
 }
@@ -53,9 +31,9 @@ TEST(InsertParagraphCommandTest, InsertAtPositionSuccess)
 	std::string textInserted = "Inserted paragraph";
 	size_t position = 0;
 
-	InsertParagraphCommandTestable command(textInserted, position, items);
+	InsertParagraphCommand command(textInserted, position, items);
 
-	command.TestDoExecute();
+	command.DoExecute();
 
 	ASSERT_EQ(items.size(), 2);
 
@@ -63,7 +41,7 @@ TEST(InsertParagraphCommandTest, InsertAtPositionSuccess)
 	ASSERT_NE(paragraph1, nullptr);
 	EXPECT_EQ(paragraph1->GetText(), textInserted);
 
-	command.TestDoUnexecute();
+	command.DoUnexecute();
 
 	ASSERT_EQ(items.size(), 1);
 	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Existing paragraph");
@@ -75,8 +53,8 @@ TEST(InsertParagraphCommandTest, InsertAtInvalidPositionError)
 	std::string text = "Text for invalid position";
 	size_t invalidPosition = 10;
 
-	InsertParagraphCommandTestable command(text, invalidPosition, items);
+	InsertParagraphCommand command(text, invalidPosition, items);
 
-	EXPECT_THROW(command.TestDoExecute(), std::invalid_argument);
+	EXPECT_THROW(command.DoExecute(), std::invalid_argument);
 	EXPECT_TRUE(items.empty());
 }

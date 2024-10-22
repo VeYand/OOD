@@ -2,27 +2,6 @@
 #include "../src/Document/Command/DeleteItemCommand.h"
 #include "../src/Document/Paragraph/CParagraph.h"
 
-class DeleteItemCommandTestable final : public DeleteItemCommand
-{
-public:
-	DeleteItemCommandTestable(
-		size_t position,
-		std::vector<CDocumentItem> &items
-	): DeleteItemCommand(position, items)
-	{
-	}
-
-	void TestDoExecute()
-	{
-		DoExecute();
-	}
-
-	void TestDoUnexecute()
-	{
-		DoUnexecute();
-	}
-};
-
 TEST(DeleteItemCommandTest, DoExecuteDeleteItemAtSpecifiedPositionSuccess)
 {
 	std::vector<CDocumentItem> items;
@@ -32,14 +11,14 @@ TEST(DeleteItemCommandTest, DoExecuteDeleteItemAtSpecifiedPositionSuccess)
 	items.emplace_back(std::make_shared<CParagraph>(text2));
 
 	size_t position = 1;
-	DeleteItemCommandTestable command(position, items);
+	DeleteItemCommand command(position, items);
 
-	command.TestDoExecute();
+	command.DoExecute();
 
 	ASSERT_EQ(items.size(), 1);
 	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Paragraph 1");
 
-	command.TestDoUnexecute();
+	command.DoUnexecute();
 
 	ASSERT_EQ(items.size(), 2);
 	EXPECT_EQ(items[1].GetParagraph()->GetText(), "Paragraph 2");
@@ -52,9 +31,9 @@ TEST(DeleteItemCommandTest, DoExecuteDeleteItemWithInvalidPositionError)
 	items.emplace_back(std::make_shared<CParagraph>(text));
 
 	size_t invalidPosition = 5;
-	DeleteItemCommandTestable command(invalidPosition, items);
+	DeleteItemCommand command(invalidPosition, items);
 
-	EXPECT_THROW(command.TestDoExecute(), std::invalid_argument);
+	EXPECT_THROW(command.DoExecute(), std::invalid_argument);
 }
 
 TEST(DeleteItemCommandTest, DoExecuteDeleteOnlyItemSuccess)
@@ -64,13 +43,13 @@ TEST(DeleteItemCommandTest, DoExecuteDeleteOnlyItemSuccess)
 	items.emplace_back(std::make_shared<CParagraph>(text));
 
 	size_t position = 0;
-	DeleteItemCommandTestable command(position, items);
+	DeleteItemCommand command(position, items);
 
-	command.TestDoExecute();
+	command.DoExecute();
 
 	EXPECT_TRUE(items.empty());
 
-	command.TestDoUnexecute();
+	command.DoUnexecute();
 
 	ASSERT_EQ(items.size(), 1);
 	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Only paragraph");
@@ -88,14 +67,14 @@ TEST(DeleteItemCommandTest, DoExecuteDeleteItemAtPositionZeroSuccess)
 	items.emplace_back(std::make_shared<CParagraph>(text3));
 
 	size_t position = 0;
-	DeleteItemCommandTestable command(position, items);
+	DeleteItemCommand command(position, items);
 
-	command.TestDoExecute();
+	command.DoExecute();
 
 	ASSERT_EQ(items.size(), 2);
 	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Paragraph 2");
 
-	command.TestDoUnexecute();
+	command.DoUnexecute();
 
 	ASSERT_EQ(items.size(), 3);
 	EXPECT_EQ(items[0].GetParagraph()->GetText(), "Paragraph 1");
@@ -106,9 +85,9 @@ TEST(DeleteItemCommandTest, DoUnexecuteOnEmptyListError)
 	std::vector<CDocumentItem> items;
 
 	size_t position = 0;
-	DeleteItemCommandTestable command(position, items);
+	DeleteItemCommand command(position, items);
 
-	EXPECT_NO_THROW(command.TestDoUnexecute());
+	EXPECT_NO_THROW(command.DoUnexecute());
 
 	EXPECT_TRUE(items.empty());
 }

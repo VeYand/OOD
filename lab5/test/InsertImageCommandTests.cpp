@@ -62,30 +62,6 @@ bool AssertFilesAreEqual(const std::string &path1, const std::string &path2)
 	                  std::istreambuf_iterator(file2));
 }
 
-class InsertImageCommandTestable final : public InsertImageCommand
-{
-public:
-	InsertImageCommandTestable(
-		const Path &path,
-		int width,
-		int height,
-		std::optional<size_t> position,
-		std::vector<CDocumentItem> &items
-	): InsertImageCommand(path, width, height, position, items)
-	{
-	}
-
-	void TestDoExecute()
-	{
-		DoExecute();
-	}
-
-	void TestDoUnexecute()
-	{
-		DoUnexecute();
-	}
-};
-
 TEST(InsertImageCommandTests, ExecuteInsertsImageAtEndSuccess)
 {
 	std::vector<CDocumentItem> items;
@@ -93,9 +69,9 @@ TEST(InsertImageCommandTests, ExecuteInsertsImageAtEndSuccess)
 	int width = 100;
 	int height = 200;
 
-	InsertImageCommandTestable command(imagePath, width, height, std::nullopt, items);
+	InsertImageCommand command(imagePath, width, height, std::nullopt, items);
 
-	EXPECT_NO_THROW(command.TestDoExecute());
+	EXPECT_NO_THROW(command.DoExecute());
 
 	ASSERT_EQ(items.size(), 1);
 	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
@@ -109,9 +85,9 @@ TEST(InsertImageCommandTests, ExecuteInsertsImageAtPositionSuccess)
 	int width = 100;
 	int height = 200;
 
-	InsertImageCommandTestable command(imagePath, width, height, 0, items);
+	InsertImageCommand command(imagePath, width, height, 0, items);
 
-	EXPECT_NO_THROW(command.TestDoExecute());
+	EXPECT_NO_THROW(command.DoExecute());
 
 	ASSERT_EQ(items.size(), 1);
 	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
@@ -125,9 +101,9 @@ TEST(InsertImageCommandTests, ExecuteThrowsOnInvalidPositionError)
 	int width = 100;
 	int height = 200;
 
-	InsertImageCommandTestable command(imagePath, width, height, 2, items);
+	InsertImageCommand command(imagePath, width, height, 2, items);
 
-	EXPECT_THROW(command.TestDoExecute(), std::invalid_argument);
+	EXPECT_THROW(command.DoExecute(), std::invalid_argument);
 }
 
 TEST(InsertImageCommandTests, UnexecuteRemovesLastInsertedSuccess)
@@ -137,14 +113,14 @@ TEST(InsertImageCommandTests, UnexecuteRemovesLastInsertedSuccess)
 	int width = 100;
 	int height = 200;
 
-	InsertImageCommandTestable command(imagePath, width, height, std::nullopt, items);
+	InsertImageCommand command(imagePath, width, height, std::nullopt, items);
 
-	command.TestDoExecute();
+	command.DoExecute();
 	ASSERT_EQ(items.size(), 1);
 	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
 	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
 
-	command.TestDoUnexecute();
+	command.DoUnexecute();
 	ASSERT_EQ(items.size(), 0);
 	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
 	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
@@ -157,14 +133,14 @@ TEST(InsertImageCommandTests, UnexecuteRemovesInsertedAtPosition)
 	int width = 100;
 	int height = 200;
 
-	InsertImageCommandTestable command(imagePath, width, height, 0, items);
+	InsertImageCommand command(imagePath, width, height, 0, items);
 
-	command.TestDoExecute();
+	command.DoExecute();
 	ASSERT_EQ(items.size(), 1);
 	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
 	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
 
-	command.TestDoUnexecute();
+	command.DoUnexecute();
 	ASSERT_EQ(items.size(), 0);
 	EXPECT_TRUE(AssertDirectoryIsNotEmpty("temp"));
 	EXPECT_TRUE(AssertFilesAreEqual(IMAGE_PATH, "temp/" + GetFirstFileOnDirectory("temp")));
