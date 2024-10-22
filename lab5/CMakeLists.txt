@@ -46,6 +46,7 @@ add_executable(${PROJECT_NAME}Test_1
         test/InsertImageCommandTests.cpp
         test/HistoryTest.cpp
         test/CDocumentTest.cpp
+        test/CMenuTest.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1 gtest_main gmock)
