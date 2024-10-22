@@ -44,6 +44,7 @@ add_executable(${PROJECT_NAME}Test_1
         test/DeleteItemCommandTest.cpp
         test/SetTitleCommandTest.cpp
         test/InsertImageCommandTests.cpp
+        test/HistoryTest.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1 gtest_main gmock)
