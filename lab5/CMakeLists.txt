@@ -32,7 +32,7 @@ add_executable(${PROJECT_NAME}
         src/Document/Command/DeleteItemCommand.h
         src/Document/Command/SetTitleCommand.h
         src/Document/Command/ReplaceTextCommand.h
-        src/Document/Html/HtmlUtils.h
+        src/Document/Utils/HtmlUtils.h
         src/Document/Command/ResizeImageCommand.h
         src/Document/Utils/FileUtils.h
 )

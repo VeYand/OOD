@@ -2,6 +2,7 @@
 #define FILEUTILS_H
 
 #include <fstream>
+#include <iostream>
 #include <stdexcept>
 #include <filesystem>
 
@@ -10,7 +11,9 @@ class FileUtils
 public:
 	static std::string GetFileName(const Path &path)
 	{
+		std::cout << path << std::endl;
 		size_t slashPosition = path.find_last_of('/');
+		std::cout << slashPosition << std::endl;
 
 		if (slashPosition != std::string::npos && slashPosition != 0)
 		{

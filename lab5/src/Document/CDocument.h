@@ -10,7 +10,7 @@
 #include "Command/ReplaceTextCommand.h"
 #include "Command/ResizeImageCommand.h"
 #include "Command/SetTitleCommand.h"
-#include "Html/HtmlUtils.h"
+#include "Utils/HtmlUtils.h"
 
 class CDocument final : public IDocument
 {

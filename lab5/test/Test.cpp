@@ -89,7 +89,7 @@ public:
 	}
 };
 
-class ReplaceTextCommandTestable : public ReplaceTextCommand
+class ReplaceTextCommandTestable final : public ReplaceTextCommand
 {
 public:
 	ReplaceTextCommandTestable(
@@ -110,7 +110,7 @@ public:
 	}
 };
 
-class DeleteItemCommandTestable : public DeleteItemCommand
+class DeleteItemCommandTestable final : public DeleteItemCommand
 {
 public:
 	DeleteItemCommandTestable(
@@ -131,7 +131,7 @@ public:
 	}
 };
 
-class SetTitleCommandTestable : public SetTitleCommand
+class SetTitleCommandTestable final : public SetTitleCommand
 {
 public:
 	SetTitleCommandTestable(
@@ -152,7 +152,7 @@ public:
 	}
 };
 
-class InsertImageCommandTestable : public InsertImageCommand
+class InsertImageCommandTestable final : public InsertImageCommand
 {
 public:
 	InsertImageCommandTestable(
