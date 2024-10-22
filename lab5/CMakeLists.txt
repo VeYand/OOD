@@ -38,7 +38,12 @@ add_executable(${PROJECT_NAME}
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
-        test/Test.cpp
+        test/ResizeImageCommandTests.cpp
+        test/InsertParagraphCommandTest.cpp
+        test/ReplaceTextCommandTest.cpp
+        test/DeleteItemCommandTest.cpp
+        test/SetTitleCommandTest.cpp
+        test/InsertImageCommandTests.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1 gtest_main gmock)
