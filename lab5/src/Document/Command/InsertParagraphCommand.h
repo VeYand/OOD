@@ -8,7 +8,7 @@
 #include "AbstractCommand.h"
 #include "../Paragraph/CParagraph.h"
 
-class InsertParagraphCommand : public AbstractCommand
+class InsertParagraphCommand final : public AbstractCommand
 {
 public:
 	InsertParagraphCommand(

@@ -11,7 +11,7 @@
 #include "../Image/СImage.h"
 #include "../Utils/FileUtils.h"
 
-class InsertImageCommand : public AbstractCommand
+class InsertImageCommand final : public AbstractCommand
 {
 public:
 	InsertImageCommand(

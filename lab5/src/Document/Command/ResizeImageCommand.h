@@ -4,7 +4,7 @@
 #include "../CDocumentItem.h"
 #include "AbstractCommand.h"
 
-class ResizeImageCommand : public AbstractCommand
+class ResizeImageCommand final : public AbstractCommand
 {
 public:
 	ResizeImageCommand(
