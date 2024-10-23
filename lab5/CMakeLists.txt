@@ -35,6 +35,7 @@ add_executable(${PROJECT_NAME}
         src/Document/Utils/HtmlUtils.h
         src/Document/Command/ResizeImageCommand.h
         src/Document/Utils/FileUtils.h
+        src/CommandHandler.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
