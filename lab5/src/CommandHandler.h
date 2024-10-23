@@ -29,7 +29,7 @@ public:
 		m_menu.AddItem(
 			"List",
 			"Usage: List. Displays the title and list of document elements.",
-			[&](std::istringstream &params) { List(params); }
+			[&](std::istringstream &params) { List(); }
 		);
 
 		m_menu.AddItem(
@@ -146,7 +146,7 @@ public:
 		m_document.SetTitle(newTitle);
 	}
 
-	void List(std::istringstream &params)
+	void List()
 	{
 		const auto title = m_document.GetTitle();
 		const auto itemCount = m_document.GetItemsCount();
@@ -205,7 +205,6 @@ public:
 			std::cerr << "Invalid arguments." << std::endl;
 			return;
 		}
-
 
 		m_document.ResizeImage(position, newWidth, newHeight);
 	}
