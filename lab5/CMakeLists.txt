@@ -50,6 +50,15 @@ add_executable(${PROJECT_NAME}Test_1
         test/CMenuTest.cpp
 )
 
+add_executable(${PROJECT_NAME}_2
+        2/main.cpp
+        2/Commands.h
+        2/ICommand.h
+        2/Menu.h
+        2/Robot.h
+        2/MenuFP.h
+)
+
 target_link_libraries(${PROJECT_NAME}Test_1 gtest_main gmock)
 enable_testing()
 add_test(NAME ${PROJECT_NAME}Test_1 COMMAND ${PROJECT_NAME}Test_1)
