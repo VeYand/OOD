@@ -54,7 +54,6 @@ add_executable(${PROJECT_NAME}_2
         2/main.cpp
         2/Commands.h
         2/ICommand.h
-        2/Menu.h
         2/Robot.h
         2/MenuFP.h
 )

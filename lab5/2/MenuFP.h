@@ -2,7 +2,6 @@
 
 #include <vector>
 #include <string>
-#include <memory>
 #include <iostream>
 #include <algorithm>
 #include <functional>
@@ -80,4 +79,6 @@ private:
 
 	std::vector<Item> m_items;
 	bool m_exit = false;
+
+	friend class BeginMacroCommand;
 };

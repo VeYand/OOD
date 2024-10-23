@@ -1,6 +1,74 @@
 #pragma once
 #include "ICommand.h"
 #include "Robot.h"
+#include <vector>
+#include <memory>
+
+
+template<typename Commands>
+CMenuFP::Command CreateMacroCommand(Commands &&commands)
+{
+	return [=] {
+		for (auto &command: commands)
+		{
+			command();
+		}
+	};
+}
+
+class BeginMacroCommand
+{
+public:
+	explicit BeginMacroCommand(CMenuFP &menu)
+		: m_menu(menu)
+	{
+	}
+
+	void Start() const
+	{
+		std::string name, description;
+		std::vector<CMenuFP::Command> commands;
+
+		std::cout << "Enter command name: " << std::endl;
+		std::getline(std::cin, name);
+
+		std::cout << "Enter command description: " << std::endl;
+		std::getline(std::cin, description);
+
+		std::cout << "Type commands to add them to the macro, 'end_macro' to finish" << std::endl;
+
+		std::string command;
+		while (true)
+		{
+			std::cout << "> ";
+			std::getline(std::cin, command);
+			if (command == "end_macro")
+			{
+				break;
+			}
+
+			auto it = std::ranges::find_if(m_menu.m_items,
+			                               [&](const CMenuFP::Item &item) {
+				                               return item.shortcut == command;
+			                               });
+			if (it != m_menu.m_items.end())
+			{
+				commands.push_back(it->command);
+				std::cout << "Command '" << command << "' added to macro" << std::endl;
+			}
+			else
+			{
+				std::cout << "Unknown command: " << command << std::endl;
+			}
+		}
+
+		m_menu.AddItem(name, description, CreateMacroCommand(std::move(commands)));
+		std::cout << "Macro '" << name << "' created" << std::endl;
+	}
+
+private:
+	CMenuFP &m_menu;
+};
 
 class CTurnOnCommand : public ICommand
 {
