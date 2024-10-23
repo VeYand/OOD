@@ -12,9 +12,9 @@ class CMenu
 {
 public:
 	void AddItem(
-		const std::string & shortcut,
-		const std::string & description,
-		std::unique_ptr<ICommand> && command)
+		const std::string &shortcut,
+		const std::string &description,
+		std::unique_ptr<ICommand> &&command)
 	{
 		m_items.emplace_back(shortcut, description, std::move(command));
 	}
@@ -25,16 +25,16 @@ public:
 
 		std::string command;
 		while ((std::cout << ">")
-			&& getline(std::cin, command)
-			&& ExecuteCommand(command))
+		       && getline(std::cin, command)
+		       && ExecuteCommand(command))
 		{
 		}
 	}
 
-	void ShowInstructions()const
+	void ShowInstructions() const
 	{
 		std::cout << "Commands list:\n";
-		for (auto & item : m_items)
+		for (auto &item: m_items)
 		{
 			std::cout << "  " << item.shortcut << ": " << item.description << "\n";
 		}
@@ -44,12 +44,13 @@ public:
 	{
 		m_exit = true;
 	}
+
 private:
-	bool ExecuteCommand(const std::string & command)
+	bool ExecuteCommand(const std::string &command)
 	{
 		m_exit = false;
 
-		auto it = std::find_if(m_items.begin(), m_items.end(), [&](const Item & item) {
+		auto it = std::find_if(m_items.begin(), m_items.end(), [&](const Item &item) {
 			return item.shortcut == command;
 		});
 		if (it != m_items.end())
@@ -66,16 +67,18 @@ private:
 
 	struct Item
 	{
-		Item(const std::string & shortcut, const std::string & description, std::unique_ptr<ICommand> && command)
+		Item(const std::string &shortcut, const std::string &description, std::unique_ptr<ICommand> &&command)
 			: shortcut(shortcut)
-			, description(description)
-			, command(std::move(command))
-		{}
+			  , description(description)
+			  , command(std::move(command))
+		{
+		}
 
 		std::string shortcut;
 		std::string description;
 		std::unique_ptr<ICommand> command;
 	};
+
 	std::vector<Item> m_items;
 	bool m_exit = false;
 };
