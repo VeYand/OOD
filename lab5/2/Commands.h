@@ -35,7 +35,7 @@ public:
 		std::cout << "Enter command description: " << std::endl;
 		std::getline(std::cin, description);
 
-		std::cout << "Type commands to add them to the macro, 'end_macro' to finish" << std::endl;
+		std::cout << "Type commands to add them to the macro, \"end_macro\" to finish" << std::endl;
 
 		std::string command;
 		while (true)
@@ -54,16 +54,16 @@ public:
 			if (it != m_menu.m_items.end())
 			{
 				commands.push_back(it->command);
-				std::cout << "Command '" << command << "' added to macro" << std::endl;
+				std::cout << "Command \"" << command << "\" added to macro" << std::endl;
 			}
 			else
 			{
-				std::cout << "Unknown command: " << command << std::endl;
+				std::cout << "Unknown command" << std::endl;
 			}
 		}
 
 		m_menu.AddItem(name, description, CreateMacroCommand(std::move(commands)));
-		std::cout << "Macro '" << name << "' created" << std::endl;
+		std::cout << "Macro \"" << name << "\" created" << std::endl;
 	}
 
 private:
