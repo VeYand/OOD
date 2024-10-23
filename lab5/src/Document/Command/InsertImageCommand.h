@@ -51,6 +51,7 @@ public:
 			throw std::invalid_argument("Position out of range");
 		}
 
+		m_shouldDelete = false;
 		m_items.insert(m_items.begin() + static_cast<std::vector<int>::difference_type>(position), documentItem);
 	}
 
@@ -60,6 +61,8 @@ public:
 		{
 			return;
 		}
+
+		m_shouldDelete = true;
 
 		if (!m_position.has_value())
 		{
@@ -78,10 +81,11 @@ public:
 
 	void Destroy() override
 	{
-		if (m_newPath.has_value())
+		if (m_newPath.has_value() && m_shouldDelete)
 		{
 			FileUtils::DeleteFileIfExists(m_newPath.value());
 		}
+		m_shouldDelete = false;
 	}
 
 	~InsertImageCommand() override
@@ -105,6 +109,7 @@ private:
 	unsigned m_height;
 	std::optional<size_t> m_position;
 	std::vector<CDocumentItem> &m_items;
+	bool m_shouldDelete = false;
 };
 
 #endif //INSERTIMAGECOMMAND_H

@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "IImage.h"
+#include "../Utils/FileUtils.h"
 
 class CImage final : public IImage
 {
