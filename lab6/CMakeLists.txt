@@ -13,12 +13,12 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME}
-        1/main.cpp
-        1/graphics_lib.h
-        1/shape_drawing_lib.h
-        1/modern_graphics_lib.h
-        1/ModernGraphicsAdapter.h
-        1/ModernGraphicsClassAdapter.h
+        src/main.cpp
+        src/graphics_lib.h
+        src/shape_drawing_lib.h
+        src/modern_graphics_lib.h
+        src/ModernGraphicsAdapter.h
+        src/ModernGraphicsClassAdapter.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
