@@ -29,7 +29,7 @@ namespace app
 		{
 			const modern_graphics_lib::CPoint end(x, y);
 
-			DrawLine(m_start, end, m_color);
+			DrawLine(m_start, end, ConvertToColor(m_color));
 
 			m_start.x = end.x;
 			m_start.y = end.y;
@@ -38,6 +38,17 @@ namespace app
 	private:
 		uint32_t m_color{};
 		modern_graphics_lib::CPoint m_start;
+
+		static modern_graphics_lib::CRGBAColor ConvertToColor(const uint32_t colorValue)
+		{
+			constexpr float colorScale = 1.0f / 255.0f;
+			const auto red = static_cast<float>((colorValue >> 16) & 0xFF) * colorScale;
+			const auto green = static_cast<float>((colorValue >> 8) & 0xFF) * colorScale;
+			const auto blue = static_cast<float>(colorValue & 0xFF) * colorScale;
+			const auto alpha = static_cast<float>((colorValue >> 24) & 0xFF) * colorScale;
+
+			return {red, green, blue, alpha};
+		}
 	};
 }
 

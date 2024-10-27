@@ -15,7 +15,7 @@ namespace app
 	{
 		using namespace shape_drawing_lib;
 
-		const CTriangle triangle({10, 15}, {100, 200}, {150, 250});
+		const CTriangle triangle({10, 15}, {100, 200}, {150, 250}, 0xFFBBCC);
 		const CRectangle rectangle({30, 40}, 18, 24);
 
 		painter.Draw(triangle);
@@ -59,7 +59,7 @@ namespace app
 
 int main()
 {
-	std::cout << "Should we use new API (y)?";
+	std::cout << "Should we use new API (y)? ";
 
 	std::string line;
 	const auto shouldUseNewApi = getline(std::cin, line) && (line == "y" || line == "Y");

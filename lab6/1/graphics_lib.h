@@ -2,6 +2,7 @@
 #define GRAPHICS_LIB_H
 #include <iostream>
 #include <cstdint>
+#include <iomanip>
 
 namespace graphics_lib
 {
@@ -27,7 +28,7 @@ namespace graphics_lib
 	public:
 		void SetColor(const uint32_t rgbColor) override
 		{
-			std::cout << "SetColor on " << rgbColor << std::endl;
+			std::cout << "SetColor on #" << std::hex << std::setfill('0') << rgbColor << std::dec << std::endl;
 		}
 
 		void MoveTo(const int x, const int y) override

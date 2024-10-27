@@ -18,6 +18,17 @@ namespace modern_graphics_lib
 		int y;
 	};
 
+	// Цвет в формате RGBA, каждый компонент принимает значения от 0.0f до 1.0f
+	class CRGBAColor
+	{
+	public:
+		CRGBAColor(const float r, const float g, const float b, const float a): red(r), green(g), blue(b), alpha(a)
+		{
+		}
+
+		float red, green, blue, alpha;
+	};
+
 	// Класс для современного рисования графики
 	class CModernGraphicsRenderer
 	{
@@ -46,14 +57,14 @@ namespace modern_graphics_lib
 		}
 
 		// Выполняет рисование линии
-		void DrawLine(const CPoint &start, const CPoint &end, const uint32_t &color)
+		void DrawLine(const CPoint &start, const CPoint &end, const CRGBAColor &color)
 		{
 			if (!m_drawing)
 			{
 				throw std::logic_error("DrawLine is allowed between BeginDraw()/EndDraw() only");
 			}
 
-			const auto [red, green, blue, alpha] = ConvertToColor(color);
+			const auto [red, green, blue, alpha] = color;
 
 			m_out << std::format(R"(  <line fromX="{}" fromY="{}" toX="{}" toY="{}">)", start.x, start.y, end.x,
 			                     end.y) << std::endl;
@@ -81,22 +92,6 @@ namespace modern_graphics_lib
 	private:
 		std::ostream &m_out;
 		bool m_drawing = false;
-
-		struct Color
-		{
-			float red, green, blue, alpha;
-		};
-
-		static Color ConvertToColor(const uint32_t colorValue)
-		{
-			constexpr float colorScale = 1.0f / 255.0f;
-			const auto red = static_cast<float>((colorValue >> 16) & 0xFF) * colorScale;
-			const auto green = static_cast<float>((colorValue >> 8) & 0xFF) * colorScale;
-			const auto blue = static_cast<float>(colorValue & 0xFF) * colorScale;
-			const auto alpha = static_cast<float>((colorValue >> 24) & 0xFF) * colorScale;
-
-			return {red, green, blue, alpha};
-		}
 	};
 }
 
