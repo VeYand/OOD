@@ -1,7 +1,8 @@
 #ifndef MODERN_GRAPHICS_LIB_H
 #define MODERN_GRAPHICS_LIB_H
+
+#include <iostream>
 #include <format>
-#include <ostream>
 
 // Пространство имен современной графической библиотеки (недоступно для изменения)
 namespace modern_graphics_lib
@@ -9,7 +10,7 @@ namespace modern_graphics_lib
 	class CPoint
 	{
 	public:
-		CPoint(int x, int y) : x(x), y(y)
+		CPoint(const int x, const int y) : x(x), y(y)
 		{
 		}
 
@@ -45,13 +46,25 @@ namespace modern_graphics_lib
 		}
 
 		// Выполняет рисование линии
-		void DrawLine(const CPoint &start, const CPoint &end)
+		void DrawLine(const CPoint &start, const CPoint &end, const uint32_t &color)
 		{
 			if (!m_drawing)
 			{
 				throw std::logic_error("DrawLine is allowed between BeginDraw()/EndDraw() only");
 			}
-			m_out << std::format(R"(  <line fromX="%1%" fromY="%2" toX="%3%" toY="%4%"/>)") << std::endl;
+
+			const auto [red, green, blue, alpha] = ConvertToColor(color);
+
+			m_out << std::format(R"(  <line fromX="{}" fromY="{}" toX="{}" toY="{}">)", start.x, start.y, end.x,
+			                     end.y) << std::endl;
+			m_out << std::format(
+				R"(    <color r="{}" g="{}" b="{}" a="{}" />)",
+				red,
+				green,
+				blue,
+				alpha
+			) << std::endl;
+			m_out << R"(  </line>)" << std::endl;
 		}
 
 		// Этот метод должен быть вызван в конце рисования
@@ -68,6 +81,22 @@ namespace modern_graphics_lib
 	private:
 		std::ostream &m_out;
 		bool m_drawing = false;
+
+		struct Color
+		{
+			float red, green, blue, alpha;
+		};
+
+		static Color ConvertToColor(const uint32_t colorValue)
+		{
+			constexpr float colorScale = 1.0f / 255.0f;
+			const auto red = static_cast<float>((colorValue >> 16) & 0xFF) * colorScale;
+			const auto green = static_cast<float>((colorValue >> 8) & 0xFF) * colorScale;
+			const auto blue = static_cast<float>(colorValue & 0xFF) * colorScale;
+			const auto alpha = static_cast<float>((colorValue >> 24) & 0xFF) * colorScale;
+
+			return {red, green, blue, alpha};
+		}
 	};
 }
 
