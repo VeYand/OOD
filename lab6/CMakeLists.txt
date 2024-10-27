@@ -21,7 +21,13 @@ add_executable(${PROJECT_NAME}
         src/ModernGraphicsClassAdapter.h
 )
 add_executable(${PROJECT_NAME}Test_1
+        src/graphics_lib.h
+        src/shape_drawing_lib.h
+        src/modern_graphics_lib.h
+        src/ModernGraphicsAdapter.h
+        src/ModernGraphicsClassAdapter.h
         test/main.cpp
+        test/test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1 gtest_main gmock)
