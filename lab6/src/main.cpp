@@ -40,7 +40,7 @@ namespace app
 
 		PaintPicture(painter);
 
-		renderer.EndDraw();
+		renderer.EndDraw(); // Имеет ли смысл вызывать внутри адаптера
 	}
 
 	void PaintPictureOnModernGraphicsRenderer2()

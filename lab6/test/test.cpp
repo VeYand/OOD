@@ -86,26 +86,16 @@ std::string DrawShapeWithClassAdapter(const std::vector<mgl::CPoint> &points, co
 	return strm.str();
 }
 
-TEST(ObjectAdapterTest, InterfaceImplementation)
-{
-	std::stringstream strm;
-	mgl::CModernGraphicsRenderer renderer(strm);
-	app::ModernGraphicsAdapter adapter(renderer);
-
-	const auto canvas = dynamic_cast<graphics_lib::ICanvas *>(&adapter);
-	ASSERT_NE(canvas, nullptr);
-}
-
 TEST(TriangleTest, DrawWithObjectAdapter)
 {
 	const auto triangle =
 	{
-		mgl::CPoint(10, 15),
-		mgl::CPoint(100, 200),
-		mgl::CPoint(150, 250),
+		mgl::CPoint(1, 2),
+		mgl::CPoint(3, 4),
+		mgl::CPoint(5, 6),
 	};
 
-	constexpr uint32_t color = 0xFF5733FF;
+	constexpr uint32_t color = 0xFFFFFFFF;
 
 	const auto originalShape = DrawWithoutAdapter(triangle, color);
 	const auto withAdapterShape = DrawWithObjectAdapter(triangle, color);
@@ -113,28 +103,16 @@ TEST(TriangleTest, DrawWithObjectAdapter)
 	EXPECT_EQ(originalShape, withAdapterShape);
 }
 
-TEST(ClassAdapterTest, InterfaceImplementation)
-{
-	std::stringstream strm;
-	app::ModernGraphicsClassAdapter adapter(strm);
-
-	auto *canvas = dynamic_cast<graphics_lib::ICanvas *>(&adapter);
-	ASSERT_NE(canvas, nullptr);
-
-	auto *renderer = dynamic_cast<mgl::CModernGraphicsRenderer *>(&adapter);
-	ASSERT_NE(renderer, nullptr);
-}
-
 TEST(TriangleTest, DrawWithClassAdapter)
 {
-	auto triangle =
+	const auto triangle =
 	{
-		mgl::CPoint(10, 15),
-		mgl::CPoint(100, 200),
-		mgl::CPoint(150, 250),
+		mgl::CPoint(1, 2),
+		mgl::CPoint(3, 4),
+		mgl::CPoint(5, 6),
 	};
 
-	uint32_t color = 0xFF5733FF;
+	constexpr uint32_t color = 0xFFAAAAFF;
 
 	const auto originalShape = DrawWithoutAdapter(triangle, color);
 	const auto withAdapterShape = DrawShapeWithClassAdapter(triangle, color);

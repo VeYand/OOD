@@ -6,7 +6,7 @@
 
 namespace app
 {
-	class ModernGraphicsClassAdapter : public graphics_lib::ICanvas, public modern_graphics_lib::CModernGraphicsRenderer
+	class ModernGraphicsClassAdapter : public graphics_lib::ICanvas, public modern_graphics_lib::CModernGraphicsRenderer // Возможно стоит использовтаь private наследование
 	{
 	public:
 		explicit ModernGraphicsClassAdapter(std::ostream &strm)
