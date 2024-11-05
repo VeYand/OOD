@@ -30,6 +30,10 @@ add_executable(${PROJECT_NAME}
         src/Shape/GroupShape.h
         src/Slide/ISlide.h
         src/Canvas/Canvas.h
+        src/ShapeFactory/ShapeFactory.h
+        src/ShapeFactory/IShapeFactory.h
+        src/ShapeFactory/ShapeType.h
+        src/Menu/CMenu.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
