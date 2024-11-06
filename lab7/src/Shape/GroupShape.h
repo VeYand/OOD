@@ -6,7 +6,7 @@
 class GroupShape final : public IGroupShape
 {
 public:
-	RectD GetFrame() override;
+	[[nodiscard]] RectD GetFrame() const override;
 
 	void SetFrame(const RectD &rect) override;
 

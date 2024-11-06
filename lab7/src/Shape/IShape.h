@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "IStyle.h"
+#include "Style/IStyle.h"
 #include "../CommonTypes.h"
 #include "../IDrawable.h"
 
@@ -12,7 +12,7 @@ class IGroupShape;
 class IShape : public IDrawable
 {
 public:
-	virtual RectD GetFrame() = 0;
+	[[nodiscard]] virtual RectD GetFrame() const = 0;
 
 	virtual void SetFrame(const RectD &rect) = 0;
 

@@ -21,7 +21,6 @@ public:
 			[&](std::istringstream &params) { Draw(params); }
 		);
 
-		...
 
 		m_menu.AddItem(
 			"Help",

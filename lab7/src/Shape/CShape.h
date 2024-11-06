@@ -8,25 +8,65 @@
 class CShape : IShape
 {
 public:
-	RectD GetFrame() override;
+	CShape(
+		const RectD &frame,
+		std::unique_ptr<IStyle> outlineStyle,
+		std::unique_ptr<IStyle> fillStyle
+	): m_frame(frame),
+	   m_outlineStyle(std::move(outlineStyle)),
+	   m_fillStyle(std::move(fillStyle))
+	{
+	}
 
-	void SetFrame(const RectD &rect) override;
+	[[nodiscard]] RectD GetFrame() const override
+	{
+		return m_frame;
+	}
 
-	IStyle &GetOutlineStyle() override;
+	void SetFrame(const RectD &rect) override
+	{
+		m_frame = rect;
+	}
 
-	[[nodiscard]] const IStyle &GetOutlineStyle() const override;
+	IStyle &GetOutlineStyle() override
+	{
+		return *m_outlineStyle;
+	}
 
-	IStyle &GetFillStyle() override;
+	[[nodiscard]] const IStyle &GetOutlineStyle() const override
+	{
+		return *m_outlineStyle;
+	}
 
-	[[nodiscard]] const IStyle &GetFillStyle() const override;
+	IStyle &GetFillStyle() override
+	{
+		return *m_fillStyle;
+	}
 
-	std::shared_ptr<IGroupShape> GetGroup() override;
+	[[nodiscard]] const IStyle &GetFillStyle() const override
+	{
+		return *m_fillStyle;
+	}
 
-	[[nodiscard]] std::shared_ptr<const IGroupShape> GetGroup() const override;
+	std::shared_ptr<IGroupShape> GetGroup() override
+	{
+		return m_group;
+	}
 
-	virtual void Draw(ICanvas &canvas) const = 0;
+	[[nodiscard]] std::shared_ptr<const IGroupShape> GetGroup() const override
+	{
+		return m_group;
+	}
+
+	void Draw(ICanvas &canvas) const override = 0;
 
 	~CShape() override = default;
+
+private:
+	RectD m_frame;
+	std::unique_ptr<IStyle> m_outlineStyle;
+	std::unique_ptr<IStyle> m_fillStyle;
+	std::shared_ptr<IGroupShape> m_group;
 };
 
 #endif //CSHAPE_H
