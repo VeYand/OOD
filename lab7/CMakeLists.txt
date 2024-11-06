@@ -36,6 +36,7 @@ add_executable(${PROJECT_NAME}
         src/ShapeFactory/ShapeType.h
         src/Menu/CMenu.h
         src/Shape/Style/ProxyStyle.h
+        src/CommandHandler.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
