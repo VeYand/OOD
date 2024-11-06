@@ -30,6 +30,7 @@ add_executable(${PROJECT_NAME}
         src/Shape/GroupShape.h
         src/Slide/ISlide.h
         src/Canvas/Canvas.h
+        src/Canvas/stb_image_write.h
         src/ShapeFactory/ShapeFactory.h
         src/ShapeFactory/IShapeFactory.h
         src/ShapeFactory/ShapeType.h
