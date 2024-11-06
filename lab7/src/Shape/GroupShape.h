@@ -3,7 +3,6 @@
 
 #include <limits>
 #include "IGroupShape.h"
-#include "Style/CStyle.h"
 #include "Style/ProxyStyle.h"
 
 class GroupShape final : public IGroupShape

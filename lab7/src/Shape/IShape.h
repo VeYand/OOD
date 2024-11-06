@@ -5,8 +5,6 @@
 #include "../CommonTypes.h"
 #include "../IDrawable.h"
 
-class IGroupShape;
-
 class IShape : public IDrawable
 {
 public:

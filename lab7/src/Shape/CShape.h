@@ -5,7 +5,7 @@
 #include "../CommonTypes.h"
 #include "../Canvas/ICanvas.h"
 
-class CShape : IShape
+class CShape : public IShape
 {
 public:
 	CShape(

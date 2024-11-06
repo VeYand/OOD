@@ -1,6 +1,7 @@
 #ifndef ICANVAS_H
 #define ICANVAS_H
 
+#include <optional>
 #include <vector>
 #include "../CommonTypes.h"
 
