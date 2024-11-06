@@ -16,14 +16,14 @@ add_executable(${PROJECT_NAME}
         src/main.cpp
         src/CommonTypes.h
         src/Shape/CShape.h
-        src/Shape/CStyle.h
+        src/Shape/Style/CStyle.h
         src/Shape/CRectangle.h
         src/Shape/CEllipse.h
         src/Shape/CTriangle.h
         src/Canvas/ICanvas.h
         src/Slide/CSlide.h
         src/IDrawable.h
-        src/Shape/IStyle.h
+        src/Shape/Style/IStyle.h
         src/Shape/IShape.h
         src/Shape/IShapes.h
         src/Shape/IGroupShape.h
