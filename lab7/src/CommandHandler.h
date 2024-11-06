@@ -15,7 +15,7 @@ public:
 	               std::unique_ptr<IShapeFactory> factory)
 		: m_slide(std::move(slide)), m_canvas(std::move(canvas)), m_factory(std::move(factory))
 	{
-		m_menu.AddItem("InsertShape", "Usage: InsertShape <type> <params>. Adds a shape.",
+		m_menu.AddItem("InsertShape", "Usage: InsertShape <type> <left> <top> <width> <height> <outlineColor> <fillColor>. Adds a shape.",
 		               [&](std::istringstream &params) { InsertShape(params); });
 		m_menu.AddItem("RemoveShape", "Usage: RemoveShape <index>. Removes a shape by index.",
 		               [&](std::istringstream &params) { RemoveShape(params); });
