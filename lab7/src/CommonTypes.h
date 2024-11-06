@@ -11,6 +11,14 @@ struct Rect
 	T height;
 };
 
+template<typename T>
+struct Point
+{
+	T x;
+	T y;
+};
+
+typedef Point<double> PointD;
 typedef Rect<double> RectD;
 typedef uint32_t RGBAColor;
 

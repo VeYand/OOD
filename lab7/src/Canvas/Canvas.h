@@ -6,29 +6,19 @@
 class Canvas final : ICanvas
 {
 public:
-	void EndFill() override
-	{
-	}
+	void BeginFill(RGBAColor color) override;
 
-	void MoveTo(double x, double y) override
-	{
-	}
+	void EndFill() override;
 
-	void LineTo(double x, double y) override
-	{
-	}
+	void MoveTo(double x, double y) override;
 
-	void DrawEllipse(double left, double top, double width, double height) override
-	{
-	}
+	void LineTo(double x, double y) override;
 
-	void SetLineColor(RGBAColor color) override
-	{
-	}
+	void DrawEllipse(RectD frame) override;
 
-	void BeginFill(RGBAColor color) override
-	{
-	}
+	void DrawPolygon(std::vector<PointD> points) override;
+
+	~Canvas() override;
 };
 
 #endif //CANVAS_H

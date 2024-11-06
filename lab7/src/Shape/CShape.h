@@ -33,7 +33,7 @@ public:
 		return *m_outlineStyle;
 	}
 
-	[[nodiscard]] const IStyle &GetOutlineStyle() const override
+	[[nodiscard]] IStyle &GetOutlineStyle() const override
 	{
 		return *m_outlineStyle;
 	}
@@ -43,7 +43,7 @@ public:
 		return *m_fillStyle;
 	}
 
-	[[nodiscard]] const IStyle &GetFillStyle() const override
+	[[nodiscard]] IStyle &GetFillStyle() const override
 	{
 		return *m_fillStyle;
 	}

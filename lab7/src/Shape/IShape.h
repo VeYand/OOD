@@ -18,11 +18,11 @@ public:
 
 	virtual IStyle &GetOutlineStyle() = 0;
 
-	[[nodiscard]] virtual const IStyle &GetOutlineStyle() const = 0;
+	[[nodiscard]] virtual IStyle &GetOutlineStyle() const = 0;
 
 	virtual IStyle &GetFillStyle() = 0;
 
-	[[nodiscard]] virtual const IStyle &GetFillStyle() const = 0;
+	[[nodiscard]] virtual IStyle &GetFillStyle() const = 0;
 
 	virtual std::shared_ptr<IGroupShape> GetGroup() = 0;
 

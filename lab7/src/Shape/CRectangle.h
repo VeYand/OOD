@@ -15,7 +15,37 @@ public:
 	{
 	}
 
-	void Draw(ICanvas &canvas) const override;
+	void Draw(ICanvas &canvas) const override
+	{
+		const IStyle &outlineStyle = GetOutlineStyle();
+		const IStyle &fillStyle = GetFillStyle();
+
+		if (fillStyle.IsEnabled() && fillStyle.GetColor().has_value())
+		{
+			canvas.BeginFill(fillStyle.GetColor().value());
+		}
+
+		if (outlineStyle.IsEnabled() && outlineStyle.GetColor().has_value())
+		{
+			canvas.SetLineColor(outlineStyle.GetColor().value());
+		}
+		else
+		{
+			canvas.SetLineColor(std::nullopt);
+		}
+
+		const auto [left, top, width, height] = GetFrame();
+
+		const std::vector<PointD> points = {
+			{left, top},
+			{left + width, top},
+			{left + width, top + height},
+			{left, top + height}
+		};
+		canvas.DrawPolygon(points);
+
+		canvas.EndFill();
+	}
 };
 
 #endif //CRECTANGLE_H

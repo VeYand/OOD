@@ -17,6 +17,26 @@ public:
 
 	void Draw(ICanvas &canvas) const override
 	{
+		const IStyle &outlineStyle = GetOutlineStyle();
+		const IStyle &fillStyle = GetFillStyle();
+
+		if (fillStyle.IsEnabled() && fillStyle.GetColor().has_value())
+		{
+			canvas.BeginFill(fillStyle.GetColor().value());
+		}
+
+		if (outlineStyle.IsEnabled() && outlineStyle.GetColor().has_value())
+		{
+			canvas.SetLineColor(outlineStyle.GetColor().value());
+		}
+		else
+		{
+			canvas.SetLineColor(std::nullopt);
+		}
+
+		canvas.DrawEllipse(GetFrame());
+
+		canvas.EndFill();
 	}
 };
 

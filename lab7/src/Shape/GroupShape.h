@@ -12,11 +12,11 @@ public:
 
 	IStyle &GetOutlineStyle() override;
 
-	[[nodiscard]] const IStyle &GetOutlineStyle() const override;
+	[[nodiscard]] IStyle &GetOutlineStyle() const override;
 
 	IStyle &GetFillStyle() override;
 
-	[[nodiscard]] const IStyle &GetFillStyle() const override;
+	[[nodiscard]] IStyle &GetFillStyle() const override;
 
 	[[nodiscard]] size_t GetShapesCount() const override;
 
