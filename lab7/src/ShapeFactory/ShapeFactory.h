@@ -42,32 +42,33 @@ public:
 	}
 
 private:
-	static std::unique_ptr<CTriangle> CreateTriangle(std::istringstream &iss)
+	static std::unique_ptr<CShape> CreateTriangle(std::istringstream &iss)
 	{
 		const auto rect = ParseShapeRect(iss);
-		const auto outlineStyle = ParseStyle(iss);
-		const auto fillStyle = ParseStyle(iss);
+		auto outlineStyle = ParseStyle(iss);
+		auto fillStyle = ParseStyle(iss);
 
-		return std::make_unique<CTriangle>(rect, outlineStyle, fillStyle);
+		return std::make_unique<CTriangle>(rect, std::move(outlineStyle), std::move(fillStyle));
 	}
 
-	static std::unique_ptr<CEllipse> CreateEllipse(std::istringstream &iss)
+	static std::unique_ptr<CShape> CreateEllipse(std::istringstream &iss)
 	{
 		const auto rect = ParseShapeRect(iss);
-		const auto outlineStyle = ParseStyle(iss);
-		const auto fillStyle = ParseStyle(iss);
+		auto outlineStyle = ParseStyle(iss);
+		auto fillStyle = ParseStyle(iss);
 
-		return std::make_unique<CEllipse>(rect, outlineStyle, fillStyle);
+		return std::make_unique<CEllipse>(rect, std::move(outlineStyle), std::move(fillStyle));
 	}
 
-	static std::unique_ptr<CRectangle> CreateRectangle(std::istringstream &iss)
+	static std::unique_ptr<CShape> CreateRectangle(std::istringstream &iss)
 	{
 		const auto rect = ParseShapeRect(iss);
-		const auto outlineStyle = ParseStyle(iss);
-		const auto fillStyle = ParseStyle(iss);
+		auto outlineStyle = ParseStyle(iss);
+		auto fillStyle = ParseStyle(iss);
 
-		return std::make_unique<CRectangle>(rect, outlineStyle, fillStyle);
+		return std::make_unique<CRectangle>(rect, std::move(outlineStyle), std::move(fillStyle));
 	}
+
 
 	static RectD ParseShapeRect(std::istringstream &iss)
 	{

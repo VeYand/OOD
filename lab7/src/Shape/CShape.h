@@ -1,6 +1,7 @@
 #ifndef CSHAPE_H
 #define CSHAPE_H
 
+#include "IGroupShape.h"
 #include "IShape.h"
 #include "../CommonTypes.h"
 #include "../Canvas/ICanvas.h"

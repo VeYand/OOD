@@ -25,4 +25,6 @@ public:
 	virtual ~ICanvas() = 0;
 };
 
+inline ICanvas::~ICanvas() {}
+
 #endif //ICANVAS_H
