@@ -14,23 +14,19 @@ public:
 
 	[[nodiscard]] double GetHeight() const override;
 
+	[[nodiscard]] size_t GetShapesCount() const override;
+
 	[[nodiscard]] IShapes &GetShapes() const override;
 
+	std::shared_ptr<IShape> GetShapeAtIndex(size_t index) override;
+
+	void RemoveShapeAtIndex(size_t index) override;
+
+	void GroupShapesAtIndexex(std::vector<size_t> indexes) override;
+
+	void InsertShape(const std::shared_ptr<IShape> &shape, size_t position) override;
+
 	void Draw(ICanvas &canvas) const override;
-
-	/** Хз что ниже */
-
-	[[nodiscard]] size_t GetShapesCount() const;
-
-	std::shared_ptr<IShape> GetShapeAtIndex(size_t index);
-
-	void InsertShape(const std::shared_ptr<IShape> &shape, size_t position = std::numeric_limits<size_t>::max());
-
-	void RemoveShapeAtIndex(size_t index);
-
-	[[nodiscard]] RGBAColor GetBackgroundColor() const;
-
-	void SetBackgroundColor(RGBAColor color);
 };
 
 #endif //CSLIDE_H
