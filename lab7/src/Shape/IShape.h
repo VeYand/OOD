@@ -1,8 +1,6 @@
 #ifndef ISHAPE_H
 #define ISHAPE_H
 
-#include <memory>
-
 #include "Style/IStyle.h"
 #include "../CommonTypes.h"
 #include "../IDrawable.h"
@@ -23,10 +21,6 @@ public:
 	virtual IStyle &GetFillStyle() = 0;
 
 	[[nodiscard]] virtual IStyle &GetFillStyle() const = 0;
-
-	virtual std::shared_ptr<IGroupShape> GetGroup() = 0;
-
-	[[nodiscard]] virtual std::shared_ptr<const IGroupShape> GetGroup() const = 0;
 
 	~IShape() override = default;
 };

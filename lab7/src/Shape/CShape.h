@@ -48,16 +48,6 @@ public:
 		return *m_fillStyle;
 	}
 
-	std::shared_ptr<IGroupShape> GetGroup() override
-	{
-		return m_group;
-	}
-
-	[[nodiscard]] std::shared_ptr<const IGroupShape> GetGroup() const override
-	{
-		return m_group;
-	}
-
 	void Draw(ICanvas &canvas) const override = 0;
 
 	~CShape() override = default;
