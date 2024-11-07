@@ -26,3 +26,6 @@ ResizeShape 0 130 400
 
 # Группируем первый и вторые дома
 GroupShapes 0 1
+
+# Изменение заливки
+SetFillStyle 0 #FF0000 true
