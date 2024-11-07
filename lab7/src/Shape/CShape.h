@@ -57,7 +57,6 @@ private:
 	RectD m_frame;
 	std::unique_ptr<IStyle> m_outlineStyle;
 	std::unique_ptr<IStyle> m_fillStyle;
-	std::shared_ptr<IGroupShape> m_group;
 };
 
 #endif //CSHAPE_H
