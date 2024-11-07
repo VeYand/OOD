@@ -1,0 +1,28 @@
+# Вывод фигур
+ListShapes
+
+# Дом 1 (цвета не совпадают)
+InsertShape ellipse 275 130 50 50 #3c59ba #42aaff
+InsertShape rectangle 200 200 200 150 #884535 #ad5744
+InsertShape triangle 200 50 200 150 #a3cc00 #ccff33
+
+
+# Дом 2 (внешние цвета совпадают, цвета заливки нет)
+InsertShape rectangle 500 400 200 150 #FF0000 #FF0000
+InsertShape triangle 500 250 200 150 #FF0000
+InsertShape ellipse 575 330 50 50 #FF0000 #FF0000
+
+# Группируем первый дом
+GroupShapes 0 1 2
+
+# Из второго дома удаляем окно (эллипс)
+RemoveShape 2
+
+# Группируем второй дом
+GroupShapes 0 1
+
+# Изменяем размеры первого дома
+ResizeShape 0 130 400
+
+# Группируем первый и вторые дома
+GroupShapes 0 1
