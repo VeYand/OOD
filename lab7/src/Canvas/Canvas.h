@@ -162,7 +162,7 @@ private:
 			{
 				double dx = (x - cx) / rx;
 				double dy = (y - cy) / ry;
-				if (dx * dx + dy * dy <= 1) // Проверка, находится ли точка внутри эллипса
+				if (dx * dx + dy * dy <= 1)
 				{
 					const int index = 4 * (y * m_width + x);
 					m_pixels[index] = (m_fillingColor >> 24) & 0xFF;
