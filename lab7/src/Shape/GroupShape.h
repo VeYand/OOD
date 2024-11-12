@@ -15,21 +15,21 @@ public:
 			return {0, 0, 0, 0};
 		}
 
-		double left = std::numeric_limits<double>::max();
-		double top = std::numeric_limits<double>::max();
-		double right = std::numeric_limits<double>::lowest();
-		double bottom = std::numeric_limits<double>::lowest();
+		double leftSum = std::numeric_limits<double>::max();
+		double topSum = std::numeric_limits<double>::max();
+		double rightSum = std::numeric_limits<double>::lowest();
+		double bottomSum = std::numeric_limits<double>::lowest();
 
 		for (const auto &shape: m_shapes)
 		{
 			auto [left, top, width, height] = shape->GetFrame();
-			left = std::min(left, left);
-			top = std::min(top, top);
-			right = std::max(right, left + width);
-			bottom = std::max(bottom, top + height);
+			leftSum = std::min(leftSum, left);
+			topSum = std::min(topSum, top);
+			rightSum = std::max(rightSum, left + width);
+			bottomSum = std::max(bottomSum, top + height);
 		}
 
-		return {left, top, right - left, bottom - top};
+		return {leftSum, topSum, rightSum - leftSum, bottomSum - topSum};
 	}
 
 	void SetFrame(const RectD &rect) override

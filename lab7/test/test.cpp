@@ -144,27 +144,68 @@ TEST_F(GroupShapeTest, GetShapesCountEmpty)
 	EXPECT_EQ(groupShape->GetShapesCount(), 0);
 }
 
-// TEST_F(GroupShapeTest, DrawCorrect)
-// {
-// 	auto rectangle1 = std::make_shared<CRectangle>(
-// 		RectD{100, 100, 200, 200},
-// 		std::make_unique<CStyle>(),
-// 		std::make_unique<CStyle>()
-// 	);
-// 	const auto [left, top, width, height] = groupShape->GetShapeAtIndex(0)->GetFrame();
-// 	const std::vector<PointD> points = {
-// 		{left, top},
-// 		{left + width, top},
-// 		{left + width, top + height},
-// 		{left, top + height}
-// 	};
-//
-// 	groupShape->InsertShape(rectangle1, groupShape->GetShapesCount());
-//
-// 	MockCanvas mockCanvas;
-// 	MockShape mockShape;
-// 	EXPECT_CALL(mockShape, Draw(mockCanvas))
-// 			.Times(1);
-//
-// 	groupShape->Draw(mockCanvas);
-// }
+TEST_F(GroupShapeTest, GetStyleGroupShape)
+{
+	auto outlineStyle1 = std::make_unique<CStyle>();
+	outlineStyle1->SetColor(0x000001);
+	auto outlineStyle2 = std::make_unique<CStyle>();
+	outlineStyle1->SetColor(0x000001);
+	auto fillStyle1 = std::make_unique<CStyle>();
+	fillStyle1->SetColor(0x000001);
+	auto fillStyle2 = std::make_unique<CStyle>();
+	fillStyle2->SetColor(0x000002);
+
+	const auto rectangle = std::make_shared<CRectangle>(
+		RectD{0, 0, 100, 100},
+		std::move(outlineStyle1),
+		std::move(fillStyle1)
+	);
+	const auto triangle = std::make_shared<CTriangle>(
+		RectD{200, 200, 100, 100},
+		std::move(outlineStyle2),
+		std::move(fillStyle2)
+	);
+
+	groupShape->InsertShape(rectangle, 0);
+	groupShape->InsertShape(triangle, 1);
+
+	const auto outlineStyleColor = groupShape->GetOutlineStyle().GetColor();
+	const auto fillStyleColor = groupShape->GetFillStyle().GetColor();
+
+	EXPECT_TRUE(outlineStyleColor == 0x000001);
+	EXPECT_TRUE(fillStyleColor == std::nullopt);
+}
+
+TEST_F(GroupShapeTest, SetStyleGroupShape)
+{
+	RGBAColor expectedOutlineStyleColor = 0xFF0000FF;
+	RGBAColor expectedFillStyleColor = 0xFF0000FF;
+
+	auto outlineStyle1 = std::make_unique<CStyle>();
+	outlineStyle1->SetColor(0x000001);
+	auto outlineStyle2 = std::make_unique<CStyle>();
+	outlineStyle1->SetColor(0x000001);
+	auto fillStyle1 = std::make_unique<CStyle>();
+	fillStyle1->SetColor(0x000001);
+	auto fillStyle2 = std::make_unique<CStyle>();
+	fillStyle2->SetColor(0x000002);
+
+	const auto rectangle = std::make_shared<CRectangle>(
+		RectD{0, 0, 100, 100},
+		std::move(outlineStyle1),
+		std::move(fillStyle1)
+	);
+	const auto triangle = std::make_shared<CTriangle>(
+		RectD{200, 200, 100, 100},
+		std::move(outlineStyle2),
+		std::move(fillStyle2)
+	);
+
+	groupShape->InsertShape(rectangle, 0);
+	groupShape->InsertShape(triangle, 1);
+	groupShape->GetOutlineStyle().SetColor(expectedOutlineStyleColor);
+	groupShape->GetFillStyle().SetColor(expectedFillStyleColor);
+
+	EXPECT_EQ(expectedOutlineStyleColor, groupShape->GetOutlineStyle().GetColor());
+	EXPECT_EQ(expectedFillStyleColor, groupShape->GetFillStyle().GetColor());
+}
