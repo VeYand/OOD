@@ -3,7 +3,7 @@
 
 #include <limits>
 #include "IGroupShape.h"
-#include "Style/ProxyStyle.h"
+#include "Style/GroupStyle.h"
 
 class GroupShape final : public IGroupShape
 {
@@ -22,11 +22,11 @@ public:
 
 		for (const auto &shape: m_shapes)
 		{
-			RectD frame = shape->GetFrame();
-			left = std::min(left, frame.left);
-			top = std::min(top, frame.top);
-			right = std::max(right, frame.left + frame.width);
-			bottom = std::max(bottom, frame.top + frame.height);
+			auto [left, top, width, height] = shape->GetFrame();
+			left = std::min(left, left);
+			top = std::min(top, top);
+			right = std::max(right, left + width);
+			bottom = std::max(bottom, top + height);
 		}
 
 		return {left, top, right - left, bottom - top};
@@ -51,22 +51,22 @@ public:
 
 	IStyle &GetOutlineStyle() override
 	{
-		return *m_outlineStyleProxy;
+		return *m_outlineStyle;
 	}
 
 	[[nodiscard]] IStyle &GetOutlineStyle() const override
 	{
-		return *m_outlineStyleProxy;
+		return *m_outlineStyle;
 	}
 
 	IStyle &GetFillStyle() override
 	{
-		return *m_fillStyleProxy;
+		return *m_fillStyle;
 	}
 
 	[[nodiscard]] IStyle &GetFillStyle() const override
 	{
-		return *m_fillStyleProxy;
+		return *m_fillStyle;
 	}
 
 	[[nodiscard]] size_t GetShapesCount() const override
@@ -81,6 +81,8 @@ public:
 			position = m_shapes.size();
 		}
 		m_shapes.insert(m_shapes.begin() + static_cast<std::vector<int>::difference_type>(position), shape);
+		m_fillStyle->InsertStyle(shape->GetFillStyle(), position);
+		m_outlineStyle->InsertStyle(shape->GetOutlineStyle(), position);
 	}
 
 	std::shared_ptr<IShape> GetShapeAtIndex(size_t index) override
@@ -99,6 +101,8 @@ public:
 			throw std::out_of_range("Index is out of range");
 		}
 		m_shapes.erase(m_shapes.begin() + static_cast<std::vector<int>::difference_type>(index));
+		m_fillStyle->RemoveStyleAtIndex(index);
+		m_outlineStyle->RemoveStyleAtIndex(index);
 	}
 
 	void Draw(ICanvas &canvas) const override
@@ -111,8 +115,8 @@ public:
 
 private:
 	std::vector<std::shared_ptr<IShape> > m_shapes;
-	std::unique_ptr<ProxyStyle> m_outlineStyleProxy = std::make_unique<ProxyStyle>(true, m_shapes);
-	std::unique_ptr<ProxyStyle> m_fillStyleProxy = std::make_unique<ProxyStyle>(false, m_shapes);
+	std::unique_ptr<IGroupStyle> m_outlineStyle = std::make_unique<GroupStyle>();
+	std::unique_ptr<IGroupStyle> m_fillStyle = std::make_unique<GroupStyle>();
 };
 
 #endif //GROUPSHAPE_H
