@@ -60,6 +60,11 @@ public:
 
 	void GroupShapesAtIndexex(std::vector<size_t> indexes) override
 	{
+		if (indexes.empty())
+		{
+			throw std::invalid_argument("Group cannot be empty");
+		}
+
 		std::vector<std::shared_ptr<IShape> > groupShapes;
 		std::ranges::sort(indexes, std::greater<>());
 
