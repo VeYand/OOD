@@ -4,6 +4,7 @@
 
 #include "IShape.h"
 
+// TODO Давть возможность работать с фигурой как группой
 class IShapes
 {
 public:

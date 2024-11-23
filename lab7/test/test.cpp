@@ -209,3 +209,41 @@ TEST_F(GroupShapeTest, SetStyleGroupShape)
 	EXPECT_EQ(expectedOutlineStyleColor, groupShape->GetOutlineStyle().GetColor());
 	EXPECT_EQ(expectedFillStyleColor, groupShape->GetFillStyle().GetColor());
 }
+
+// TODO Дописать тест
+// TEST_F (GroupShapeTest, TestStyleInGroup)
+// {
+// 	std::shared_ptr<GroupShape> rootGroup;
+// 	std::shared_ptr<GroupShape> group1;
+// 	std::shared_ptr<GroupShape> group2;
+//
+//
+// 	auto outlineStyle1 = std::make_unique<CStyle>();
+// 	outlineStyle1->SetColor(0xFF000000);
+// 	auto outlineStyle2 = std::make_unique<CStyle>();
+// 	outlineStyle1->SetColor(0x000001);
+// 	auto fillStyle1 = std::make_unique<CStyle>();
+// 	fillStyle1->SetColor(0xFF000000);
+// 	auto fillStyle2 = std::make_unique<CStyle>();
+// 	fillStyle2->SetColor(0x000002);
+//
+// 	const auto rectangle = std::make_shared<CRectangle>(
+// 		RectD{0, 0, 100, 100},
+// 		std::move(outlineStyle1),
+// 		std::move(fillStyle1)
+// 	);
+// 	const auto triangle = std::make_shared<CTriangle>(
+// 		RectD{200, 200, 100, 100},
+// 		std::move(outlineStyle2),
+// 		std::move(fillStyle2)
+// 	);
+//
+// 	group2->InsertShape(rectangle, 0);
+// 	group1->InsertShape(group2, 0);
+// 	rootGroup->InsertShape(group1, 0);
+//
+// 	EXPECT_EQ(rootGroup->GetOutlineStyle().GetColor(), 0xFF000000);
+//
+// 	group2->InsertShape(triangle, 1);
+// 	EXPECT_EQ(rootGroup->GetOutlineStyle().GetColor(), std::nullopt);
+// }

@@ -8,6 +8,7 @@
 class GroupShape final : public IGroupShape
 {
 public:
+	// TODO Группа с пустой фигурой
 	[[nodiscard]] RectD GetFrame() const override
 	{
 		if (m_shapes.empty())
