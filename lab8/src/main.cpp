@@ -1,6 +1,4 @@
-#include "gumball_machine/NaiveGumBallMachine.h"
-#include "gumball_machine/GumBallMachineWithState.h"
-#include "gumball_machine/GumBallMachineWithDynamicallyCreatedState.h"
+#include "gumball_machine/CGumballMachine.h"
 
 using namespace std;
 
@@ -39,33 +37,17 @@ void TestGumballMachine(GumballMachineType &m)
 	cout << m.ToString() << endl;
 }
 
-void TestNaiveGumballMachine()
-{
-	naive::CGumballMachine m(5);
-	TestGumballMachine(m);
-}
-
 void TestGumballMachineWithState()
 {
-	with_state::CGumballMachine m(5);
-	TestGumballMachine(m);
-}
-
-void TestGumballMachineWithDynamicState()
-{
-	with_dynamic_state::CGumballMachine m(5);
+	CGumballMachine m(5);
 	TestGumballMachine(m);
 }
 
 int main()
 {
-	TestNaiveGumballMachine();
-
 	cout << "\n-----------------\n";
 	TestGumballMachineWithState();
-
 	cout << "\n-----------------\n";
-	TestGumballMachineWithDynamicState();
 
 	return 0;
 }

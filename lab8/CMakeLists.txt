@@ -13,10 +13,14 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME}
-        src/gumball_machine/GumBallMachineWithDynamicallyCreatedState.h
-        src/gumball_machine/GumBallMachineWithState.h
         src/main.cpp
-        src/gumball_machine/NaiveGumBallMachine.h
+        src/gumball_machine/State/IState.h
+        src/gumball_machine/IGumballMachine.h
+        src/gumball_machine/State/CSoldState.h
+        src/gumball_machine/State/CSoldOutState.h
+        src/gumball_machine/State/CHasQuarterState.h
+        src/gumball_machine/State/CNoQuarterState.h
+        src/gumball_machine/CGumballMachine.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
