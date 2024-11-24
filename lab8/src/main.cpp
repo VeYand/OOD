@@ -39,7 +39,7 @@ void TestGumballMachine(GumballMachineType &m)
 
 void TestGumballMachineWithState()
 {
-	CGumballMachine m(5);
+	gumball_machine::CGumballMachine m(5);
 	TestGumballMachine(m);
 }
 

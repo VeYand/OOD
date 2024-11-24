@@ -5,42 +5,44 @@
 #include "IState.h"
 #include "../IGumballMachine.h"
 
-class CNoQuarterState final : public IState
+namespace gumball_machine
 {
-public:
-	explicit CNoQuarterState(IGumballMachine &gumballMachine)
-		: m_gumballMachine(gumballMachine)
+	class CNoQuarterState final : public IState
 	{
-	}
+	public:
+		explicit CNoQuarterState(IGumballMachine &gumballMachine)
+			: m_gumballMachine(gumballMachine)
+		{
+		}
 
-	void InsertQuarter() override
-	{
-		std::cout << "You inserted a quarter\n";
-		m_gumballMachine.SetHasQuarterState();
-	}
+		void InsertQuarter() override
+		{
+			std::cout << "You inserted a quarter\n";
+			m_gumballMachine.SetHasQuarterState();
+		}
 
-	void EjectQuarter() override
-	{
-		std::cout << "You haven't inserted a quarter\n";
-	}
+		void EjectQuarter() override
+		{
+			std::cout << "You haven't inserted a quarter\n";
+		}
 
-	void TurnCrank() override
-	{
-		std::cout << "You turned but there's no quarter\n";
-	}
+		void TurnCrank() override
+		{
+			std::cout << "You turned but there's no quarter\n";
+		}
 
-	void Dispense() override
-	{
-		std::cout << "You need to pay first\n";
-	}
+		void Dispense() override
+		{
+			std::cout << "You need to pay first\n";
+		}
 
-	[[nodiscard]] std::string ToString() const override
-	{
-		return "waiting for quarter";
-	}
+		[[nodiscard]] std::string ToString() const override
+		{
+			return "waiting for quarter";
+		}
 
-private:
-	IGumballMachine &m_gumballMachine;
-};
-
+	private:
+		IGumballMachine &m_gumballMachine;
+	};
+}
 #endif //CNOQUARTERSTATE_H

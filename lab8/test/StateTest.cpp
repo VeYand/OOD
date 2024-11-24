@@ -2,6 +2,8 @@
 #include <gmock/gmock.h>
 #include "../src/gumball_machine/CGumballMachine.h"
 
+using namespace gumball_machine;
+
 class MockGumballMachine final : public IGumballMachine
 {
 public:

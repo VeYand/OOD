@@ -1,21 +1,24 @@
 #ifndef IGUMBALLMACHINE_H
 #define IGUMBALLMACHINE_H
 
-struct IGumballMachine
+namespace gumball_machine
 {
-	virtual void ReleaseBall() = 0;
+	struct IGumballMachine
+	{
+		virtual void ReleaseBall() = 0;
 
-	[[nodiscard]] virtual unsigned GetBallCount() const = 0;
+		[[nodiscard]] virtual unsigned GetBallCount() const = 0;
 
-	virtual void SetSoldOutState() = 0;
+		virtual void SetSoldOutState() = 0;
 
-	virtual void SetNoQuarterState() = 0;
+		virtual void SetNoQuarterState() = 0;
 
-	virtual void SetSoldState() = 0;
+		virtual void SetSoldState() = 0;
 
-	virtual void SetHasQuarterState() = 0;
+		virtual void SetHasQuarterState() = 0;
 
-	virtual ~IGumballMachine() = default;
-};
+		virtual ~IGumballMachine() = default;
+	};
+}
 
 #endif //IGUMBALLMACHINE_H

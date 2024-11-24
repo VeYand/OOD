@@ -5,43 +5,46 @@
 #include "IState.h"
 #include "../IGumballMachine.h"
 
-class CHasQuarterState final : public IState
+namespace gumball_machine
 {
-public:
-	explicit CHasQuarterState(IGumballMachine &gumballMachine)
-		: m_gumballMachine(gumballMachine)
+	class CHasQuarterState final : public IState
 	{
-	}
+	public:
+		explicit CHasQuarterState(IGumballMachine &gumballMachine)
+			: m_gumballMachine(gumballMachine)
+		{
+		}
 
-	void InsertQuarter() override
-	{
-		std::cout << "You can't insert another quarter\n";
-	}
+		void InsertQuarter() override
+		{
+			std::cout << "You can't insert another quarter\n";
+		}
 
-	void EjectQuarter() override
-	{
-		std::cout << "Quarter returned\n";
-		m_gumballMachine.SetNoQuarterState();
-	}
+		void EjectQuarter() override
+		{
+			std::cout << "Quarter returned\n";
+			m_gumballMachine.SetNoQuarterState();
+		}
 
-	void TurnCrank() override
-	{
-		std::cout << "You turned...\n";
-		m_gumballMachine.SetSoldState();
-	}
+		void TurnCrank() override
+		{
+			std::cout << "You turned...\n";
+			m_gumballMachine.SetSoldState();
+		}
 
-	void Dispense() override
-	{
-		std::cout << "No gumball dispensed\n";
-	}
+		void Dispense() override
+		{
+			std::cout << "No gumball dispensed\n";
+		}
 
-	[[nodiscard]] std::string ToString() const override
-	{
-		return "waiting for turn of crank";
-	}
+		[[nodiscard]] std::string ToString() const override
+		{
+			return "waiting for turn of crank";
+		}
 
-private:
-	IGumballMachine &m_gumballMachine;
-};
+	private:
+		IGumballMachine &m_gumballMachine;
+	};
+}
 
 #endif //CHASQUARTERSTATE_H
