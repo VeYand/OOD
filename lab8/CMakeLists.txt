@@ -30,6 +30,13 @@ add_executable(${PROJECT_NAME}
         src/gumball_machine/State/CHasQuarterState.h
         src/gumball_machine/State/CNoQuarterState.h
         src/gumball_machine/CGumballMachine.h
+        src/multi_gumball_machine/IMultiGumballMachine.h
+        src/multi_gumball_machine/CMultiGumballMachine.h
+        src/multi_gumball_machine/State/IState.h
+        src/multi_gumball_machine/State/CSoldState.h
+        src/multi_gumball_machine/State/CSoldOutState.h
+        src/multi_gumball_machine/State/CNoQuarterState.h
+        src/multi_gumball_machine/State/CHasQuarterState.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
