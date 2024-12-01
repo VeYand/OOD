@@ -38,10 +38,19 @@ namespace multi_gumball_machine
 				std::cout << "Oops, out of gumballs\n";
 				m_gumballMachine.SetSoldOutState();
 			}
+			else if (m_gumballMachine.GetQuarterCount() > 0)
+			{
+				m_gumballMachine.SetHasQuarterState();
+			}
 			else
 			{
 				m_gumballMachine.SetNoQuarterState();
 			}
+		}
+
+		void Refill(unsigned numBalls) override
+		{
+			std::cout << "Cannot refill machine when giving you a gumball\n";
 		}
 
 		[[nodiscard]] std::string ToString() const override

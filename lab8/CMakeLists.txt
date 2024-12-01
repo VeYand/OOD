@@ -37,6 +37,7 @@ add_executable(${PROJECT_NAME}
         src/multi_gumball_machine/State/CSoldOutState.h
         src/multi_gumball_machine/State/CNoQuarterState.h
         src/multi_gumball_machine/State/CHasQuarterState.h
+        src/multi_gumball_machine/naive/CMultiGumballNaiveMachine.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp
@@ -48,7 +49,10 @@ add_executable(${PROJECT_NAME}Test_1
         src/gumball_machine/State/CNoQuarterState.h
         src/gumball_machine/CGumballMachine.h
         test/GumBallMachineTest.cpp
-        test/StateTest.cpp
+        test/GumballMachineStateTest.cpp
+        test/MultiGumballMachineStateTest.cpp
+        test/MultiGumballMachineTest.cpp
+        test/MultiGumballNaiveMachineTest.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1 gtest_main gmock)

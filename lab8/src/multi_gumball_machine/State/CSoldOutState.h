@@ -22,7 +22,14 @@ namespace multi_gumball_machine
 
 		void EjectQuarter() override
 		{
-			std::cout << "You can't eject, you haven't inserted a quarter yet\n";
+			if (m_gumballMachine.GetQuarterCount() > 0)
+			{
+				m_gumballMachine.ReturnAllQuarters();
+			}
+			else
+			{
+				std::cout << "You can't eject, you haven't inserted a quarter yet\n";
+			}
 		}
 
 		void TurnCrank() override
@@ -33,6 +40,23 @@ namespace multi_gumball_machine
 		void Dispense() override
 		{
 			std::cout << "No gumball dispensed\n";
+		}
+
+		void Refill(const unsigned numBalls) override
+		{
+			std::cout << "Added gumball\n";
+			m_gumballMachine.RefillBall(numBalls);
+			if (m_gumballMachine.GetBallCount() > 0)
+			{
+				if (m_gumballMachine.GetQuarterCount() > 0)
+				{
+					m_gumballMachine.SetHasQuarterState();
+				}
+				else
+				{
+					m_gumballMachine.SetNoQuarterState();
+				}
+			}
 		}
 
 		[[nodiscard]] std::string ToString() const override

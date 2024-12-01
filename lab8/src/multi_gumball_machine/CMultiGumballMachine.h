@@ -53,6 +53,11 @@ namespace multi_gumball_machine
 			)", m_count, m_count != 1 ? "s" : "", m_state->ToString());
 		}
 
+		void Refill(const unsigned numBalls) const
+		{
+			m_state->Refill(numBalls);
+		}
+
 	private:
 		[[nodiscard]] unsigned GetBallCount() const override
 		{
@@ -65,7 +70,35 @@ namespace multi_gumball_machine
 			{
 				std::cout << "A gumball comes rolling out the slot...\n";
 				--m_count;
+				--m_quarter;
 			}
+		}
+
+		[[nodiscard]] unsigned GetQuarterCount() const override
+		{
+			return m_quarter;
+		}
+
+		[[nodiscard]] unsigned GetMaxQuarterCount() const override
+		{
+			return MAX_QUARTER;
+		}
+
+		void AddQuarter() override
+		{
+			++m_quarter;
+		}
+
+		void RefillBall(const unsigned numBalls) override
+		{
+			m_count = numBalls;
+		}
+
+		void ReturnAllQuarters() override
+		{
+			std::cout << "Quarter returned\n";
+
+			m_quarter = 0;
 		}
 
 		void SetSoldOutState() override
@@ -88,12 +121,14 @@ namespace multi_gumball_machine
 			m_state = &m_hasQuarterState;
 		}
 
+		static constexpr unsigned MAX_QUARTER = 5;
 		unsigned m_count = 0;
-		CSoldState m_soldState;
-		CSoldOutState m_soldOutState;
-		CNoQuarterState m_noQuarterState;
-		CHasQuarterState m_hasQuarterState;
-		IState *m_state;
+		unsigned m_quarter = 0;
+		CSoldState m_soldState{*this};
+		CSoldOutState m_soldOutState{*this};
+		CNoQuarterState m_noQuarterState{*this};
+		CHasQuarterState m_hasQuarterState{*this};
+		IState *m_state{};
 	};
 }
 

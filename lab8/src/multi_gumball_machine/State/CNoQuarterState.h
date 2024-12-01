@@ -18,6 +18,7 @@ namespace multi_gumball_machine
 		void InsertQuarter() override
 		{
 			std::cout << "You inserted a quarter\n";
+			m_gumballMachine.AddQuarter();
 			m_gumballMachine.SetHasQuarterState();
 		}
 
@@ -34,6 +35,12 @@ namespace multi_gumball_machine
 		void Dispense() override
 		{
 			std::cout << "You need to pay first\n";
+		}
+
+		void Refill(const unsigned numBalls) override
+		{
+			std::cout << "Added gumball\n";
+			m_gumballMachine.RefillBall(numBalls);
 		}
 
 		[[nodiscard]] std::string ToString() const override
