@@ -38,6 +38,8 @@ add_executable(${PROJECT_NAME}
         src/multi_gumball_machine/State/CNoQuarterState.h
         src/multi_gumball_machine/State/CHasQuarterState.h
         src/multi_gumball_machine/naive/CMultiGumballNaiveMachine.h
+        src/Menu/CMenu.h
+        src/CommandHandler.h
 )
 add_executable(${PROJECT_NAME}Test_1
         test/main.cpp

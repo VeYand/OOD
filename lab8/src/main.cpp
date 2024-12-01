@@ -1,53 +1,12 @@
-#include "gumball_machine/CGumballMachine.h"
-
-using namespace std;
-
-template<typename GumballMachineType>
-void TestGumballMachine(GumballMachineType &m)
-{
-	cout << m.ToString() << endl;
-
-	m.InsertQuarter();
-	m.TurnCrank();
-
-	cout << m.ToString() << endl;
-
-	m.InsertQuarter();
-	m.EjectQuarter();
-	m.TurnCrank();
-
-	cout << m.ToString() << endl;
-
-	m.InsertQuarter();
-	m.TurnCrank();
-	m.InsertQuarter();
-	m.TurnCrank();
-	m.EjectQuarter();
-
-	cout << m.ToString() << endl;
-
-	m.InsertQuarter();
-	m.InsertQuarter();
-	m.TurnCrank();
-	m.InsertQuarter();
-	m.TurnCrank();
-	m.InsertQuarter();
-	m.TurnCrank();
-
-	cout << m.ToString() << endl;
-}
-
-void TestGumballMachineWithState()
-{
-	gumball_machine::CGumballMachine m(5);
-	TestGumballMachine(m);
-}
+#include <memory>
+#include "CommandHandler.h"
+#include "multi_gumball_machine/CMultiGumballMachine.h"
 
 int main()
 {
-	cout << "\n-----------------\n";
-	TestGumballMachineWithState();
-	cout << "\n-----------------\n";
+	auto machine = std::make_unique<multi_gumball_machine::CMultiGumballMachine>(0);
+	CommandHandler handler(std::move(machine));
+	handler.Run();
 
 	return 0;
 }
