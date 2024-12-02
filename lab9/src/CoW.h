@@ -42,13 +42,13 @@ public:
 	}
 
 	// Создаём значение за счёт перемещения его из value.
-	CoW(Value &&value)
+	explicit CoW(Value &&value)
 		: value_(std::make_shared<Value>(std::move(value)))
 	{
 	}
 
 	// Создаём значение из value.
-	CoW(const Value &value)
+	explicit CoW(const Value &value)
 		: value_(std::make_shared<Value>(value))
 	{
 	}

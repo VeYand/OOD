@@ -13,7 +13,7 @@ struct Size
 };
 
 // Точка передаётся в локальных координатах.
-inline bool IsPointInSize(Point p, Size size) noexcept
+inline bool IsPointInSize(const Point p, const Size size) noexcept
 {
 	return p.x >= 0 && p.y >= 0 && p.x < size.width && p.y < size.height;
 }
