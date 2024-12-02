@@ -23,6 +23,13 @@ endif ()
 
 add_executable(${PROJECT_NAME}
         src/main.cpp
+        src/CoW.h
+        src/Drawer.h
+        src/Drawer.cpp
+        src/Geom.h
+        src/Image.cpp
+        src/Image.h
+        src/Tile.h
 )
 add_executable(${PROJECT_NAME}Test
         test/main.cpp
