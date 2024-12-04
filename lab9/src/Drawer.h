@@ -1,8 +1,10 @@
-#pragma once
+#ifndef DRAWER_H
+#define DRAWER_H
 
+#include <iostream>
 #include <cassert>
-
 #include "Image.h"
+#include "Geom.h"
 
 class Drawer
 {
@@ -13,7 +15,7 @@ public:
 	 * Для рисования используется алгоритм Брезенхэма.
 	 * (https://ru.wikipedia.org/wiki/Алгоритм_Брезенхэма)
 	 */
-	void DrawLine(Image &image, const Point from, const Point to, const char color)
+	static void DrawLine(Image &image, const Point from, const Point to, const uint32_t color)
 	{
 		const int deltaX = std::abs(to.x - from.x);
 		const int deltaY = std::abs(to.y - from.y);
@@ -30,6 +32,63 @@ public:
 		}
 	}
 
+	static void DrawCircle(Image &image, const Point center, const int radius, const uint32_t color)
+	{
+		int x = 0;
+		int y = radius;
+		int d = 3 - 2 * radius;
+
+		while (x <= y)
+		{
+			image.SetPixel({center.x + x, center.y + y}, color);
+			image.SetPixel({center.x - x, center.y + y}, color);
+			image.SetPixel({center.x + x, center.y - y}, color);
+			image.SetPixel({center.x - x, center.y - y}, color);
+			image.SetPixel({center.x + y, center.y + x}, color);
+			image.SetPixel({center.x - y, center.y + x}, color);
+			image.SetPixel({center.x + y, center.y - x}, color);
+			image.SetPixel({center.x - y, center.y - x}, color);
+
+			if (d < 0)
+			{
+				d = d + 4 * x + 6;
+			}
+			else
+			{
+				d = d + 4 * (x - y) + 10;
+				--y;
+			}
+			++x;
+		}
+	}
+
+	static void FillCircle(Image &image, const Point center, const int radius, const uint32_t color)
+	{
+		int x = 0;
+		int y = radius;
+		int d = 3 - 2 * radius;
+
+		while (x <= y)
+		{
+			DrawLine(image, {center.x - x, center.y + y}, {center.x + x, center.y + y}, color);
+			DrawLine(image, {center.x - x, center.y - y}, {center.x + x, center.y - y}, color);
+
+			DrawLine(image, {center.x - y, center.y + x}, {center.x + y, center.y + x}, color);
+			DrawLine(image, {center.x - y, center.y - x}, {center.x + y, center.y - x}, color);
+
+			if (d < 0)
+			{
+				d = d + 4 * x + 6;
+			}
+			else
+			{
+				d = d + 4 * (x - y) + 10;
+				--y;
+			}
+			++x;
+		}
+	}
+
 private:
 	static int Sign(const int value)
 	{
@@ -37,9 +96,9 @@ private:
 	}
 
 	/**
- * Рисует крутой отрезок (для которого |to.y - from.x| >= |to.x - from.x|).
- */
-	static void DrawSteepLine(Image &image, Point from, Point to, const char color)
+	* Рисует крутой отрезок (для которого |to.y - from.x| >= |to.x - from.x|).
+	*/
+	static void DrawSteepLine(Image &image, Point from, Point to, const uint32_t color)
 	{
 		const int deltaX = std::abs(to.x - from.x);
 		const int deltaY = std::abs(to.y - from.y);
@@ -78,7 +137,7 @@ private:
 	/**
 	 * Рисует пологий отрезок (для которого |to.y - from.x| >= |to.y - from.y|).
 	 */
-	static void DrawSlopeLine(Image &image, Point from, Point to, const char color)
+	static void DrawSlopeLine(Image &image, Point from, Point to, const uint32_t color)
 	{
 		const int deltaX = std::abs(to.x - from.x);
 		const int deltaY = std::abs(to.y - from.y);
@@ -114,3 +173,5 @@ private:
 		}
 	}
 };
+
+#endif //DRAWER_H

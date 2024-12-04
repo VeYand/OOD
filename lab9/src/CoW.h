@@ -1,4 +1,6 @@
-#pragma once
+#ifndef COW_H
+#define COW_H
+
 #include <cassert>
 #include <memory>
 
@@ -106,3 +108,5 @@ private:
 
 	std::shared_ptr<Value> value_;
 };
+
+#endif //COW_H

@@ -1,26 +1,46 @@
-#include <cmath>
 #include <iostream>
-
+#include "Image.h"
+#include "ImageController.h"
 #include "Drawer.h"
 
-constexpr int STAR_COUNT = 20;
+void DrawPicture()
+{
+	Image img({40, 30}, 0xFFFFFF);
+
+	Drawer::DrawLine(img, {5, 20}, {35, 20}, 0x00FF00);
+	Drawer::DrawLine(img, {5, 20}, {10, 10}, 0x00FF00);
+	Drawer::DrawLine(img, {10, 10}, {30, 10}, 0x00FF00);
+	Drawer::DrawLine(img, {30, 10}, {35, 20}, 0x00FF00);
+	Drawer::DrawLine(img, {5, 20}, {5, 25}, 0x00FF00);
+	Drawer::DrawLine(img, {35, 20}, {35, 25}, 0x00FF00);
+	Drawer::DrawLine(img, {5, 25}, {35, 25}, 0x000000);
+
+	Drawer::FillCircle(img, {12, 26}, 3, 0x000000);
+	Drawer::FillCircle(img, {28, 26}, 3, 0x000000);
+	Drawer::DrawCircle(img, {12, 26}, 3, 0xFF8844);
+	Drawer::DrawCircle(img, {28, 26}, 3, 0xFF8844);
+
+	ImageController::Print(img, std::cout);
+	std::cout << std::endl;
+
+	ImageController::SaveImageToPPM(img, "picture.ppm");
+}
+
+void DrawSamplePicture()
+{
+	const Image img = ImageController::LoadImage(
+		" CCCC             \n"
+		"CC  CC   ##    ## \n"
+		"CC      ####  ####\n"
+		"CC  CC   ##    ## \n"
+		" CCCC             \n"
+	);
+	ImageController::Print(img, std::cout);
+}
 
 int main()
-{ {
-		Image img = LoadImage(
-			" CCCC             \n"
-			"CC  CC   ##    ## \n"
-			"CC      ####  ####\n"
-			"CC  CC   ##    ## \n"
-			" CCCC             \n");
-		Print(img, std::cout);
-	} {
-		Image img{{30, 20}, '.'};
-
-		DrawLine(img, {3, 2}, {26, 5}, '#');
-		DrawLine(img, {26, 5}, {21, 18}, '#');
-		DrawLine(img, {21, 18}, {3, 2}, '#');
-
-		Print(img, std::cout);
-	}
+{
+	DrawSamplePicture();
+	DrawPicture();
+	return 0;
 }

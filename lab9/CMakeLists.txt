@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.28)
-project(lab8)
+project(lab9)
 
 set(CMAKE_CXX_STANDARD 23)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_SOURCE_DIR}/bin)
@@ -28,6 +28,7 @@ add_executable(${PROJECT_NAME}
         src/Geom.h
         src/Image.h
         src/Tile.h
+        src/ImageController.h
 )
 add_executable(${PROJECT_NAME}Test
         test/main.cpp

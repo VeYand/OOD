@@ -1,10 +1,10 @@
-#pragma once
-#include <iosfwd>
-#include <string>
-#include <ostream>
-#include <sstream>
+#ifndef IMAGE_H
+#define IMAGE_H
+
 #include <vector>
+#include "CoW.h"
 #include "Geom.h"
+#include "Tile.h"
 
 class Image
 {
@@ -13,87 +13,60 @@ public:
 	 * Конструирует изображение заданного размера. Если размеры не являются положительными,
 	 * выбрасывает исключение std::out_of_range.
 	 */
-	explicit Image(Size size, char color = ' ')
+	explicit Image(const Size size, const uint32_t color = 0xFFFFFF)
+		: m_size(size), m_tiles(size.height, std::vector(size.width, CoW(Tile(color))))
 	{
-		/* Реализуйте конструктор самостоятельно */
 	}
 
 	// Возвращает размер изображения в пикселях.
-	Size GetSize() noexcept
+	[[nodiscard]] Size GetSize() const noexcept
 	{
-		/* Реализуйте метод самостоятельно. */
-
-		return {0, 0};
+		return m_size;
 	}
 
 	/**
 	 * Возвращает «цвет» пикселя в указанных координатах.Если координаты выходят за пределы
 	 * изображения, возвращает «пробел».
 	 */
-	char GetPixel(Point p) noexcept
+	[[nodiscard]] uint32_t GetPixel(const Point p) const noexcept
 	{
-		/* Реализуйте метод самостоятельно. */
+		if (!IsPointInSize(p, m_size))
+		{
+			return 0xFFFFFF;
+		}
 
-		return ' ';
+		const int tileX = p.x / Tile::SIZE;
+		const int tileY = p.y / Tile::SIZE;
+		const int pixelX = p.x % Tile::SIZE;
+		const int pixelY = p.y % Tile::SIZE;
+
+		return m_tiles[tileY][tileX]->GetPixel({pixelX, pixelY});
 	}
 
 	/**
 	 * Задаёт «цвет» пикселя в указанных координатах. Если координаты выходят за пределы изображения
 	 * действие игнорируется.
 	 */
-	void SetPixel(Point p, char color)
+	void SetPixel(const Point p, const uint32_t color)
 	{
-		/* Реализуйте метод самостоятельно. */
+		if (!IsPointInSize(p, m_size))
+		{
+			return;
+		}
+
+		const int tileX = p.x / Tile::SIZE;
+		const int tileY = p.y / Tile::SIZE;
+		const int pixelX = p.x % Tile::SIZE;
+		const int pixelY = p.y % Tile::SIZE;
+
+		m_tiles[tileY][tileX].Write([&](Tile &tile) {
+			tile.SetPixel({pixelX, pixelY}, color);
+		});
 	}
 
 private:
-	/**
-	 * Выводит в поток out изображение в виде символов.
-	 */
-	static void Print(Image &img, std::ostream &out)
-	{
-		const auto size = img.GetSize();
-		for (int y = 0; y < size.height; ++y)
-		{
-			for (int x = 0; x < size.width; ++x)
-			{
-				out.put(img.GetPixel({x, y}));
-			}
-			out.put('\n');
-		}
-	}
-
-
-	/**
-	 * Загружает изображение из pixels. Линии изображения разделяются символами \n.
-	 * Размеры картинки определяются по количеству переводов строки и самой длинной линии.
-	 */
-	Image LoadImage(const std::string &pixels)
-	{
-		std::istringstream s(pixels);
-		Size size;
-		std::string line;
-		while (std::getline(s, line))
-		{
-			size.width = std::max(size.width, static_cast<int>(line.length()));
-			++size.height;
-		}
-
-		Image img(size);
-
-		s = std::istringstream(pixels);
-		for (int y = 0; y < size.height; ++y)
-		{
-			if (!std::getline(s, line))
-				break;
-
-			int x = 0;
-			for (char ch: line)
-			{
-				img.SetPixel({x++, y}, ch);
-			}
-		}
-
-		return img;
-	}
+	Size m_size;
+	std::vector<std::vector<CoW<Tile> > > m_tiles;
 };
+
+#endif //IMAGE_H

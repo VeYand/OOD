@@ -1,4 +1,5 @@
-#pragma once
+#ifndef GEOM_H
+#define GEOM_H
 
 struct Point
 {
@@ -17,3 +18,5 @@ inline bool IsPointInSize(const Point p, const Size size) noexcept
 {
 	return p.x >= 0 && p.y >= 0 && p.x < size.width && p.y < size.height;
 }
+
+#endif //GEOM_H
