@@ -104,12 +104,28 @@ TEST(CHasQuarterMultiStateTest, Refill)
 	MockMultiGumballMachine mockMachine;
 	CHasQuarterState hasQuarterState(mockMachine);
 	testing::internal::CaptureStdout();
+	EXPECT_CALL(mockMachine, GetBallCount()).WillOnce(testing::Return(5));
 	EXPECT_CALL(mockMachine, RefillBall(5)).Times(1);
 
 	hasQuarterState.Refill(5);
 
 	const std::string output = testing::internal::GetCapturedStdout();
-	EXPECT_EQ(output, "Added gumball\n");
+	EXPECT_EQ(output, "Gumball machine is refilled\n");
+}
+
+TEST(CHasQuarterMultiStateTest, RefillZero)
+{
+	MockMultiGumballMachine mockMachine;
+	CHasQuarterState hasQuarterState(mockMachine);
+	testing::internal::CaptureStdout();
+	EXPECT_CALL(mockMachine, GetBallCount()).WillOnce(testing::Return(0));
+	EXPECT_CALL(mockMachine, RefillBall(0)).Times(1);
+	EXPECT_CALL(mockMachine, SetSoldOutState).Times(1);
+
+	hasQuarterState.Refill(0);
+
+	const std::string output = testing::internal::GetCapturedStdout();
+	EXPECT_EQ(output, "Gumball machine is refilled\n");
 }
 
 TEST(CHasQuarterMultiStateTest, ToString)
@@ -177,12 +193,28 @@ TEST(CNoQuarterMultiStateTest, Refill)
 	MockMultiGumballMachine mockMachine;
 	CNoQuarterState noQuarterState(mockMachine);
 	testing::internal::CaptureStdout();
+	EXPECT_CALL(mockMachine, GetBallCount()).WillOnce(testing::Return(5));
 	EXPECT_CALL(mockMachine, RefillBall(5)).Times(1);
 
 	noQuarterState.Refill(5);
 
 	const std::string output = testing::internal::GetCapturedStdout();
-	EXPECT_EQ(output, "Added gumball\n");
+	EXPECT_EQ(output, "Gumball machine is refilled\n");
+}
+
+TEST(CNoQuarterMultiStateTest, RefillZero)
+{
+	MockMultiGumballMachine mockMachine;
+	CNoQuarterState noQuarterState(mockMachine);
+	testing::internal::CaptureStdout();
+	EXPECT_CALL(mockMachine, GetBallCount()).WillOnce(testing::Return(0));
+	EXPECT_CALL(mockMachine, RefillBall(0)).Times(1);
+	EXPECT_CALL(mockMachine, SetSoldOutState).Times(1);
+
+	noQuarterState.Refill(0);
+
+	const std::string output = testing::internal::GetCapturedStdout();
+	EXPECT_EQ(output, "Gumball machine is refilled\n");
 }
 
 TEST(CNoQuarterMultiStateTest, ToString)
@@ -266,7 +298,7 @@ TEST(CSoldOutMultiStateTest, RefillSoldOut)
 	soldOutState.Refill(ballsCount);
 
 	const std::string output = testing::internal::GetCapturedStdout();
-	EXPECT_EQ(output, "Added gumball\n");
+	EXPECT_EQ(output, "Gumball machine is refilled\n");
 }
 
 TEST(CSoldOutMultiStateTest, RefillHasQuarter)
@@ -283,7 +315,7 @@ TEST(CSoldOutMultiStateTest, RefillHasQuarter)
 	soldOutState.Refill(ballsCount);
 
 	const std::string output = testing::internal::GetCapturedStdout();
-	EXPECT_EQ(output, "Added gumball\n");
+	EXPECT_EQ(output, "Gumball machine is refilled\n");
 }
 
 TEST(CSoldOutMultiStateTest, RefillNoQuarter)
@@ -300,7 +332,7 @@ TEST(CSoldOutMultiStateTest, RefillNoQuarter)
 	soldOutState.Refill(ballsCount);
 
 	const std::string output = testing::internal::GetCapturedStdout();
-	EXPECT_EQ(output, "Added gumball\n");
+	EXPECT_EQ(output, "Gumball machine is refilled\n");
 }
 
 TEST(CSoldOutMultiStateTest, ToString)

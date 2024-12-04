@@ -44,7 +44,7 @@ namespace multi_gumball_machine
 
 		void Refill(const unsigned numBalls) override
 		{
-			std::cout << "Added gumball\n";
+			std::cout << "Gumball machine is refilled\n";
 			m_gumballMachine.RefillBall(numBalls);
 			if (m_gumballMachine.GetBallCount() > 0)
 			{

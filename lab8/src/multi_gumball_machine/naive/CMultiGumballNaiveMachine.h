@@ -107,7 +107,7 @@ namespace multi_gumball_naive_machine
 			{
 				case State::SoldOut:
 					m_count = numBalls;
-					std::cout << "Added gumball\n";
+					std::cout << "Gumball machine is refilled\n";
 					if (m_count > 0)
 					{
 						if (m_quarter > 0)
@@ -123,10 +123,10 @@ namespace multi_gumball_naive_machine
 				case State::NoQuarter:
 				case State::HasQuarter:
 					m_count = numBalls;
-					std::cout << "Added gumball\n";
+					std::cout << "Gumball machine is refilled\n";
 					break;
 				case State::Sold:
-					std::cout << "Not added gumball when giving giving you a gumball\n";
+					std::cout << "Cannot refill machine when giving you a gumball\n";
 					break;
 			}
 		}

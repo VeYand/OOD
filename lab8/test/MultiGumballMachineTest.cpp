@@ -84,7 +84,7 @@ TEST(CMultiGumballMachineTest, Refill)
 	machine.Refill(5);
 	const std::string output = testing::internal::GetCapturedStdout();
 
-	EXPECT_EQ(output, "Added gumball\n");
+	EXPECT_EQ(output, "Gumball machine is refilled\n");
 	EXPECT_EQ(machine.ToString(), GetExpectedMachineStringMultiState(5, "waiting for quarter"));
 }
 
