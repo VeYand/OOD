@@ -70,9 +70,6 @@ public:
 
 		while (x <= y)
 		{
-			DrawLine(image, {center.x - x, center.y + y}, {center.x + x, center.y + y}, color);
-			DrawLine(image, {center.x - x, center.y - y}, {center.x + x, center.y - y}, color);
-
 			DrawLine(image, {center.x - y, center.y + x}, {center.x + y, center.y + x}, color);
 			DrawLine(image, {center.x - y, center.y - x}, {center.x + y, center.y - x}, color);
 

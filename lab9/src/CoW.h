@@ -10,7 +10,7 @@ class CoW
 	struct WriteProxy
 	{
 		explicit WriteProxy(Value *value) noexcept
-			: value_ptr_{value}
+			: m_value_ptr{value}
 		{
 		}
 
@@ -22,51 +22,51 @@ class CoW
 
 		[[nodiscard]] Value &operator*() const && noexcept
 		{
-			return *value_ptr_;
+			return *m_value_ptr;
 		}
 
 		Value *operator->() const & = delete;
 
 		Value *operator->() const && noexcept
 		{
-			return value_ptr_;
+			return m_value_ptr;
 		}
 
 	private:
-		Value *value_ptr_;
+		Value *m_value_ptr;
 	};
 
 public:
 	// Конструируем значение по умолчанию.
 	CoW()
-		: value_(std::make_shared<Value>())
+		: m_value(std::make_shared<Value>())
 	{
 	}
 
 	// Создаём значение за счёт перемещения его из value.
 	explicit CoW(Value &&value)
-		: value_(std::make_shared<Value>(std::move(value)))
+		: m_value(std::make_shared<Value>(std::move(value)))
 	{
 	}
 
 	// Создаём значение из value.
 	explicit CoW(const Value &value)
-		: value_(std::make_shared<Value>(value))
+		: m_value(std::make_shared<Value>(value))
 	{
 	}
 
 	// Оператор разыменования служит для чтения значения.
 	const Value &operator*() const noexcept
 	{
-		assert(value_);
-		return *value_;
+		assert(m_value);
+		return *m_value;
 	}
 
 	// Оператор -> служит для чтения полей и вызова константных методов.
 	const Value *operator->() const noexcept
 	{
-		assert(value_);
-		return value_.get();
+		assert(m_value);
+		return m_value.get();
 	}
 
 	template<typename ModifierFn>
@@ -74,7 +74,7 @@ public:
 	{
 		EnsureUnique();
 
-		std::forward<ModifierFn>(modify)(*value_);
+		std::forward<ModifierFn>(modify)(*m_value);
 	}
 
 	// Метод Write() нельзя вызвать только у rvalue-ссылок на CoW-объект.
@@ -84,29 +84,29 @@ public:
 	{
 		EnsureUnique();
 
-		return WriteProxy(value_.get());
+		return WriteProxy(m_value.get());
 	}
 
 	Value &WriteBad()
 	{
 		EnsureUnique();
 
-		return *value_;
+		return *m_value;
 	}
 
 private:
 	void EnsureUnique()
 	{
-		assert(value_);
+		assert(m_value);
 
-		if (value_.use_count() > 1)
+		if (m_value.use_count() > 1)
 		{
-			// Кроме нас на value_ ссылается кто-то ещё, копируем value_.
-			value_ = std::make_shared<Value>(*value_);
+			// Кроме нас на m_value ссылается кто-то ещё, копируем m_value.
+			m_value = std::make_shared<Value>(*m_value);
 		}
 	}
 
-	std::shared_ptr<Value> value_;
+	std::shared_ptr<Value> m_value;
 };
 
 #endif //COW_H

@@ -53,7 +53,7 @@ public:
 	 */
 	void SetPixel(const Point p, const uint32_t color) noexcept
 	{
-		if (p.x >= 0 && p.x < SIZE && p.y >= 0 && p.y < SIZE)
+		if (IsPointInSize(p, {SIZE, SIZE}))
 		{
 			m_pixels[p.y][p.x] = color;
 		}
@@ -64,11 +64,12 @@ public:
 	 */
 	[[nodiscard]] uint32_t GetPixel(const Point p) const noexcept
 	{
-		if (p.x >= 0 && p.x < SIZE && p.y >= 0 && p.y < SIZE)
+		if (!IsPointInSize(p, {SIZE, SIZE}))
 		{
-			return m_pixels[p.y][p.x]; // Возвращаем цвет пикселя
+			return 0xFFFFFF; // Возвращаем пробел, если координаты выходят за пределы
 		}
-		return 0xFFFFFF; // Возвращаем пробел, если координаты выходят за пределы
+
+		return m_pixels[p.y][p.x]; // Возвращаем цвет пикселя
 	}
 
 	// Возвращает количество экземпляра класса Tile в программе.

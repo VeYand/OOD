@@ -9,8 +9,13 @@ struct Point
 
 struct Size
 {
-	int width = 0;
-	int height = 0;
+	unsigned width = 0;
+	unsigned height = 0;
+
+	bool operator==(const Size &size) const
+	{
+		return size.width == width && size.height == height;
+	}
 };
 
 // Точка передаётся в локальных координатах.
