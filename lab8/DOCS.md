@@ -17,7 +17,7 @@ CGumballMachine *-- CSoldState
 CGumballMachine *-- CSoldOutState
 CGumballMachine *-- CNoQuarterState
 CGumballMachine *-- CHasQuarterState
-CGumballMachine *-- IState
+CGumballMachine o-- IState
 class CGumballMachine {
     + EjectQuarter() void
     + InsertQuarter() void
