@@ -31,10 +31,10 @@ class CGumballMachine {
     - SetHasQuarterState() void
     - unsigned m_count
     - CSoldState m_soldState
-	- CSoldOutState m_soldOutState
-	- CNoQuarterState m_noQuarterState
-	- CHasQuarterState m_hasQuarterState;
-	- IState *m_state
+    - CSoldOutState m_soldOutState
+    - CNoQuarterState m_noQuarterState
+    - CHasQuarterState m_hasQuarterState;
+    - IState *m_state
 }
 
 class IState {
@@ -88,6 +88,14 @@ class CSoldState {
     + Dispense() void
     + ToString() string
     - IGumballMachine& m_gumBallMachine
+}
+
+class CMenu
+
+CommandHandler *-- CMenu
+CommandHandler *-- CGumballMachine
+class CommandHandler {
+    <<template>>
 }
 ```
 
