@@ -1,7 +1,6 @@
 #ifndef CSTATISTICS_H
 #define CSTATISTICS_H
 
-#include <iostream>
 #include <limits>
 
 class CStatistics

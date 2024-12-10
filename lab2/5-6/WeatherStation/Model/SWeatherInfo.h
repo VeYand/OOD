@@ -1,5 +1,6 @@
 #ifndef SWEATHERINFO_H
 #define SWEATHERINFO_H
+
 #include "SWindInfo.h"
 
 struct SWeatherInfo

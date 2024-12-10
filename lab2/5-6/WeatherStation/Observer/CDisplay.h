@@ -1,8 +1,8 @@
 #ifndef CDISPLAY_H
 #define CDISPLAY_H
-#include <iostream>
 
-#include "IObserver.h"
+#include <iostream>
+#include "../Observable/IObservable.h"
 #include "../Model/SWeatherInfo.h"
 
 class CDisplay final : public IObserver<SWeatherInfo>
@@ -32,6 +32,8 @@ private:
         else if (observable == m_outStation)
         {
             std::cout << "Outside station" << std::endl;
+            std::cout << "Current wind speed " << data.wind.speed << std::endl;
+            std::cout << "Current wind direction " << data.wind.direction << " degrees" << std::endl;
         }
         else
         {
@@ -40,8 +42,6 @@ private:
         std::cout << "Current Temp " << data.temperature << std::endl;
         std::cout << "Current Hum " << data.humidity << std::endl;
         std::cout << "Current Pressure " << data.pressure << std::endl;
-        std::cout << "Current wind speed " << data.wind.speed << std::endl;
-        std::cout << "Current wind direction " << data.wind.direction << " degrees" << std::endl;
         std::cout << "----------------" << std::endl;
     }
 };

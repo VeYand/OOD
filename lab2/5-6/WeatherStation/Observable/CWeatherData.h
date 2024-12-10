@@ -1,5 +1,6 @@
 #ifndef CWEATHERDATA_H
 #define CWEATHERDATA_H
+
 #include "CObservable.h"
 #include "../Model/SWeatherInfo.h"
 

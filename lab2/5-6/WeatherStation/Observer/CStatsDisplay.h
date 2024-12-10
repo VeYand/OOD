@@ -5,7 +5,7 @@
 
 #include "CStatistics.h"
 #include "CWindStatistics.h"
-#include "IObserver.h"
+#include "../Observable/IObservable.h"
 #include "../Model/SWeatherInfo.h"
 
 class CStatsDisplay final : public IObserver<SWeatherInfo>
@@ -40,6 +40,10 @@ private:
         else if (observable == m_outStation)
         {
             std::cout << "Outside station" << std::endl;
+            std::cout << "Max wind speed " << m_windStatistics.GetMaxSpeed() << std::endl;
+            std::cout << "Min wind speed " << m_windStatistics.GetMinSpeed() << std::endl;
+            std::cout << "Average wind speed " << m_windStatistics.GetAverageSpeed() << std::endl;
+            std::cout << "Average wind direction " << m_windStatistics.GetAverageDirection() << " degrees" << std::endl;
         }
         else
         {
@@ -57,11 +61,6 @@ private:
         std::cout << "Max Pressure " << m_pressureStatistics.GetMax() << std::endl;
         std::cout << "Min Pressure " << m_pressureStatistics.GetMin() << std::endl;
         std::cout << "Average Pressure " << m_pressureStatistics.GetAverage() << std::endl;
-
-        std::cout << "Max wind speed " << m_windStatistics.GetMaxSpeed() << std::endl;
-        std::cout << "Min wind speed " << m_windStatistics.GetMinSpeed() << std::endl;
-        std::cout << "Average wind speed " << m_windStatistics.GetAverageSpeed() << std::endl;
-        std::cout << "Average wind direction " << m_windStatistics.GetAverageDirection() << " degrees" << std::endl;
 
         std::cout << "----------------" << std::endl;
     }

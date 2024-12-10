@@ -38,7 +38,6 @@ add_executable(${PROJECT_NAME}_3
 
 add_executable(${PROJECT_NAME}_4
         4/WeatherStation/main.cpp
-        4/WeatherStation/Observer/IObserver.h
         4/WeatherStation/Observable/IObservable.h
         4/WeatherStation/Observable/CObservable.h
         4/WeatherStation/Observer/CDisplay.h
@@ -50,7 +49,6 @@ add_executable(${PROJECT_NAME}_4
 
 add_executable(${PROJECT_NAME}_5
         5-6/WeatherStation/main.cpp
-        5-6/WeatherStation/Observer/IObserver.h
         5-6/WeatherStation/Observable/IObservable.h
         5-6/WeatherStation/Observable/CObservable.h
         5-6/WeatherStation/Observer/CDisplay.h
@@ -87,7 +85,6 @@ add_executable(${PROJECT_NAME}Test_3
 )
 
 add_executable(${PROJECT_NAME}Test_4
-        4/WeatherStation/Observer/IObserver.h
         4/WeatherStation/Observable/IObservable.h
         4/WeatherStation/Observable/CObservable.h
         4/WeatherStation/Observer/CDisplay.h
@@ -101,7 +98,6 @@ add_executable(${PROJECT_NAME}Test_4
 )
 
 add_executable(${PROJECT_NAME}Test_5-6
-        5-6/WeatherStation/Observer/IObserver.h
         5-6/WeatherStation/Observable/IObservable.h
         5-6/WeatherStation/Observable/CObservable.h
         5-6/WeatherStation/Observer/CDisplay.h

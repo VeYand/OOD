@@ -2,7 +2,7 @@
 #define CDISPLAY_H
 #include <iostream>
 
-#include "IObserver.h"
+#include "../Observable/IObservable.h"
 #include "../Model/SWeatherInfo.h"
 
 class CDisplay final : public IObserver<SWeatherInfo>

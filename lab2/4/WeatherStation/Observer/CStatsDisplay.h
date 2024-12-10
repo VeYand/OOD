@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "CStatistics.h"
-#include "IObserver.h"
+#include "../Observable/IObservable.h"
 #include "../Model/SWeatherInfo.h"
 
 class CStatsDisplay final : public IObserver<SWeatherInfo>
