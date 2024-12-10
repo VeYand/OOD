@@ -10,12 +10,22 @@ template<class T>
 class CObservable : public IObservable<T>
 {
 public:
-    typedef IObserver<T> ObserverType;
+    using ObserverType = IObserver<T>;
+    using ObserversByPriorityIterator = typename std::multimap<unsigned, ObserverType *>::iterator;
 
     void RegisterObserver(unsigned priority, ObserverType &observer) override
     {
-        m_observersByPriority.insert({priority, &observer});
-        m_observerPriorityMap[&observer] = priority;
+        auto observerIt = m_observersByPriority.insert({priority, &observer});
+
+        try
+        {
+            m_observerPriorityMap[&observer] = observerIt;
+        }
+        catch (...)
+        {
+            m_observerPriorityMap.erase(&observer);
+            throw;
+        }
     }
 
     void NotifyObservers() override
@@ -30,19 +40,10 @@ public:
 
     void RemoveObserver(ObserverType &observer) override
     {
-        if (auto observerIt = m_observerPriorityMap.find(&observer); observerIt != m_observerPriorityMap.end())
+        auto observerIt = m_observerPriorityMap.find(&observer);
+        if (observerIt != m_observerPriorityMap.end())
         {
-            auto priority = observerIt->second;
-            auto [first, last] = m_observersByPriority.equal_range(priority);
-
-            for (auto observerPriorityIt = first; observerPriorityIt != last; ++observerPriorityIt)
-            {
-                if (observerPriorityIt->second == &observer)
-                {
-                    m_observersByPriority.erase(observerPriorityIt);
-                    break;
-                }
-            }
+            m_observersByPriority.erase(observerIt->second);
             m_observerPriorityMap.erase(observerIt);
         }
     }
@@ -54,7 +55,7 @@ protected:
 
 private:
     std::multimap<unsigned, ObserverType *> m_observersByPriority;
-    std::unordered_map<ObserverType *, unsigned> m_observerPriorityMap;
+    std::unordered_map<ObserverType *, ObserversByPriorityIterator> m_observerPriorityMap;
 };
 
 #endif //COBSERVABLE_H
