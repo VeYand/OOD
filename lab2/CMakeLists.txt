@@ -60,6 +60,19 @@ add_executable(${PROJECT_NAME}_5
         5-6/WeatherStation/Model/SWindInfo.h
 )
 
+add_executable(${PROJECT_NAME}_7
+        7/WeatherStation/main.cpp
+        7/WeatherStation/Observable/IObservable.h
+        7/WeatherStation/Observable/CObservable.h
+        7/WeatherStation/Observer/CDisplay.h
+        7/WeatherStation/Model/SWeatherInfo.h
+        7/WeatherStation/Observer/CStatsDisplay.h
+        7/WeatherStation/Observable/CWeatherData.h
+        7/WeatherStation/Observer/CStatistics.h
+        7/WeatherStation/Observer/CWindStatistics.h
+        7/WeatherStation/Model/SWindInfo.h
+)
+
 add_executable(${PROJECT_NAME}Test_1-2
         1-2/WeatherStation/Observer/IObserver.h
         1-2/WeatherStation/Observable/IObservable.h
@@ -112,12 +125,28 @@ add_executable(${PROJECT_NAME}Test_5-6
         5-6/test/main.cpp
 )
 
+add_executable(${PROJECT_NAME}Test_7
+        7/WeatherStation/Observable/CObservable.h
+        7/WeatherStation/Observable/IObservable.h
+        7/WeatherStation/Observer/CDisplay.h
+        7/WeatherStation/Model/SWeatherInfo.h
+        7/WeatherStation/Observer/CStatsDisplay.h
+        7/WeatherStation/Observable/CWeatherData.h
+        7/WeatherStation/Observer/CStatistics.h
+        7/WeatherStation/Observer/CWindStatistics.h
+        7/WeatherStation/Model/SWindInfo.h
+        7/test/CObservableTest.cpp
+        7/test/main.cpp
+)
+
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_3 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_4 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_5-6 gtest_main gmock)
+target_link_libraries(${PROJECT_NAME}Test_7 gtest_main gmock)
 enable_testing()
 add_test(NAME ${PROJECT_NAME}Test_1-2 COMMAND ${PROJECT_NAME}Test_1-2)
 add_test(NAME ${PROJECT_NAME}Test_3 COMMAND ${PROJECT_NAME}Test_3)
 add_test(NAME ${PROJECT_NAME}Test_4 COMMAND ${PROJECT_NAME}Test_4)
 add_test(NAME ${PROJECT_NAME}Test_5-6 COMMAND ${PROJECT_NAME}Test_5-6)
+add_test(NAME ${PROJECT_NAME}Test_7 COMMAND ${PROJECT_NAME}Test_7)
