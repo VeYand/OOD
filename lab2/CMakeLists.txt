@@ -64,12 +64,8 @@ add_executable(${PROJECT_NAME}_7
         7/WeatherStation/main.cpp
         7/WeatherStation/Observable/IObservable.h
         7/WeatherStation/Observable/CObservable.h
-        7/WeatherStation/Observer/CDisplay.h
         7/WeatherStation/Model/SWeatherInfo.h
-        7/WeatherStation/Observer/CStatsDisplay.h
         7/WeatherStation/Observable/CWeatherData.h
-        7/WeatherStation/Observer/CStatistics.h
-        7/WeatherStation/Observer/CWindStatistics.h
         7/WeatherStation/Model/SWindInfo.h
 )
 
@@ -123,20 +119,6 @@ add_executable(${PROJECT_NAME}Test_5-6
         5-6/test/CObservableTest.cpp
         5-6/test/DuoWeatherStationDisplayTest.cpp
         5-6/test/main.cpp
-)
-
-add_executable(${PROJECT_NAME}Test_7
-        7/WeatherStation/Observable/CObservable.h
-        7/WeatherStation/Observable/IObservable.h
-        7/WeatherStation/Observer/CDisplay.h
-        7/WeatherStation/Model/SWeatherInfo.h
-        7/WeatherStation/Observer/CStatsDisplay.h
-        7/WeatherStation/Observable/CWeatherData.h
-        7/WeatherStation/Observer/CStatistics.h
-        7/WeatherStation/Observer/CWindStatistics.h
-        7/WeatherStation/Model/SWindInfo.h
-        7/test/CObservableTest.cpp
-        7/test/main.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)

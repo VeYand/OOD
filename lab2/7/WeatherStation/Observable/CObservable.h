@@ -1,7 +1,7 @@
 #ifndef COBSERVABLE_H
 #define COBSERVABLE_H
 
-#include <unordered_map>
+#include <unordered_set>
 #include <map>
 #include "IObservable.h"
 
@@ -13,49 +13,52 @@ public:
 	using ObserverType = IObserver<T>;
 	using ObserversByPriorityIterator = typename std::multimap<unsigned, ObserverType *>::iterator;
 
-	void RegisterObserver(unsigned priority, ObserverType &observer) override
+	void RegisterObserver(unsigned priority, ObserverType &observer, EventType eventType) override
 	{
-		auto observerIt = m_observersByPriority.insert({priority, &observer});
+		if (!m_observers.contains(eventType))
+		{
+			m_observers.insert({eventType, {}});
+		}
+		if (!m_observers.at(eventType).contains(priority))
+		{
+			m_observers.at(eventType).insert({priority, {}});
+		}
 
-		try
-		{
-			m_observerPriorityMap[&observer] = observerIt;
-		}
-		catch (...)
-		{
-			m_observerPriorityMap.erase(&observer);
-			throw;
-		}
+		m_observers.at(eventType).at(priority).insert(&observer);
 	}
 
-	void NotifyObservers() override
+	void RemoveObserver(ObserverType &observer, EventType eventType) override
 	{
-		T data = GetChangedData();
-		auto observers = m_observersByPriority;
-		for (auto &[priority, observer]: observers)
+		for (auto &[priority, observers]: m_observers[eventType])
 		{
-			observer->Update(data);
-		}
-	}
-
-	void RemoveObserver(ObserverType &observer) override
-	{
-		auto observerIt = m_observerPriorityMap.find(&observer);
-		if (observerIt != m_observerPriorityMap.end())
-		{
-			m_observersByPriority.erase(observerIt->second);
-			m_observerPriorityMap.erase(observerIt);
+			if (observers.erase(&observer))
+			{
+				return;
+			}
 		}
 	}
 
 protected:
+	void NotifyObservers(EventType eventType) override
+	{
+		T data = GetChangedData();
+		auto observersCopy = m_observers;
+		for (auto &[priority, observers]: m_observers[eventType])
+		{
+			for (auto &observer: observers)
+			{
+				observer->Update(data, eventType);
+			}
+		}
+	}
+
 	// Классы-наследники должны перегрузить данный метод,
 	// в котором возвращать информацию об изменениях в объекте
 	virtual T GetChangedData() const = 0;
 
 private:
-	std::multimap<unsigned, ObserverType *> m_observersByPriority;
-	std::unordered_map<ObserverType *, ObserversByPriorityIterator> m_observerPriorityMap;
+	std::map<EventType, std::map<int, std::unordered_set<ObserverType *> > > m_observers;
 };
+
 
 #endif //COBSERVABLE_H

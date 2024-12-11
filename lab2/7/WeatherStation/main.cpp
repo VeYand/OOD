@@ -1,25 +1,16 @@
 #include "Observable/CWeatherData.h"
-#include "Observer/CDisplay.h"
-#include "Observer/CStatsDisplay.h"
+#include "Observer/CFishermanDisplay.h"
 
 int main()
 {
-	CWeatherData insideWd;
-	CWeatherData outsideWd;
+	CWeatherData wd;
 
-	auto display = CDisplay();
-	insideWd.RegisterObserver(1, display);
+	CFishermanDisplay display;
+	wd.RegisterObserver(5, display, EventType::Temperature);
 
-	auto statsDisplay = CStatsDisplay();
-	insideWd.RegisterObserver(2, statsDisplay);
-	outsideWd.RegisterObserver(1, statsDisplay);
+	wd.SetMeasurements(25, 0.4, 760, {10, 10});
 
-	outsideWd.SetMeasurements(3, 0.7, 760, {10, 10});
-	insideWd.SetMeasurements(4, 0.8, 761, {1, 320});
+	wd.SetMeasurements(10, 0.8, 761, {10, 10});
 
-	insideWd.RemoveObserver(statsDisplay);
-
-	outsideWd.SetMeasurements(10, 0.8, 761, {0.2, 120});
-	insideWd.SetMeasurements(-10, 0.8, 761, {1, 120});
 	return 0;
 }
