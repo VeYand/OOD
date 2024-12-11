@@ -70,8 +70,20 @@ public:
 
 		while (x <= y)
 		{
-			DrawLine(image, {center.x - y, center.y + x}, {center.x + y, center.y + x}, color);
-			DrawLine(image, {center.x - y, center.y - x}, {center.x + y, center.y - x}, color);
+			if (y != x)
+			{
+				DrawLine(image, {center.x - y, center.y + x}, {center.x + y, center.y + x}, 0xFF0000);//color);
+				if (x != 0)
+				{
+					DrawLine(image, {center.x - y, center.y - x}, {center.x + y, center.y - x},  0xFF0000);//color);
+				}
+			}
+
+			DrawLine(image, {center.x - x, center.y + y}, {center.x + x, center.y + y},  0x0000FF);//color);
+			if (y != 0)
+			{
+				DrawLine(image, {center.x - x, center.y - y}, {center.x + x, center.y - y},  0x0000FF);//color);
+			}
 
 			if (d < 0)
 			{
