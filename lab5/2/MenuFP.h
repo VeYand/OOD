@@ -12,7 +12,7 @@ public:
 	typedef std::function<void()> Command;
 
 	template<typename Commands>
-	Command CreateMacroCommand(Commands &&commands)
+	static Command CreateMacroCommand(Commands &&commands)
 	{
 		return [=] {
 			for (auto &command: commands)

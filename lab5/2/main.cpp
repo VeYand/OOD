@@ -63,12 +63,12 @@ void TestMenuWithFunctionalCommandPattern()
 	                [ObjectPtr = &robot] { ObjectPtr->Stop(); });
 	menu.AddCommand("patrol", "Patrol the territory",
 	                CMenuFP::CreateMacroCommand<vector<CMenuFP::Command> >({
-		                bind(&Robot::TurnOn, &robot),
-		                bind(&Robot::Walk, &robot, WalkDirection::North),
-		                bind(&Robot::Walk, &robot, WalkDirection::South),
-		                bind(&Robot::Walk, &robot, WalkDirection::West),
-		                bind(&Robot::Walk, &robot, WalkDirection::East),
-		                bind(&Robot::TurnOff, &robot)
+		                [ObjectPtr = &robot] { ObjectPtr->TurnOn(); },
+		                [ObjectPtr = &robot] { ObjectPtr->Walk(WalkDirection::North); },
+		                [ObjectPtr = &robot] { ObjectPtr->Walk(WalkDirection::South); },
+		                [ObjectPtr = &robot] { ObjectPtr->Walk(WalkDirection::West); },
+		                [ObjectPtr = &robot] { ObjectPtr->Walk(WalkDirection::East); },
+		                [ObjectPtr = &robot] { ObjectPtr->TurnOff(); }
 	                }));
 	menu.AddCommand("begin_macro", "Start recording a new macro", [&] {
 		CreateMacroCommand(menu);
