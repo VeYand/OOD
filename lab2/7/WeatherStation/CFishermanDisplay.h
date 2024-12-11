@@ -3,17 +3,17 @@
 
 #include <iostream>
 #include "../Observable/IObservable.h"
-#include "../Model/SWeatherInfo.h"
+#include "Model/SWeatherInfo.h"
 
-class CFishermanDisplay final : public IObserver<SWeatherInfo>
+class CFishermanDisplay final : public IObserver<SWeatherInfo, WeatherEventType>
 {
-	void Update(SWeatherInfo const &data, const EventType eventType) override
+	void Update(SWeatherInfo const &data, const WeatherEventType eventType) override
 	{
-		if (eventType == EventType::Temperature)
+		if (eventType == WeatherEventType::Temperature)
 		{
 			std::cout << "Current Temperature: " << data.temperature << std::endl;
 		}
-		else if (eventType == EventType::Pressure)
+		else if (eventType == WeatherEventType::Pressure)
 		{
 			std::cout << "Current Pressure: " << data.pressure << std::endl;
 		}

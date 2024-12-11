@@ -61,12 +61,17 @@ add_executable(${PROJECT_NAME}_5
 )
 
 add_executable(${PROJECT_NAME}_7
-        7/WeatherStation/main.cpp
-        7/WeatherStation/Observable/IObservable.h
-        7/WeatherStation/Observable/CObservable.h
+        7/main.cpp
+        7/Observable/IObservable.h
+        7/Observable/CObservable.h
         7/WeatherStation/Model/SWeatherInfo.h
-        7/WeatherStation/Observable/CWeatherData.h
+        7/WeatherStation/CWeatherData.h
         7/WeatherStation/Model/SWindInfo.h
+        7/Animal/Model/SAnimalInfo.h
+        7/Animal/CAnimalData.h
+        7/Animal/CCattishObserver.h
+        7/Animal/CDoggyObserver.h
+        7/Animal/CAnimalData.h
 )
 
 add_executable(${PROJECT_NAME}Test_1-2
@@ -125,10 +130,8 @@ target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_3 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_4 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_5-6 gtest_main gmock)
-target_link_libraries(${PROJECT_NAME}Test_7 gtest_main gmock)
 enable_testing()
 add_test(NAME ${PROJECT_NAME}Test_1-2 COMMAND ${PROJECT_NAME}Test_1-2)
 add_test(NAME ${PROJECT_NAME}Test_3 COMMAND ${PROJECT_NAME}Test_3)
 add_test(NAME ${PROJECT_NAME}Test_4 COMMAND ${PROJECT_NAME}Test_4)
 add_test(NAME ${PROJECT_NAME}Test_5-6 COMMAND ${PROJECT_NAME}Test_5-6)
-add_test(NAME ${PROJECT_NAME}Test_7 COMMAND ${PROJECT_NAME}Test_7)

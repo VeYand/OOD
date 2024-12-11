@@ -6,11 +6,11 @@
 #include "IObservable.h"
 
 // Реализация интерфейса IObservable
-template<class T>
-class CObservable : public IObservable<T>
+template<class T, class EventType>
+class CObservable : public IObservable<T, EventType>
 {
 public:
-	using ObserverType = IObserver<T>;
+	using ObserverType = IObserver<T, EventType>;
 	using ObserversByPriorityIterator = typename std::multimap<unsigned, ObserverType *>::iterator;
 
 	void RegisterObserver(unsigned priority, ObserverType &observer, EventType eventType) override

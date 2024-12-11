@@ -1,10 +1,18 @@
 #ifndef CWEATHERDATA_H
 #define CWEATHERDATA_H
 
-#include "CObservable.h"
-#include "../Model/SWeatherInfo.h"
+#include "../Observable/CObservable.h"
+#include "Model/SWeatherInfo.h"
 
-class CWeatherData final : public CObservable<SWeatherInfo>
+enum class WeatherEventType
+{
+	Temperature,
+	Pressure,
+	Humidity,
+	Wind,
+};
+
+class CWeatherData final : public CObservable<SWeatherInfo, WeatherEventType>
 {
 public:
 	// Температура в градусах Цельсия
@@ -30,7 +38,7 @@ public:
 		return m_wind;
 	}
 
-	void MeasurementsChanged(const EventType eventType)
+	void MeasurementsChanged(const WeatherEventType eventType)
 	{
 		NotifyObservers(eventType);
 	}
@@ -39,21 +47,21 @@ public:
 	{
 		m_temperature = temp;
 
-		MeasurementsChanged(EventType::Temperature);
+		MeasurementsChanged(WeatherEventType::Temperature);
 	}
 
 	void SetHumidity(const double humidity)
 	{
 		m_humidity = humidity;
 
-		MeasurementsChanged(EventType::Humidity);
+		MeasurementsChanged(WeatherEventType::Humidity);
 	}
 
 	void SetPressure(const double pressure)
 	{
 		m_pressure = pressure;
 
-		MeasurementsChanged(EventType::Pressure);
+		MeasurementsChanged(WeatherEventType::Pressure);
 	}
 
 	void SetMeasurements(const double temp, const double humidity, const double pressure, const SWindInfo &wind)
@@ -63,10 +71,10 @@ public:
 		m_pressure = pressure;
 		m_wind = wind;
 
-		MeasurementsChanged(EventType::Temperature);
-		MeasurementsChanged(EventType::Pressure);
-		MeasurementsChanged(EventType::Humidity);
-		MeasurementsChanged(EventType::Wind);
+		MeasurementsChanged(WeatherEventType::Temperature);
+		MeasurementsChanged(WeatherEventType::Pressure);
+		MeasurementsChanged(WeatherEventType::Humidity);
+		MeasurementsChanged(WeatherEventType::Wind);
 	}
 
 protected:
