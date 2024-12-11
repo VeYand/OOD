@@ -74,6 +74,19 @@ add_executable(${PROJECT_NAME}_7
         7/Animal/CAnimalData.h
 )
 
+add_executable(${PROJECT_NAME}_8
+        8/WeatherStation/main.cpp
+        8/WeatherStation/Observable/IObservable.h
+        8/WeatherStation/Observable/CObservable.h
+        8/WeatherStation/Observer/CDisplay.h
+        8/WeatherStation/Model/SWeatherInfo.h
+        8/WeatherStation/Observer/CStatsDisplay.h
+        8/WeatherStation/Observable/CWeatherData.h
+        8/WeatherStation/Observer/CStatistics.h
+        8/WeatherStation/Observer/CWindStatistics.h
+        8/WeatherStation/Model/SWindInfo.h
+)
+
 add_executable(${PROJECT_NAME}Test_1-2
         1-2/WeatherStation/Observer/IObserver.h
         1-2/WeatherStation/Observable/IObservable.h
