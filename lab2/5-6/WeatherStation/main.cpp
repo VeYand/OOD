@@ -4,20 +4,22 @@
 
 int main()
 {
-    CWeatherData wd;
+    CWeatherData insideWd;
+    CWeatherData outsideWd;
 
-    CDisplay display(&wd, &wd);
-    wd.RegisterObserver(1, display);
+    CDisplay display(&insideWd, &outsideWd);
+    insideWd.RegisterObserver(1, display);
 
-    CStatsDisplay statsDisplay(&wd, &wd);
-    wd.RegisterObserver(2, statsDisplay);
+    CStatsDisplay statsDisplay(&insideWd, &outsideWd);
+    insideWd.RegisterObserver(2, statsDisplay);
+    outsideWd.RegisterObserver(1, statsDisplay);
 
-    wd.SetMeasurements(3, 0.7, 760, {10, 10});
-    wd.SetMeasurements(4, 0.8, 761, {1, 320});
+    outsideWd.SetMeasurements(3, 0.7, 760, {10, 10});
+    insideWd.SetMeasurements(4, 0.8, 761, {1, 320});
 
-    wd.RemoveObserver(statsDisplay);
+    insideWd.RemoveObserver(statsDisplay);
 
-    wd.SetMeasurements(10, 0.8, 761, {0.2, 120});
-    wd.SetMeasurements(-10, 0.8, 761, {1, 120});
+    outsideWd.SetMeasurements(10, 0.8, 761, {0.2, 120});
+    insideWd.SetMeasurements(-10, 0.8, 761, {1, 120});
     return 0;
 }
