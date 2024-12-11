@@ -34,7 +34,7 @@ namespace multi_gumball_machine
 			m_gumballMachine.SetNoQuarterState();
 		}
 
-		void TurnCrank() override
+		void TurnCrank() override // todo добавить отображение кол-ва монеток
 		{
 			if (m_gumballMachine.GetQuarterCount() > 0)
 			{
