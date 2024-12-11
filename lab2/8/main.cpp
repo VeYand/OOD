@@ -5,7 +5,7 @@ void WorkWithFisherman()
 {
 	CWeatherData wd;
 
-	CFishermanDisplay display;
+	CFishermanDisplay display(&wd, &wd);
 	wd.RegisterObserver(5, display, WeatherEventType::Temperature);
 
 	wd.SetMeasurements(25, 0.4, 760, {10, 10});

@@ -32,7 +32,7 @@ template<typename T, typename EventType>
 class IObserver
 {
 public:
-	virtual void Update(T const &data, EventType eventType) = 0;
+	virtual void Update(T const &data, EventType eventType, IObservable<T, EventType> *observable) = 0;
 
 	virtual ~IObserver() = default;
 };

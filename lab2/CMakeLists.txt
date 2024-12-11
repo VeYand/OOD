@@ -75,12 +75,12 @@ add_executable(${PROJECT_NAME}_7
 )
 
 add_executable(${PROJECT_NAME}_8
-        7/main.cpp
-        7/Observable/IObservable.h
-        7/Observable/CObservable.h
-        7/WeatherStation/Model/SWeatherInfo.h
-        7/WeatherStation/CWeatherData.h
-        7/WeatherStation/Model/SWindInfo.h
+        8/main.cpp
+        8/Observable/IObservable.h
+        8/Observable/CObservable.h
+        8/WeatherStation/Model/SWeatherInfo.h
+        8/WeatherStation/CWeatherData.h
+        8/WeatherStation/Model/SWindInfo.h
 )
 
 add_executable(${PROJECT_NAME}Test_1-2
