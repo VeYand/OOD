@@ -1,46 +1,82 @@
 #include "MenuFP.h"
-#include "Commands.h"
+#include "Robot.h"
 
 using namespace std;
+
+void CreateMacroCommand(CMenuFP &menu)
+{
+	std::string name, description;
+	std::vector<std::string> commandNames;
+
+	std::cout << "Enter command name: " << std::endl;
+	std::getline(std::cin, name);
+
+	std::cout << "Enter command description: " << std::endl;
+	std::getline(std::cin, description);
+
+	std::cout << "Type commands to add them to the macro, \"end_macro\" to finish" << std::endl;
+
+	std::string command;
+	while (true)
+	{
+		std::cout << "> ";
+		std::getline(std::cin, command);
+		if (command == "end_macro")
+		{
+			break;
+		}
+
+
+		if (menu.IsCommandExists(command))
+		{
+			commandNames.push_back(command);
+			std::cout << "Command \"" << command << "\" added to macro" << std::endl;
+		}
+		else
+		{
+			std::cout << "Unknown command" << std::endl;
+		}
+	}
+
+	menu.AddMacroCommand(name, description, commandNames);
+	std::cout << "Macro \"" << name << "\" created" << std::endl;
+}
 
 void TestMenuWithFunctionalCommandPattern()
 {
 	Robot robot;
 	CMenuFP menu;
 
-	menu.AddItem("on", "Turns the Robot on",
-	             bind(&Robot::TurnOn, &robot));
-	menu.AddItem("off", "Turns the Robot off",
-	             bind(&Robot::TurnOff, &robot));
-	menu.AddItem("north", "Makes the Robot walk north",
-	             bind(&Robot::Walk, &robot, WalkDirection::North));
-	menu.AddItem("south", "Makes the Robot walk south",
-	             bind(&Robot::Walk, &robot, WalkDirection::South));
-	menu.AddItem("west", "Makes the Robot walk west",
-	             bind(&Robot::Walk, &robot, WalkDirection::West));
-	menu.AddItem("east", "Makes the Robot walk east",
-	             bind(&Robot::Walk, &robot, WalkDirection::East));
-	menu.AddItem("stop", "Stops the Robot",
-	             bind(&Robot::Stop, &robot));
-	menu.AddItem("patrol", "Patrol the territory",
-	             CreateMacroCommand<vector<CMenuFP::Command> >({
-		             bind(&Robot::TurnOn, &robot),
-		             bind(&Robot::Walk, &robot, WalkDirection::North),
-		             bind(&Robot::Walk, &robot, WalkDirection::South),
-		             bind(&Robot::Walk, &robot, WalkDirection::West),
-		             bind(&Robot::Walk, &robot, WalkDirection::East),
-		             bind(&Robot::TurnOff, &robot)
-	             }));
-
-	menu.AddItem("begin_macro", "Start recording a new macro", [&] {
-		const BeginMacroCommand beginMacroCommand(menu);
-		beginMacroCommand.Start();
+	menu.AddCommand("on", "Turns the Robot on",
+	                [ObjectPtr = &robot] { ObjectPtr->TurnOn(); });
+	menu.AddCommand("off", "Turns the Robot off",
+	                [ObjectPtr = &robot] { ObjectPtr->TurnOff(); });
+	menu.AddCommand("north", "Makes the Robot walk north",
+	                [ObjectPtr = &robot] { ObjectPtr->Walk(WalkDirection::North); });
+	menu.AddCommand("south", "Makes the Robot walk south",
+	                [ObjectPtr = &robot] { ObjectPtr->Walk(WalkDirection::South); });
+	menu.AddCommand("west", "Makes the Robot walk west",
+	                [ObjectPtr = &robot] { ObjectPtr->Walk(WalkDirection::West); });
+	menu.AddCommand("east", "Makes the Robot walk east",
+	                [ObjectPtr = &robot] { ObjectPtr->Walk(WalkDirection::East); });
+	menu.AddCommand("stop", "Stops the Robot",
+	                [ObjectPtr = &robot] { ObjectPtr->Stop(); });
+	menu.AddCommand("patrol", "Patrol the territory",
+	                CMenuFP::CreateMacroCommand<vector<CMenuFP::Command> >({
+		                bind(&Robot::TurnOn, &robot),
+		                bind(&Robot::Walk, &robot, WalkDirection::North),
+		                bind(&Robot::Walk, &robot, WalkDirection::South),
+		                bind(&Robot::Walk, &robot, WalkDirection::West),
+		                bind(&Robot::Walk, &robot, WalkDirection::East),
+		                bind(&Robot::TurnOff, &robot)
+	                }));
+	menu.AddCommand("begin_macro", "Start recording a new macro", [&] {
+		CreateMacroCommand(menu);
 	});
-
-	menu.AddItem("help", "Show instructions",
-	             bind(&CMenuFP::ShowInstructions, &menu));
-	menu.AddItem("exit", "Exit from this menu",
-	             bind(&CMenuFP::Exit, &menu));
+	menu.AddCommand("help", "Show instructions",
+	                [ObjectPtr = &menu] { ObjectPtr->ShowInstructions(); });
+	menu.AddCommand("exit", "Exit from this menu",
+	                [ObjectPtr = &menu] { ObjectPtr->Exit(); });
 
 	menu.Run();
 }

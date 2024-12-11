@@ -11,12 +11,45 @@ class CMenuFP
 public:
 	typedef std::function<void()> Command;
 
-	void AddItem(
+	template<typename Commands>
+	Command CreateMacroCommand(Commands &&commands)
+	{
+		return [=] {
+			for (auto &command: commands)
+			{
+				command();
+			}
+		};
+	}
+
+	void AddCommand(
 		const std::string &shortcut,
 		const std::string &description,
-		const Command &command)
+		const Command &command
+	)
 	{
 		m_items.emplace_back(shortcut, description, command);
+	}
+
+	void AddMacroCommand(
+		const std::string &shortcut,
+		const std::string &description,
+		const std::vector<std::string> &commandNames
+	)
+	{
+		std::vector<Command> commands;
+		for (const auto &command: commandNames)
+		{
+			const auto it = std::ranges::find_if(m_items, [&](const Item &item) {
+				return item.shortcut == command;
+			});
+			if (it != m_items.end())
+			{
+				commands.push_back(it->command);
+			}
+		}
+
+		m_items.emplace_back(shortcut, description, CreateMacroCommand(commands));
 	}
 
 	void Run()
@@ -38,6 +71,14 @@ public:
 		{
 			std::cout << "  " << item.shortcut << ": " << item.description << "\n";
 		}
+	}
+
+	[[nodiscard]] bool IsCommandExists(const std::string &commandName) const
+	{
+		const auto it = std::ranges::find_if(m_items, [&](const Item &item) {
+			return item.shortcut == commandName;
+		});
+		return it != m_items.end();
 	}
 
 	void Exit()
@@ -79,6 +120,4 @@ private:
 
 	std::vector<Item> m_items;
 	bool m_exit = false;
-
-	friend class BeginMacroCommand;
 };
