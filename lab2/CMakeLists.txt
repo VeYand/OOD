@@ -12,6 +12,13 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+set(BOOST_ENABLE_CMAKE ON)
+FetchContent_Declare(
+        Boost
+        URL https://github.com/boostorg/boost/releases/download/boost-1.84.0/boost-1.84.0.tar.xz
+)
+FetchContent_MakeAvailable(Boost)
+
 add_executable(${PROJECT_NAME}_1-2
         1-2/WeatherStation/main.cpp
         1-2/WeatherStation/Observer/IObserver.h
@@ -82,6 +89,7 @@ add_executable(${PROJECT_NAME}_8
         8/WeatherStation/CWeatherData.h
         8/WeatherStation/Model/SWindInfo.h
 )
+target_link_libraries(${PROJECT_NAME}_8 PRIVATE Boost::signals2)
 
 add_executable(${PROJECT_NAME}Test_1-2
         1-2/WeatherStation/Observer/IObserver.h
@@ -135,12 +143,23 @@ add_executable(${PROJECT_NAME}Test_5-6
         5-6/test/main.cpp
 )
 
+add_executable(${PROJECT_NAME}Test_8
+        8/test/main.cpp
+        8/Observable/IObservable.h
+        8/Observable/CObservable.h
+        8/WeatherStation/Model/SWeatherInfo.h
+        8/WeatherStation/CWeatherData.h
+        8/WeatherStation/Model/SWindInfo.h
+)
+
 target_link_libraries(${PROJECT_NAME}Test_1-2 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_3 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_4 gtest_main gmock)
 target_link_libraries(${PROJECT_NAME}Test_5-6 gtest_main gmock)
+target_link_libraries(${PROJECT_NAME}Test_8 gtest_main gmock Boost::signals2)
 enable_testing()
 add_test(NAME ${PROJECT_NAME}Test_1-2 COMMAND ${PROJECT_NAME}Test_1-2)
 add_test(NAME ${PROJECT_NAME}Test_3 COMMAND ${PROJECT_NAME}Test_3)
 add_test(NAME ${PROJECT_NAME}Test_4 COMMAND ${PROJECT_NAME}Test_4)
 add_test(NAME ${PROJECT_NAME}Test_5-6 COMMAND ${PROJECT_NAME}Test_5-6)
+add_test(NAME ${PROJECT_NAME}Test_8 COMMAND ${PROJECT_NAME}Test_8)

@@ -8,22 +8,18 @@
 class CFishermanDisplay final : public IObserver<SWeatherInfo, WeatherEventType>
 {
 public:
-	CFishermanDisplay(
-		IObservable<SWeatherInfo, WeatherEventType> *inStation,
-		IObservable<SWeatherInfo, WeatherEventType> *outStation
-	): m_inStation(inStation), m_outStation(outStation)
+	CFishermanDisplay(IObservable<SWeatherInfo, WeatherEventType> *inStation,
+	                  IObservable<SWeatherInfo, WeatherEventType> *outStation)
+		: m_inStation(inStation), m_outStation(outStation)
 	{
 	}
 
 private:
-	IObservable<SWeatherInfo, WeatherEventType> *m_inStation{};
-	IObservable<SWeatherInfo, WeatherEventType> *m_outStation{};
+	IObservable<SWeatherInfo, WeatherEventType> *m_inStation;
+	IObservable<SWeatherInfo, WeatherEventType> *m_outStation;
 
-	void Update(
-		SWeatherInfo const &data,
-		const WeatherEventType eventType,
-		IObservable<SWeatherInfo, WeatherEventType> *observable
-	) override
+	void Update(const SWeatherInfo &data, WeatherEventType eventType,
+	            IObservable<SWeatherInfo, WeatherEventType> *observable) override
 	{
 		if (eventType == WeatherEventType::Temperature)
 		{
@@ -37,4 +33,4 @@ private:
 	}
 };
 
-#endif //CFISHERMANDISPLAY_H
+#endif // CFISHERMANDISPLAY_H
