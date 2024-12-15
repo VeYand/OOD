@@ -16,12 +16,13 @@ export default (configEnv: ConfigEnv) => {
 	}
 
 	const aliases: BuildAliases = {
-		shared: path.resolve(__dirname, 'src', 'shared'),
-		pages: path.resolve(__dirname, 'src', 'pages'),
-		widgets: path.resolve(__dirname, 'src', 'widgets'),
-		features: path.resolve(__dirname, 'src', 'features'),
-		entities: path.resolve(__dirname, 'src', 'entities'),
-		app: path.resolve(__dirname, 'src', 'app'),
+		components: path.resolve(__dirname, 'src', 'components'),
+		controllers: path.resolve(__dirname, 'src', 'controllers'),
+		models: path.resolve(__dirname, 'src', 'models'),
+		services: path.resolve(__dirname, 'src', 'services'),
+		types: path.resolve(__dirname, 'src', 'types'),
+		utils: path.resolve(__dirname, 'src', 'utils'),
+		svg: path.resolve(__dirname, 'src', 'svg'),
 	}
 
 	return buildViteConfig({
