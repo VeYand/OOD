@@ -1,25 +1,30 @@
+import {ShapePosition, ShapeSize, ShapeType} from '../../types/shapes'
+
 abstract class BaseShape {
-	x = 0
-	y = 0
-	width: number
-	height: number
+	private position: ShapePosition = {x: 0, y: 0}
+	private size: ShapeSize
 
-	constructor(width: number, height: number) {
-		this.width = width
-		this.height = height
+	constructor(size: ShapeSize) {
+		this.size = size
 	}
 
-	resize(width: number, height: number): void {
-		this.width = width
-		this.height = height
+	getPosition(): ShapePosition {
+		return this.position
 	}
 
-	move(x: number, y: number): void {
-		this.x = x
-		this.y = y
+	getSize(): ShapeSize {
+		return this.size
 	}
 
-	abstract draw(ctx: CanvasRenderingContext2D): void
+	resize(size: ShapeSize): void {
+		this.size = size
+	}
+
+	move(position: ShapePosition): void {
+		this.position = position
+	}
+
+	abstract getType(): ShapeType
 }
 
 export {

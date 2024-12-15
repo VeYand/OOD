@@ -1,9 +1,6 @@
-import {ArtObjectType} from '../types/shapes'
+import {ArtObjectType, ShapePosition, ShapeSize} from '../types/shapes'
 import {BaseShape} from './Shape/BaseShape'
-import {Ellipse} from './Shape/Ellipse'
-import {ImageShape} from './Shape/ImageShape'
-import {Rectangle} from './Shape/Rectangle'
-import {Triangle} from './Shape/Triangle'
+import {ShapeFactory} from './ShapeFactory'
 
 type ChangeEvent = 'create' | 'update' | 'delete'
 
@@ -14,26 +11,22 @@ class CanvasModel {
 	private shapeChangeObserver?: ShapeChangeObserver
 
 	addArtObject(type: ArtObjectType): void {
-		let shape: BaseShape
-		switch (type) {
-			case 'ellipse':
-				shape = new Ellipse(100, 100)
-				break
-			case 'rectangle':
-				shape = new Rectangle(100, 100)
-				break
-			case 'triangle':
-				shape = new Triangle(100, 100)
-				break
-		}
-		this.addShape(shape)
+		this.addShape(ShapeFactory.constructShape(type))
 	}
 
 	addImage(data: string) {
-		this.addShape(new ImageShape(100, 100, data))
+		this.addShape(ShapeFactory.constructShape('image', data))
 	}
 
-	addObserver(onShapeChange: ShapeChangeObserver) {
+	resizeShape(shapeId: string, size: ShapeSize) {
+		this.getShape(shapeId)?.resize(size)
+	}
+
+	moveShape(shapeId: string, position: ShapePosition) {
+		this.getShape(shapeId)?.move(position)
+	}
+
+	setObserver(onShapeChange: ShapeChangeObserver) {
 		this.shapeChangeObserver = onShapeChange
 	}
 
@@ -59,4 +52,8 @@ class CanvasModel {
 
 export {
 	CanvasModel,
+}
+
+export type {
+	ShapeChangeObserver,
 }

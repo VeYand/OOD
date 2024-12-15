@@ -1,15 +1,16 @@
+import {ShapeSize, ShapeType} from 'types/shapes'
 import {BaseShape} from './BaseShape'
 
 class ImageShape extends BaseShape {
 	data: string
 
-	constructor(width: number, height: number, data: string) {
-		super(width, height)
+	constructor(size: ShapeSize, data: string) {
+		super(size)
 		this.data = data
 	}
 
-	draw(ctx: CanvasRenderingContext2D): void {
-		ctx.ellipse(1, 1, 1, 1, 1, 1, 1)
+	override getType(): ShapeType {
+		return 'image'
 	}
 }
 

@@ -1,5 +1,5 @@
 import {CanvasModel} from '../models/CanvasModel'
-import {ArtObjectType} from '../types/shapes'
+import {ArtObjectType, ShapePosition, ShapeSize} from '../types/shapes'
 
 class CanvasController {
 	constructor(private model: CanvasModel) {}
@@ -16,9 +16,12 @@ class CanvasController {
 		this.model.removeShape(shapeId)
 	}
 
-	moveShape(shapeId: string, x: number, y: number) {
-		const shape = this.model.getShape(shapeId)
-		shape?.move(x, y)
+	resizeShape(shapeId: string, size: ShapeSize) {
+		this.model.resizeShape(shapeId, size)
+	}
+
+	moveShape(shapeId: string, position: ShapePosition) {
+		this.model.moveShape(shapeId, position)
 	}
 }
 
