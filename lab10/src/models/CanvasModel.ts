@@ -20,10 +20,12 @@ class CanvasModel {
 
 	resizeShape(shapeId: string, size: ShapeSize) {
 		this.getShape(shapeId)?.resize(size)
+		this.shapeChangeObserver?.(shapeId, 'update')
 	}
 
 	moveShape(shapeId: string, position: ShapePosition) {
 		this.getShape(shapeId)?.move(position)
+		this.shapeChangeObserver?.(shapeId, 'update')
 	}
 
 	setObserver(onShapeChange: ShapeChangeObserver) {
@@ -39,8 +41,8 @@ class CanvasModel {
 		return this.shapes.get(shapeId)
 	}
 
-	getShapes(): BaseShape[] {
-		return [...this.shapes.values()]
+	getShapeIdToShapeMap(): Map<string, BaseShape> {
+		return this.shapes
 	}
 
 	private addShape(shape: BaseShape): void {
@@ -56,4 +58,5 @@ export {
 
 export type {
 	ShapeChangeObserver,
+	ChangeEvent,
 }
