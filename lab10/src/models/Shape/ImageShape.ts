@@ -12,6 +12,8 @@ class ImageShape extends BaseShape {
 	override getType(): ShapeType {
 		return 'image'
 	}
+
+	getData = () => this.data
 }
 
 export {
