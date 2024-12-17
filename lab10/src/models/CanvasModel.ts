@@ -7,6 +7,7 @@ type ChangeEvent = 'create' | 'update' | 'delete'
 type ShapeChangeObserver = (shapeId: string, event: ChangeEvent) => void
 
 class CanvasModel {
+	private canvasSize: ShapeSize = {width: 800, height: 600}
 	private shapes: Map<string, BaseShape> = new Map()
 	private shapeChangeObserver?: ShapeChangeObserver
 
@@ -43,6 +44,10 @@ class CanvasModel {
 
 	getShapeIdToShapeMap(): Map<string, BaseShape> {
 		return this.shapes
+	}
+
+	getCanvasSize(): ShapeSize {
+		return this.canvasSize
 	}
 
 	private addShape(shape: BaseShape): void {

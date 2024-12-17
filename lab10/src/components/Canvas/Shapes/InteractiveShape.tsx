@@ -1,14 +1,14 @@
 import React, {Component, createRef, ReactElement} from 'react'
-import {ShapePosition, ShapeSize} from '../../../types/shapes'
+import {ShapePosition, ShapeSize} from 'types/shapes'
 
 type InteractiveShapeProps = {
 	isSelected: boolean,
 	setIsSelected: (selected: boolean) => void,
-	size: {width: number, height: number},
-	position: {x: number, y: number},
+	size: ShapeSize,
+	position: ShapePosition,
 	shape: ReactElement,
-	onDrag: (position: ShapePosition) => void,
-	onResize: (size: ShapeSize) => void,
+	onDrag: (position: ShapePosition) => ShapePosition,
+	onResize: (size: ShapeSize) => ShapeSize,
 }
 
 class InteractiveShape extends Component<InteractiveShapeProps> {
