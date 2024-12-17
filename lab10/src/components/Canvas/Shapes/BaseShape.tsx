@@ -32,13 +32,23 @@ class BaseShape extends Component<BaseShapeProps> {
 		this.isDragging = true
 		this.dragStartX = e.clientX
 		this.dragStartY = e.clientY
+
+		window.addEventListener('mousemove', this.handleMouseMove)
+		window.addEventListener('mouseup', this.handleMouseUp)
 	}
 
 	handleMouseMove = (e: MouseEvent) => {
 		if (this.isDragging) {
 			const deltaX = e.clientX - this.dragStartX
 			const deltaY = e.clientY - this.dragStartY
-			this.props.onDrag({x: this.props.position.x + deltaX, y: this.props.position.y + deltaY})
+
+			this.props.onDrag({
+				x: this.props.position.x + deltaX,
+				y: this.props.position.y + deltaY,
+			})
+
+			this.dragStartX = e.clientX
+			this.dragStartY = e.clientY
 		}
 
 		if (this.isResizing) {
@@ -179,11 +189,12 @@ class BaseShape extends Component<BaseShapeProps> {
 					width: size.width,
 					height: size.height,
 					outline: isSelected ? '2px solid blue' : 'none',
-					cursor: 'move',
+					cursor: isSelected ? 'move' : 'default',
 				}}
 				onMouseDown={this.handleMouseDown}
+				ref={this.shapeRef}
 			>
-				<div style={{width: '100%', height: '100%'}} ref={this.shapeRef}>{shape}</div>
+				{shape}
 				{this.renderResizeHandles()}
 			</div>
 		)
