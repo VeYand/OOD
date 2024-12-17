@@ -2,6 +2,7 @@ import {Component, ReactElement} from 'react'
 import {CanvasController} from '../../controllers/CanvasController'
 import {CanvasModel} from '../../models/CanvasModel'
 import {ImageShape as ImageShapeModel} from '../../models/Shape/ImageShape'
+import {ShapePosition, ShapeSize} from '../../types/shapes'
 import {EllipseShape} from './Shapes/EllipseShape'
 import {ImageShape} from './Shapes/ImageShape'
 import {InteractiveShape} from './Shapes/InteractiveShape'
@@ -68,11 +69,12 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 					setIsSelected={selected =>
 						this.handleSelectShape(selected ? shapeId : undefined)
 					}
-					size={size}
-					position={position}
+					shapeSize={size}
+					shapePosition={position}
 					shape={shapeComponent}
-					onDrag={newPosition => this.controller.moveShape(shapeId, newPosition)}
-					onResize={newSize => this.controller.resizeShape(shapeId, newSize)}
+					updateShapeSizeAndPosition={(newSize?: ShapeSize, newPosition?: ShapePosition) =>
+						this.controller.updateShapeSizeAndPosition(shapeId, {size: newSize, position: newPosition})}
+					canvasSize={this.model.getCanvasSize()}
 				/>,
 			)
 		})

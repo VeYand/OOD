@@ -16,12 +16,8 @@ class CanvasController {
 		this.model.removeShape(shapeId)
 	}
 
-	resizeShape(shapeId: string, size: ShapeSize) {
-		this.model.resizeShape(shapeId, size)
-	}
-
-	moveShape(shapeId: string, position: ShapePosition) {
-		this.model.moveShape(shapeId, position)
+	updateShapeSizeAndPosition(shapeId: string, changes: {size?: ShapeSize, position?: ShapePosition}) {
+		this.model.updateShapeSizeAndPosition(shapeId, changes)
 	}
 }
 

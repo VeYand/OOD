@@ -4,14 +4,15 @@ import {ShapePosition, ShapeSize} from 'types/shapes'
 type InteractiveShapeProps = {
 	isSelected: boolean,
 	setIsSelected: (selected: boolean) => void,
-	size: ShapeSize,
-	position: ShapePosition,
+	shapeSize: ShapeSize,
+	shapePosition: ShapePosition,
 	shape: ReactElement,
-	onDrag: (position: ShapePosition) => void,
-	onResize: (size: ShapeSize) => void,
+	updateShapeSizeAndPosition: (size?: ShapeSize, position?: ShapePosition) => void,
+	canvasSize: ShapeSize,
 }
 
 class InteractiveShape extends Component<InteractiveShapeProps> {
+	private minSize = 20
 	private isDragging = false
 	private dragStartX = 0
 	private dragStartY = 0
@@ -39,18 +40,24 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 	}
 
 	handleMouseMove = (e: MouseEvent) => {
-		const minSize = 20
+		const clamp = (value: number, min: number, max: number): number => Math.max(min, Math.min(max, value))
 
 		const topResize = (
 			oldHeight: number,
 			deltaY: number,
 			oldPosY: number,
 		): [number, number] => {
-			const newHeight = oldHeight - deltaY
-			if (newHeight < minSize) {
-				return [minSize, oldPosY + oldHeight - minSize]
+			let newHeight = oldHeight - deltaY
+			let newY = oldPosY + deltaY
+			if (newY < 0) {
+				newHeight += newY
+				newY = 0
 			}
-			return [newHeight, oldPosY + deltaY]
+			if (newHeight < this.minSize) {
+				newHeight = this.minSize
+				newY = oldPosY + oldHeight - this.minSize
+			}
+			return [newHeight, newY]
 		}
 
 		const bottomResize = (
@@ -59,7 +66,8 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 			oldPosY: number,
 		): [number, number] => {
 			const newHeight = oldHeight + deltaY
-			return newHeight < minSize ? [minSize, oldPosY] : [newHeight, oldPosY]
+			const maxHeight = this.props.canvasSize.height - oldPosY
+			return newHeight > maxHeight ? [maxHeight, oldPosY] : [Math.max(newHeight, this.minSize), oldPosY]
 		}
 
 		const leftResize = (
@@ -67,11 +75,17 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 			deltaX: number,
 			oldPosX: number,
 		): [number, number] => {
-			const newWidth = oldWidth - deltaX
-			if (newWidth < minSize) {
-				return [minSize, oldPosX + oldWidth - minSize]
+			let newWidth = oldWidth - deltaX
+			let newX = oldPosX + deltaX
+			if (newX < 0) {
+				newWidth += newX
+				newX = 0
 			}
-			return [newWidth, oldPosX + deltaX]
+			if (newWidth < this.minSize) {
+				newWidth = this.minSize
+				newX = oldPosX + oldWidth - this.minSize
+			}
+			return [newWidth, newX]
 		}
 
 		const rightResize = (
@@ -80,16 +94,23 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 			oldPosX: number,
 		): [number, number] => {
 			const newWidth = oldWidth + deltaX
-			return newWidth < minSize ? [minSize, oldPosX] : [newWidth, oldPosX]
+			const maxWidth = this.props.canvasSize.width - oldPosX
+			return newWidth > maxWidth ? [maxWidth, oldPosX] : [Math.max(newWidth, this.minSize), oldPosX]
 		}
 
 		if (this.isDragging) {
 			const deltaX = e.clientX - this.dragStartX
 			const deltaY = e.clientY - this.dragStartY
 
-			this.props.onDrag({
-				x: this.props.position.x + deltaX,
-				y: this.props.position.y + deltaY,
+			let newPosX = this.props.shapePosition.x + deltaX
+			let newPosY = this.props.shapePosition.y + deltaY
+
+			newPosX = clamp(newPosX, 0, this.props.canvasSize.width - this.props.shapeSize.width)
+			newPosY = clamp(newPosY, 0, this.props.canvasSize.height - this.props.shapeSize.height)
+
+			this.props.updateShapeSizeAndPosition(undefined, {
+				x: newPosX,
+				y: newPosY,
 			})
 
 			this.dragStartX = e.clientX
@@ -126,8 +147,10 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 					return
 			}
 
-			this.props.onResize({width: newWidth, height: newHeight})
-			this.props.onDrag({x: newX, y: newY})
+			this.props.updateShapeSizeAndPosition(
+				{width: newWidth, height: newHeight},
+				{x: newX, y: newY},
+			)
 		}
 	}
 
@@ -144,10 +167,10 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 		this.resizeCorner = corner
 		this.resizeStartX = e.clientX
 		this.resizeStartY = e.clientY
-		this.initialWidth = this.props.size.width
-		this.initialHeight = this.props.size.height
-		this.initialX = this.props.position.x
-		this.initialY = this.props.position.y
+		this.initialWidth = this.props.shapeSize.width
+		this.initialHeight = this.props.shapeSize.height
+		this.initialX = this.props.shapePosition.x
+		this.initialY = this.props.shapePosition.y
 
 		window.addEventListener('mousemove', this.handleMouseMove)
 		window.addEventListener('mouseup', this.handleMouseUp)
@@ -219,16 +242,16 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 	}
 
 	override render() {
-		const {isSelected, size, position, shape} = this.props
+		const {isSelected, shapeSize, shapePosition, shape} = this.props
 
 		return (
 			<div
 				style={{
 					position: 'absolute',
-					top: position.y,
-					left: position.x,
-					width: size.width,
-					height: size.height,
+					top: shapePosition.y,
+					left: shapePosition.x,
+					width: shapeSize.width,
+					height: shapeSize.height,
 					outline: isSelected ? '2px solid blue' : 'none',
 					cursor: isSelected ? 'move' : 'default',
 				}}
