@@ -1,6 +1,9 @@
 import {ChangeEvent, Component} from 'react'
 import {CanvasController} from '../../controllers/CanvasController'
 import {ArtObjectType} from '../../types/shapes'
+import {EllipseShape} from '../Canvas/Shapes/EllipseShape'
+import {RectangleShape} from '../Canvas/Shapes/RectangleShape'
+import {TriangleShape} from '../Canvas/Shapes/TriangleShape'
 
 type ToolbarProps = {
 	controller: CanvasController,
@@ -18,6 +21,7 @@ class Toolbar extends Component<ToolbarProps> {
 		<div style={{display: 'flex', gap: '10px'}}>
 			{this.renderCreateArtObjectBlock()}
 			{this.renderImageImportBlock()}
+			{this.renderJsonBlock()}
 		</div>
 	)
 
@@ -27,10 +31,32 @@ class Toolbar extends Component<ToolbarProps> {
 		}
 
 		return (
-			<div style={{display: 'flex', gap: '10px', padding: '10px', background: '#f4f4f4'}}>
-				<button onClick={() => onCreateArt('rectangle')}>{'Rectangle'}</button>
-				<button onClick={() => onCreateArt('triangle')}>{'Triangle'}</button>
-				<button onClick={() => onCreateArt('ellipse')}>{'Ellipse'}</button>
+			<div style={{display: 'flex', gap: '10px', padding: '10px', background: '#e0e0e0', borderRadius: '5px'}}>
+				<button onClick={() => onCreateArt('rectangle')}>{this.renderIcon('rectangle')}{' Rectangle'}</button>
+				<button onClick={() => onCreateArt('triangle')}>{this.renderIcon('triangle')}{' Triangle'}</button>
+				<button onClick={() => onCreateArt('ellipse')}>{this.renderIcon('ellipse')}{' Ellipse'}</button>
+			</div>
+		)
+	}
+
+	private renderIcon(type: ArtObjectType): JSX.Element {
+		switch (type) {
+			case 'rectangle':
+				return <div style={{width: 16, height:16}}><RectangleShape/></div>
+			case 'triangle':
+				return <div style={{width: 16, height:16}}><TriangleShape/></div>
+			case 'ellipse':
+				return <div style={{width: 16, height:16}}><EllipseShape/></div>
+			default:
+				return <></>
+		}
+	}
+
+	private renderJsonBlock(): JSX.Element {
+		return (
+			<div style={{display: 'flex', gap: '10px', padding: '10px', background: '#e0e0e0', borderRadius: '5px'}}>
+				<button onClick={() => {}}>{'Save JSON'}</button>
+				<button onClick={() => {}}>{'Load JSON'}</button>
 			</div>
 		)
 	}
@@ -50,17 +76,19 @@ class Toolbar extends Component<ToolbarProps> {
 		}
 
 		return (
-			<div>
-				<h3>{'Upload an image'}</h3>
+			<div style={{display: 'flex', padding: '10px', background: '#e0e0e0', borderRadius: '5px'}}>
 				<input
 					id="input-image-from-pc"
 					type="file"
 					accept=".jpeg, .jpg, .png"
 					onChange={handleImageUpload}
+					style={{display: 'none'}}
 				/>
-				<div>
-					<label htmlFor="input-image-from-pc">Select a file</label>
-				</div>
+				<button>
+					<label htmlFor="input-image-from-pc">
+						{'Upload an image'}
+					</label>
+				</button>
 			</div>
 		)
 	}
