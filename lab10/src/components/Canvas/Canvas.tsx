@@ -14,7 +14,7 @@ type CanvasProps = {
 }
 
 type CanvasState = {
-	selectedShapeId: string | null,
+	selectedShapeId?: string,
 }
 
 class Canvas extends Component<CanvasProps, CanvasState> {
@@ -26,11 +26,11 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 		this.model = props.model
 		this.controller = props.controller
 		this.state = {
-			selectedShapeId: null,
+			selectedShapeId: undefined,
 		}
 	}
 
-	handleSelectShape = (shapeId: string) => {
+	handleSelectShape = (shapeId?: string) => {
 		this.setState({selectedShapeId: shapeId})
 	}
 
@@ -66,7 +66,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 					key={shapeId}
 					isSelected={isSelected}
 					setIsSelected={selected =>
-						this.handleSelectShape(selected ? shapeId : '')
+						this.handleSelectShape(selected ? shapeId : undefined)
 					}
 					size={size}
 					position={position}
@@ -79,14 +79,23 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 		return shapesComponents
 	}
 
+	handleKeyDown = (event: KeyboardEvent) => {
+		if (event.key === 'Delete' && this.state.selectedShapeId) {
+			this.controller.removeShape(this.state.selectedShapeId)
+		}
+	}
+
 	override render() {
+		const canvasSize = this.model.getCanvasSize()
+
 		return (
 			<div
 				style={{
 					position: 'relative',
-					width: 800,
-					height: 600,
+					width: canvasSize.width,
+					height: canvasSize.height,
 					backgroundColor: '#f0f0f0',
+					overflow: 'hidden',
 				}}
 			>
 				{this.renderShapes()}
@@ -96,6 +105,11 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 
 	override componentDidMount() {
 		this.model.setObserver(() => this.forceUpdate())
+		document.addEventListener('keydown', this.handleKeyDown)
+	}
+
+	override componentWillUnmount() {
+		document.removeEventListener('keydown', this.handleKeyDown)
 	}
 }
 
