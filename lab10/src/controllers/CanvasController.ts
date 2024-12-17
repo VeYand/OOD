@@ -1,4 +1,4 @@
-import {CanvasModel} from '../models/CanvasModel'
+import {CanvasModel, ShapeChangeObserver} from '../models/CanvasModel'
 import {ArtObjectType, ShapePosition, ShapeSize} from '../types/shapes'
 
 class CanvasController {
@@ -18,6 +18,10 @@ class CanvasController {
 
 	updateShapeSizeAndPosition(shapeId: string, changes: {size?: ShapeSize, position?: ShapePosition}) {
 		this.model.updateShapeSizeAndPosition(shapeId, changes)
+	}
+
+	setObserver(onShapeChange: ShapeChangeObserver) {
+		this.model.setObserver(onShapeChange)
 	}
 }
 

@@ -6,7 +6,13 @@ type ChangeEvent = 'create' | 'update' | 'delete'
 
 type ShapeChangeObserver = (shapeId: string, event: ChangeEvent) => void
 
-class CanvasModel {
+type ICanvasModel = {
+	getShape: (shapeId: string) => BaseShape | undefined,
+	getCanvasSize: () => ShapeSize,
+	getShapeIdToShapeMap: () => Map<string, BaseShape>,
+}
+
+class CanvasModel implements ICanvasModel {
 	private canvasSize: ShapeSize = {width: 800, height: 600}
 	private shapes: Map<string, BaseShape> = new Map()
 	private shapeChangeObserver?: ShapeChangeObserver
@@ -83,6 +89,7 @@ export {
 }
 
 export type {
+	ICanvasModel,
 	ShapeChangeObserver,
 	ChangeEvent,
 }

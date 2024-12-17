@@ -1,6 +1,6 @@
 import {Component, ReactElement} from 'react'
 import {CanvasController} from '../../controllers/CanvasController'
-import {CanvasModel} from '../../models/CanvasModel'
+import {ICanvasModel} from '../../models/CanvasModel'
 import {ImageShape as ImageShapeModel} from '../../models/Shape/ImageShape'
 import {ShapePosition, ShapeSize} from '../../types/shapes'
 import {EllipseShape} from './Shapes/EllipseShape'
@@ -10,7 +10,7 @@ import {RectangleShape} from './Shapes/RectangleShape'
 import {TriangleShape} from './Shapes/TriangleShape'
 
 type CanvasProps = {
-	model: CanvasModel,
+	model: ICanvasModel,
 	controller: CanvasController,
 	selectedShapeId?: string,
 	handleSelectShape: (shapeId?: string) => void,
@@ -18,7 +18,7 @@ type CanvasProps = {
 }
 
 class Canvas extends Component<CanvasProps> {
-	private model: CanvasModel
+	private model: ICanvasModel
 	private controller: CanvasController
 
 	constructor(props: CanvasProps) {
@@ -100,7 +100,7 @@ class Canvas extends Component<CanvasProps> {
 	}
 
 	override componentDidMount() {
-		this.model.setObserver(() => this.forceUpdate())
+		this.controller.setObserver(() => this.forceUpdate())
 		document.addEventListener('keydown', this.handleKeyDown)
 	}
 

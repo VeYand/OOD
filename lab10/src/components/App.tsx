@@ -1,6 +1,6 @@
 import {Component} from 'react'
 import {CanvasController} from '../controllers/CanvasController'
-import {CanvasModel} from '../models/CanvasModel'
+import {CanvasModel, ICanvasModel} from '../models/CanvasModel'
 import {Canvas} from './Canvas/Canvas'
 import {Toolbar} from './Toolbar/Toolbar'
 
@@ -11,13 +11,14 @@ type AppState = {
 }
 
 class App extends Component<AppProps, AppState> {
-	private readonly model: CanvasModel
+	private readonly model: ICanvasModel
 	private readonly controller: CanvasController
 
 	constructor(props: AppProps) {
 		super(props)
-		this.model = new CanvasModel()
-		this.controller = new CanvasController(this.model)
+		const model = new CanvasModel()
+		this.model = model
+		this.controller = new CanvasController(model)
 		this.state = {}
 	}
 
