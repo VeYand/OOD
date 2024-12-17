@@ -1,16 +1,17 @@
 import React, {Component, createRef, ReactElement} from 'react'
+import {ShapePosition, ShapeSize} from '../../../types/shapes'
 
-type BaseShapeProps = {
+type InteractiveShapeProps = {
 	isSelected: boolean,
 	setIsSelected: (selected: boolean) => void,
 	size: {width: number, height: number},
 	position: {x: number, y: number},
 	shape: ReactElement,
-	onDrag: (position: {x: number, y: number}) => void,
-	onResize: (size: {width: number, height: number}) => void,
+	onDrag: (position: ShapePosition) => void,
+	onResize: (size: ShapeSize) => void,
 }
 
-class BaseShape extends Component<BaseShapeProps> {
+class InteractiveShape extends Component<InteractiveShapeProps> {
 	private isDragging = false
 	private dragStartX = 0
 	private dragStartY = 0
@@ -38,6 +39,50 @@ class BaseShape extends Component<BaseShapeProps> {
 	}
 
 	handleMouseMove = (e: MouseEvent) => {
+		const minSize = 20
+
+		const topResize = (
+			oldHeight: number,
+			deltaY: number,
+			oldPosY: number,
+		): [number, number] => {
+			const newHeight = oldHeight - deltaY
+			if (newHeight < minSize) {
+				return [minSize, oldPosY + oldHeight - minSize]
+			}
+			return [newHeight, oldPosY + deltaY]
+		}
+
+		const bottomResize = (
+			oldHeight: number,
+			deltaY: number,
+			oldPosY: number,
+		): [number, number] => {
+			const newHeight = oldHeight + deltaY
+			return newHeight < minSize ? [minSize, oldPosY] : [newHeight, oldPosY]
+		}
+
+		const leftResize = (
+			oldWidth: number,
+			deltaX: number,
+			oldPosX: number,
+		): [number, number] => {
+			const newWidth = oldWidth - deltaX
+			if (newWidth < minSize) {
+				return [minSize, oldPosX + oldWidth - minSize]
+			}
+			return [newWidth, oldPosX + deltaX]
+		}
+
+		const rightResize = (
+			oldWidth: number,
+			deltaX: number,
+			oldPosX: number,
+		): [number, number] => {
+			const newWidth = oldWidth + deltaX
+			return newWidth < minSize ? [minSize, oldPosX] : [newWidth, oldPosX]
+		}
+
 		if (this.isDragging) {
 			const deltaX = e.clientX - this.dragStartX
 			const deltaY = e.clientY - this.dragStartY
@@ -62,24 +107,20 @@ class BaseShape extends Component<BaseShapeProps> {
 
 			switch (this.resizeCorner) {
 				case 'top-left':
-					newWidth = this.initialWidth - deltaX
-					newHeight = this.initialHeight - deltaY
-					newX = this.initialX + deltaX
-					newY = this.initialY + deltaY
+					[newHeight, newY] = topResize(this.initialHeight, deltaY, this.initialY);
+					[newWidth, newX] = leftResize(this.initialWidth, deltaX, this.initialX)
 					break
 				case 'top-right':
-					newWidth = this.initialWidth + deltaX
-					newHeight = this.initialHeight - deltaY
-					newY = this.initialY + deltaY
+					[newHeight, newY] = topResize(this.initialHeight, deltaY, this.initialY);
+					[newWidth, newX] = rightResize(this.initialWidth, deltaX, this.initialX)
 					break
 				case 'bottom-left':
-					newWidth = this.initialWidth - deltaX
-					newHeight = this.initialHeight + deltaY
-					newX = this.initialX + deltaX
+					[newHeight, newY] = bottomResize(this.initialHeight, deltaY, this.initialY);
+					[newWidth, newX] = leftResize(this.initialWidth, deltaX, this.initialX)
 					break
 				case 'bottom-right':
-					newWidth = this.initialWidth + deltaX
-					newHeight = this.initialHeight + deltaY
+					[newHeight, newY] = bottomResize(this.initialHeight, deltaY, this.initialY);
+					[newWidth, newX] = rightResize(this.initialWidth, deltaX, this.initialX)
 					break
 				default:
 					return
@@ -211,4 +252,6 @@ class BaseShape extends Component<BaseShapeProps> {
 	}
 }
 
-export {BaseShape}
+export {
+	InteractiveShape,
+}

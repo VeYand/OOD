@@ -2,9 +2,9 @@ import {Component, ReactElement} from 'react'
 import {CanvasController} from '../../controllers/CanvasController'
 import {CanvasModel} from '../../models/CanvasModel'
 import {ImageShape as ImageShapeModel} from '../../models/Shape/ImageShape'
-import {BaseShape} from './Shapes/BaseShape'
 import {EllipseShape} from './Shapes/EllipseShape'
 import {ImageShape} from './Shapes/ImageShape'
+import {InteractiveShape} from './Shapes/InteractiveShape'
 import {RectangleShape} from './Shapes/RectangleShape'
 import {TriangleShape} from './Shapes/TriangleShape'
 
@@ -62,7 +62,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 			}
 
 			shapesComponents.push(
-				<BaseShape
+				<InteractiveShape
 					key={shapeId}
 					isSelected={isSelected}
 					setIsSelected={selected =>
