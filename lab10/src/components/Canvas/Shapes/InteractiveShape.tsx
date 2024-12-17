@@ -7,8 +7,8 @@ type InteractiveShapeProps = {
 	size: ShapeSize,
 	position: ShapePosition,
 	shape: ReactElement,
-	onDrag: (position: ShapePosition) => ShapePosition,
-	onResize: (size: ShapeSize) => ShapeSize,
+	onDrag: (position: ShapePosition) => void,
+	onResize: (size: ShapeSize) => void,
 }
 
 class InteractiveShape extends Component<InteractiveShapeProps> {
