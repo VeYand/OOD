@@ -12,13 +12,12 @@ import {TriangleShape} from './Shapes/TriangleShape'
 type CanvasProps = {
 	model: CanvasModel,
 	controller: CanvasController,
-}
-
-type CanvasState = {
 	selectedShapeId?: string,
+	handleSelectShape: (shapeId?: string) => void,
+	handleDeleteShape: (shapeId: string) => void,
 }
 
-class Canvas extends Component<CanvasProps, CanvasState> {
+class Canvas extends Component<CanvasProps> {
 	private model: CanvasModel
 	private controller: CanvasController
 
@@ -26,19 +25,13 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 		super(props)
 		this.model = props.model
 		this.controller = props.controller
-		this.state = {
-			selectedShapeId: undefined,
-		}
 	}
 
-	handleSelectShape = (shapeId?: string) => {
-		this.setState({selectedShapeId: shapeId})
-	}
 
 	renderShapes = () => {
 		const shapesComponents: ReactElement[] = []
 		this.model.getShapeIdToShapeMap().forEach((shape, shapeId) => {
-			const isSelected = this.state.selectedShapeId === shapeId
+			const isSelected = this.props.selectedShapeId === shapeId
 			const position = shape.getPosition()
 			const size = shape.getSize()
 
@@ -67,7 +60,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 					key={shapeId}
 					isSelected={isSelected}
 					setIsSelected={selected =>
-						this.handleSelectShape(selected ? shapeId : undefined)
+						this.props.handleSelectShape(selected ? shapeId : undefined)
 					}
 					shapeSize={size}
 					shapePosition={position}
@@ -82,8 +75,8 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 	}
 
 	handleKeyDown = (event: KeyboardEvent) => {
-		if (event.key === 'Delete' && this.state.selectedShapeId) {
-			this.controller.removeShape(this.state.selectedShapeId)
+		if (event.key === 'Delete' && this.props.selectedShapeId) {
+			this.props.handleDeleteShape(this.props.selectedShapeId)
 		}
 	}
 
@@ -92,6 +85,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 
 		return (
 			<div
+				id={'canvas'}
 				style={{
 					position: 'relative',
 					width: canvasSize.width,

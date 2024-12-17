@@ -7,6 +7,8 @@ import {TriangleShape} from '../Canvas/Shapes/TriangleShape'
 
 type ToolbarProps = {
 	controller: CanvasController,
+	selectedShapeId?: string,
+	handleDeleteShape: (shapeId: string) => void,
 }
 
 class Toolbar extends Component<ToolbarProps> {
@@ -22,6 +24,7 @@ class Toolbar extends Component<ToolbarProps> {
 			{this.renderCreateArtObjectBlock()}
 			{this.renderImageImportBlock()}
 			{this.renderJsonBlock()}
+			{this.renderShapeControlBlock()}
 		</div>
 	)
 
@@ -88,6 +91,22 @@ class Toolbar extends Component<ToolbarProps> {
 					<label htmlFor="input-image-from-pc">
 						{'Upload an image'}
 					</label>
+				</button>
+			</div>
+		)
+	}
+
+	private renderShapeControlBlock(): JSX.Element {
+		if (!this.props.selectedShapeId) {
+			return <></>
+		}
+
+		return (
+			<div style={{display: 'flex', gap: '10px', padding: '10px', background: '#e0e0e0', borderRadius: '5px'}}>
+				<button
+					onClick={() => this.props.handleDeleteShape(this.props.selectedShapeId ?? '')}
+				>
+					{'Delete shape'}
 				</button>
 			</div>
 		)

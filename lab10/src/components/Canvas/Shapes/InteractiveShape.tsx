@@ -236,7 +236,10 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 		)
 	}
 	handleClickOutside = (event: MouseEvent | TouchEvent) => {
-		if (this.shapeRef.current && !this.shapeRef.current.contains(event.target as Node)) {
+		if (this.shapeRef.current
+			&& !this.shapeRef.current.contains(event.target as Node)
+			&& document.getElementById('canvas')?.contains(event.target as Node)
+		) {
 			this.props.setIsSelected(false)
 		}
 	}
@@ -266,12 +269,10 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 
 	override componentDidMount() {
 		document.addEventListener('mousedown', this.handleClickOutside)
-		document.addEventListener('touchend', this.handleClickOutside)
 	}
 
 	override componentWillUnmount() {
 		document.removeEventListener('mousedown', this.handleClickOutside)
-		document.removeEventListener('touchend', this.handleClickOutside)
 	}
 }
 
