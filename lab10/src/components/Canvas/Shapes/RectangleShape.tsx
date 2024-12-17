@@ -1,12 +1,12 @@
 import {Component} from 'react'
 
-type RectangleShapeProps = {}
+class RectangleShape extends Component {
+	private color = 'green'
 
-class RectangleShape extends Component<RectangleShapeProps> {
 	override render() {
 		return (
 			<svg width="100%" height="100%">
-				<rect width="100%" height="100%" fill="green" />
+				<rect width="100%" height="100%" fill={this.color} />
 			</svg>
 		)
 	}
