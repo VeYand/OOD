@@ -1,6 +1,12 @@
 import {ShapePosition, ShapeSize, ShapeType} from '../../types/shapes'
 
-abstract class BaseShape {
+type IShape = {
+	getPosition: () => ShapePosition,
+	getSize: () => ShapeSize,
+	getType: () => ShapeType,
+}
+
+abstract class BaseShape implements IShape {
 	private position: ShapePosition = {x: 0, y: 0}
 	private size: ShapeSize
 
@@ -29,4 +35,8 @@ abstract class BaseShape {
 
 export {
 	BaseShape,
+}
+
+export type {
+	IShape,
 }

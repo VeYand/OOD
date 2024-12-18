@@ -1,5 +1,5 @@
 import {ArtObjectType, ShapePosition, ShapeSize} from '../types/shapes'
-import {BaseShape} from './Shape/BaseShape'
+import {BaseShape, IShape} from './Shape/BaseShape'
 import {ShapeFactory} from './ShapeFactory'
 
 type ChangeEvent = 'create' | 'update' | 'delete'
@@ -7,9 +7,9 @@ type ChangeEvent = 'create' | 'update' | 'delete'
 type ShapeChangeObserver = (shapeId: string, event: ChangeEvent) => void
 
 type ICanvasModel = {
-	getShape: (shapeId: string) => BaseShape | undefined,
+	getShape: (shapeId: string) => IShape | undefined,
 	getCanvasSize: () => ShapeSize,
-	getShapeIdToShapeMap: () => Map<string, BaseShape>,
+	getShapeIdToShapeMap: () => Map<string, IShape>,
 }
 
 class CanvasModel implements ICanvasModel {

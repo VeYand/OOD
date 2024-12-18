@@ -4,6 +4,7 @@ classDiagram
 ShapeFactory ..> BaseShape
 CanvasModel o-- BaseShape
 CanvasModel ..|> ICanvasModel
+BaseShape ..|> IShape
 Ellipse ..|> BaseShape
 Rectangle ..|> BaseShape
 Triangle ..|> BaseShape
@@ -15,8 +16,8 @@ namespace Model {
 
     class ICanvasModel {
         <<interface>>
-        + getShape(shapeId: string): BaseShape | undefined
-        + getShapeIdToShapeMap(): Map<string, BaseShape>
+        + getShape(shapeId: string): IShape | undefined
+        + getShapeIdToShapeMap(): Map<string, IShape>
         + getCanvasSize(): ShapeSize
     }
 
@@ -32,6 +33,13 @@ namespace Model {
         + getShape(shapeId: string): BaseShape | undefined
         + getShapeIdToShapeMap(): Map<string, BaseShape>
         + getCanvasSize(): ShapeSize
+    }
+
+    class IShape {
+        <<interface>>
+        + getPosition(): ShapePosition
+        + getSize(): ShapeSize
+        + move(position: ShapePosition): void
     }
 
     class BaseShape {
