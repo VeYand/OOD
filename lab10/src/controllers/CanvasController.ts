@@ -20,8 +20,12 @@ class CanvasController {
 		this.model.updateShapeSizeAndPosition(shapeId, changes)
 	}
 
-	setObserver(onShapeChange: ShapeChangeObserver) {
-		this.model.setObserver(onShapeChange)
+	addObserver(onShapeChange: ShapeChangeObserver) {
+		this.model.addObserver(onShapeChange)
+	}
+
+	removeObserver(onShapeChange: ShapeChangeObserver) {
+		this.model.removeObserver(onShapeChange)
 	}
 }
 

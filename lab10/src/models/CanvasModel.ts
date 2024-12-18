@@ -15,7 +15,7 @@ type ICanvasModel = {
 class CanvasModel implements ICanvasModel {
 	private canvasSize: ShapeSize = {width: 800, height: 600}
 	private shapes: Map<string, BaseShape> = new Map()
-	private shapeChangeObserver?: ShapeChangeObserver
+	private shapeChangeObservers: ShapeChangeObserver[] = []
 
 	addArtObject(type: ArtObjectType): void {
 		this.addShape(ShapeFactory.constructShape(type))
@@ -50,11 +50,18 @@ class CanvasModel implements ICanvasModel {
 
 		shape.move(newPosition)
 		shape.resize(newSize)
-		this.shapeChangeObserver?.(shapeId, 'update')
+		this.notifyObservers(shapeId, 'update')
 	}
 
-	setObserver(onShapeChange: ShapeChangeObserver) {
-		this.shapeChangeObserver = onShapeChange
+	addObserver(onShapeChange: ShapeChangeObserver) {
+		this.shapeChangeObservers.push(onShapeChange)
+	}
+
+	removeObserver(onShapeChange: ShapeChangeObserver) {
+		const index = this.shapeChangeObservers.indexOf(onShapeChange)
+		if (index !== -1) {
+			this.shapeChangeObservers.splice(index, 1)
+		}
 	}
 
 	removeShape(shapeId: string) {
@@ -62,7 +69,7 @@ class CanvasModel implements ICanvasModel {
 			throw new Error(`Shape with id ${shapeId} not found`)
 		}
 		this.shapes.delete(shapeId)
-		this.shapeChangeObserver?.(shapeId, 'delete')
+		this.notifyObservers(shapeId, 'delete')
 	}
 
 	getShape(shapeId: string): BaseShape | undefined {
@@ -80,7 +87,13 @@ class CanvasModel implements ICanvasModel {
 	private addShape(shape: BaseShape): void {
 		const shapeId = Date.now().toString()
 		this.shapes.set(shapeId, shape)
-		this.shapeChangeObserver?.(shapeId, 'create')
+		this.notifyObservers(shapeId, 'create')
+	}
+
+	private notifyObservers(shapeId: string, event: ChangeEvent) {
+		for (const observer of this.shapeChangeObservers) {
+			observer(shapeId, event)
+		}
 	}
 }
 

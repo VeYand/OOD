@@ -100,7 +100,7 @@ class Canvas extends Component<CanvasProps> {
 	}
 
 	override componentDidMount() {
-		this.controller.setObserver(() => this.forceUpdate())
+		this.controller.addObserver(() => this.forceUpdate())
 		document.addEventListener('keydown', this.handleKeyDown)
 	}
 
