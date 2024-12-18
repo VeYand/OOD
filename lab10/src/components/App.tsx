@@ -32,19 +32,21 @@ class App extends Component<AppProps, AppState> {
 
 	override render() {
 		return (
-			<div>
-				<Toolbar
-					controller={this.controller}
-					selectedShapeId={this.state.selectedShapeId}
-					handleDeleteShape={this.handleDeleteShape}
-				/>
-				<Canvas
-					model={this.model}
-					controller={this.controller}
-					handleSelectShape={this.handleSelectShape}
-					selectedShapeId={this.state.selectedShapeId}
-					handleDeleteShape={this.handleDeleteShape}
-				/>
+			<div style={{display: 'flex'}}>
+				<div style={{margin: '0 auto'}}>
+					<Toolbar
+						controller={this.controller}
+						selectedShapeId={this.state.selectedShapeId}
+						handleDeleteShape={this.handleDeleteShape}
+					/>
+					<Canvas
+						model={this.model}
+						controller={this.controller}
+						handleSelectShape={this.handleSelectShape}
+						selectedShapeId={this.state.selectedShapeId}
+						handleDeleteShape={this.handleDeleteShape}
+					/>
+				</div>
 			</div>
 		)
 	}
