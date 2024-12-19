@@ -7,19 +7,19 @@ import {Toolbar} from './Toolbar/Toolbar'
 type AppProps = {}
 
 type AppState = {
+	model: ICanvasModel,
+	controller: CanvasController,
 	selectedShapeId?: string,
 }
 
 class App extends Component<AppProps, AppState> {
-	private readonly model: ICanvasModel
-	private readonly controller: CanvasController
-
 	constructor(props: AppProps) {
 		super(props)
 		const model = new CanvasModel()
-		this.model = model
-		this.controller = new CanvasController(model)
-		this.state = {}
+		this.state = {
+			model: model,
+			controller: new CanvasController(model),
+		}
 	}
 
 	handleSelectShape = (shapeId?: string) => {
@@ -27,7 +27,7 @@ class App extends Component<AppProps, AppState> {
 	}
 
 	handleDeleteShape = (shapeId: string) => {
-		this.controller.removeShape(shapeId)
+		this.state.controller.removeShape(shapeId)
 	}
 
 	override render() {
@@ -35,13 +35,13 @@ class App extends Component<AppProps, AppState> {
 			<div style={{display: 'flex'}}>
 				<div style={{margin: '0 auto'}}>
 					<Toolbar
-						controller={this.controller}
+						controller={this.state.controller}
 						selectedShapeId={this.state.selectedShapeId}
 						handleDeleteShape={this.handleDeleteShape}
 					/>
 					<Canvas
-						model={this.model}
-						controller={this.controller}
+						model={this.state.model}
+						controller={this.state.controller}
 						handleSelectShape={this.handleSelectShape}
 						selectedShapeId={this.state.selectedShapeId}
 						handleDeleteShape={this.handleDeleteShape}

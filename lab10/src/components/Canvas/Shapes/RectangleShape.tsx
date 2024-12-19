@@ -4,6 +4,7 @@ class RectangleShape extends Component {
 	private color = 'green'
 
 	override render() {
+		console.log('rectangle')
 		return (
 			<svg width="100%" height="100%">
 				<rect width="100%" height="100%" fill={this.color} />

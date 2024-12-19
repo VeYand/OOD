@@ -7,7 +7,7 @@ type ChangeEvent = 'create' | 'update' | 'delete'
 type ShapeChangeObserver = (shapeId: string, event: ChangeEvent) => void
 
 type ICanvasModel = {
-	getShape: (shapeId: string) => IShape | undefined,
+	getShape: (shapeId: string) => IShape,
 	getCanvasSize: () => ShapeSize,
 	getShapeIdToShapeMap: () => Map<string, IShape>,
 }
@@ -72,8 +72,12 @@ class CanvasModel implements ICanvasModel {
 		this.notifyObservers(shapeId, 'delete')
 	}
 
-	getShape(shapeId: string): BaseShape | undefined {
-		return this.shapes.get(shapeId)
+	getShape(shapeId: string): BaseShape {
+		const shape = this.shapes.get(shapeId)
+		if (!shape) {
+			throw new Error(`Shape with id ${shapeId} not found`)
+		}
+		return shape
 	}
 
 	getShapeIdToShapeMap(): Map<string, BaseShape> {

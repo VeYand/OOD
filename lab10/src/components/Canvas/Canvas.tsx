@@ -1,6 +1,7 @@
 import {Component, ReactElement} from 'react'
 import {CanvasController} from '../../controllers/CanvasController'
-import {ICanvasModel} from '../../models/CanvasModel'
+import {ChangeEvent, ICanvasModel} from '../../models/CanvasModel'
+import {IShape} from '../../models/Shape/BaseShape'
 import {ImageShape as ImageShapeModel} from '../../models/Shape/ImageShape'
 import {ShapePosition, ShapeSize} from '../../types/shapes'
 import {EllipseShape} from './Shapes/EllipseShape'
@@ -17,7 +18,11 @@ type CanvasProps = {
 	handleDeleteShape: (shapeId: string) => void,
 }
 
-class Canvas extends Component<CanvasProps> {
+type CanvasState = {
+	shapes: ReactElement[],
+}
+
+class Canvas extends Component<CanvasProps, CanvasState> {
 	private model: ICanvasModel
 	private controller: CanvasController
 
@@ -25,51 +30,62 @@ class Canvas extends Component<CanvasProps> {
 		super(props)
 		this.model = props.model
 		this.controller = props.controller
+		this.state = {
+			shapes: this.renderShapes(),
+		}
 	}
 
+
+	renderShape(shapeId: string, shape: IShape, isSelected: boolean): ReactElement {
+		const position = shape.getPosition()
+		const size = shape.getSize()
+
+		let shapeComponent: ReactElement = <></>
+		switch (shape.getType()) {
+			case 'ellipse':
+				shapeComponent = <EllipseShape />
+				break
+			case 'rectangle':
+				shapeComponent = <RectangleShape />
+				break
+			case 'triangle':
+				shapeComponent = <TriangleShape />
+				break
+			case 'image':
+				if (shape instanceof ImageShapeModel) {
+					shapeComponent = <ImageShape src={shape.getData()}/>
+				}
+				break
+		}
+
+		return (
+			<InteractiveShape
+				key={shapeId}
+				isSelected={isSelected}
+				setIsSelected={selected => {
+					this.props.handleSelectShape(selected ? shapeId : undefined)
+					this.setState(prevState => ({
+						shapes: prevState.shapes.map(prevShape =>
+							(prevShape.key === shapeId
+								? this.renderShape(shapeId, this.model.getShape(shapeId), selected)
+								: this.renderShape(prevShape.key ?? '', this.model.getShape(prevShape.key ?? ''), false)),
+						),
+					}))
+				}}
+				shapeSize={size}
+				shapePosition={position}
+				shape={shapeComponent}
+				updateShapeSizeAndPosition={(newSize?: ShapeSize, newPosition?: ShapePosition) =>
+					this.controller.updateShapeSizeAndPosition(shapeId, {size: newSize, position: newPosition})}
+				canvasSize={this.model.getCanvasSize()}
+			/>
+		)
+	}
 
 	renderShapes = () => {
 		const shapesComponents: ReactElement[] = []
 		this.model.getShapeIdToShapeMap().forEach((shape, shapeId) => {
-			const isSelected = this.props.selectedShapeId === shapeId
-			const position = shape.getPosition()
-			const size = shape.getSize()
-
-			let shapeComponent: ReactElement = <></>
-			switch (shape.getType()) {
-				case 'ellipse':
-					shapeComponent = <EllipseShape />
-					break
-				case 'rectangle':
-					shapeComponent = <RectangleShape />
-					break
-				case 'triangle':
-					shapeComponent = <TriangleShape />
-					break
-				case 'image':
-					if (shape instanceof ImageShapeModel) {
-						shapeComponent = <ImageShape src={shape.getData()}/>
-					}
-					break
-				default:
-					return
-			}
-
-			shapesComponents.push(
-				<InteractiveShape
-					key={shapeId}
-					isSelected={isSelected}
-					setIsSelected={selected =>
-						this.props.handleSelectShape(selected ? shapeId : undefined)
-					}
-					shapeSize={size}
-					shapePosition={position}
-					shape={shapeComponent}
-					updateShapeSizeAndPosition={(newSize?: ShapeSize, newPosition?: ShapePosition) =>
-						this.controller.updateShapeSizeAndPosition(shapeId, {size: newSize, position: newPosition})}
-					canvasSize={this.model.getCanvasSize()}
-				/>,
-			)
+			shapesComponents.push(this.renderShape(shapeId, shape, this.props.selectedShapeId === shapeId))
 		})
 		return shapesComponents
 	}
@@ -94,13 +110,34 @@ class Canvas extends Component<CanvasProps> {
 					overflow: 'hidden',
 				}}
 			>
-				{this.renderShapes()}
+				{this.state.shapes}
 			</div>
 		)
 	}
 
 	override componentDidMount() {
-		this.controller.addObserver(() => this.forceUpdate())
+		this.controller.addObserver((shapeId: string, event: ChangeEvent) => {
+			switch (event) {
+				case 'create':
+					this.setState(prevState => ({
+						shapes: [...prevState.shapes, this.renderShape(shapeId, this.model.getShape(shapeId), this.props.selectedShapeId === shapeId)],
+					}))
+					break
+				case 'delete':
+					this.setState(prevState => ({
+						shapes: prevState.shapes.filter(shape => shape.key !== shapeId),
+					}))
+					break
+				case 'update':
+					this.setState(prevState => ({
+						shapes: prevState.shapes.map(shape =>
+							(shape.key === shapeId ? this.renderShape(shapeId, this.model.getShape(shapeId), this.props.selectedShapeId === shapeId) : shape),
+						),
+					}))
+					break
+			}
+		})
+
 		document.addEventListener('keydown', this.handleKeyDown)
 	}
 
