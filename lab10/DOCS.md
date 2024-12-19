@@ -9,6 +9,7 @@ Ellipse ..|> BaseShape
 Rectangle ..|> BaseShape
 Triangle ..|> BaseShape
 ImageShape ..|> BaseShape
+ICanvasModel ..> IShape
 namespace Model {
     class ShapeFactory {
         + constructShape(type: ShapeType, data?: string): BaseShape
@@ -16,7 +17,7 @@ namespace Model {
 
     class ICanvasModel {
         <<interface>>
-        + getShape(shapeId: string): IShape | undefined
+        + getShape(shapeId: string): IShape
         + getShapeIdToShapeMap(): Map<string, IShape>
         + getCanvasSize(): ShapeSize
     }
@@ -24,11 +25,12 @@ namespace Model {
     class CanvasModel {
         - canvasSize: ShapeSize
         - shapes: Map<string, BaseShape>
-        - shapeChangeObserver?: ShapeChangeObserver
+        - shapeChangeObservers: ShapeChangeObserver[]
         + addArtObject(type: ArtObjectType): void
         + addImage(data: string): void
         + updateShapeSizeAndPosition(shapeId: string, changes): void
-        + setObserver(onShapeChange: ShapeChangeObserver): void
+        + addObserver(onShapeChange: ShapeChangeObserver): void
+        + removeObserver(onShapeChange: ShapeChangeObserver): void
         + removeShape(shapeId: string): void
         + getShape(shapeId: string): BaseShape | undefined
         + getShapeIdToShapeMap(): Map<string, BaseShape>
@@ -71,76 +73,89 @@ namespace Model {
     }
 }
 
-App ..> CanvasModel
 App o-- ICanvasModel
 App o-- CanvasController
+App o-- ShapeController
 App ..> Canvas
 App ..> Toolbar
 Toolbar o-- CanvasController
 Canvas o-- ICanvasModel
+Canvas o-- ShapeController
 Canvas o-- CanvasController
 Canvas ..> InteractiveShape
 Canvas ..> EllipseShape
 Canvas ..> RectangleShape
 Canvas ..> TriangleShape
-Canvas ..> ImageShape
+Canvas ..> ImageShapeComponent
+InteractiveShape o-- ShapeController
 namespace View {
     class App {
         - model: ICanvasModel
-        - controller: CanvasController
+        - canvasController: CanvasController
+        - shapeController: ShapeContoller
         + handleSelectShape(shapeId?: string): void
         + handleDeleteShape(shapeId: string): void
-        + render(): JSX.Element
+        + render(): ReactElement
     }
 
     class Canvas {
         - model: ICanvasModel
-        - controller: CanvasController
+        - canvasController: CanvasController
+        - shapeController: ShapeController
         + renderShapes(): ReactElement[]
         + handleKeyDown(event: KeyboardEvent): void
-        + render(): JSX.Element
+        + render(): ReactElement
     }
 
     class Toolbar {
-        - controller: CanvasController
-        + render(): JSX.Element
+        - canvasController: CanvasController
+        + render(): ReactElement
     }
 
     class InteractiveShape {
         - isDragging: boolean
         - isResizing: boolean
+        - shapeController: ShapeContoller
         + handleMouseDown(e: React.MouseEvent): void
         + handleMouseMove(e: MouseEvent): void
         + handleMouseUp(): void
-        + render(): JSX.Element
+        + render(): ReactElement
     }
 
     class EllipseShape {
-        + render(): JSX.Element
+        + render(): ReactElement
     }
 
     class TriangleShape {
-        + render(): JSX.Element
+        + render(): ReactElement
     }
 
     class RectangleShape {
-        + render(): JSX.Element
+        + render(): ReactElement
     }
 
-    class ImageShape {
-        + render(): JSX.Element
+    class ImageShapeComponent {
+        + render(): ReactElement
     }
 }
 
 CanvasController o-- CanvasModel
+ShapeController o-- CanvasModel
 namespace Controller {
     class CanvasController {
         - model: CanvasModel
         + addArtObject(type: ArtObjectType): void
         + addImage(data: string): void
         + removeShape(shapeId: string): void
+        + addObserver(onShapeChange: ShapeChangeObserver): void
+        + removeObserver(onShapeChange: ShapeChangeObserver): void
+    }
+
+    class ShapeController {
+        - model: CanvasModel
         + updateShapeSizeAndPosition(shapeId: string, changes): void
-        + setObserver(onShapeChange: ShapeChangeObserver): void
+        + handleMove(shapeId, initialPosition, deltaX, deltaY): void
+        + handleResize(shapeId: string, initial, delta: ShapePosition, resizeCorner: string): void
     }
 }
 ```
