@@ -6,7 +6,6 @@ type ImageShapeProps = {
 
 class ImageShape extends Component<ImageShapeProps> {
 	override render() {
-		console.log('image')
 		const {src} = this.props
 		return (
 			<svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none">
