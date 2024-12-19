@@ -1,6 +1,6 @@
+import {ShapeController} from 'controllers/ShapeController'
 import React, {Component, createRef, ReactElement} from 'react'
 import {ShapePosition, ShapeSize} from 'types/shapes'
-import {ShapeController} from '../../../controllers/ShapeController'
 
 type InteractiveShapeProps = {
 	isSelected: boolean,
@@ -14,7 +14,6 @@ type InteractiveShapeProps = {
 }
 
 class InteractiveShape extends Component<InteractiveShapeProps> {
-	private minSize = 20
 	private isDragging = false
 	private dragStartX = 0
 	private dragStartY = 0
@@ -42,124 +41,34 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 	}
 
 	handleMouseMove = (e: MouseEvent) => {
-		const clamp = (value: number, min: number, max: number): number => Math.max(min, Math.min(max, value))
-
-		const topResize = (
-			oldHeight: number,
-			deltaY: number,
-			oldPosY: number,
-		): [number, number] => {
-			let newHeight = oldHeight - deltaY
-			let newY = oldPosY + deltaY
-			if (newY < 0) {
-				newHeight += newY
-				newY = 0
-			}
-			if (newHeight < this.minSize) {
-				newHeight = this.minSize
-				newY = oldPosY + oldHeight - this.minSize
-			}
-			return [newHeight, newY]
-		}
-
-		const bottomResize = (
-			oldHeight: number,
-			deltaY: number,
-			oldPosY: number,
-		): [number, number] => {
-			const newHeight = oldHeight + deltaY
-			const maxHeight = this.props.canvasSize.height - oldPosY
-			return newHeight > maxHeight ? [maxHeight, oldPosY] : [Math.max(newHeight, this.minSize), oldPosY]
-		}
-
-		const leftResize = (
-			oldWidth: number,
-			deltaX: number,
-			oldPosX: number,
-		): [number, number] => {
-			let newWidth = oldWidth - deltaX
-			let newX = oldPosX + deltaX
-			if (newX < 0) {
-				newWidth += newX
-				newX = 0
-			}
-			if (newWidth < this.minSize) {
-				newWidth = this.minSize
-				newX = oldPosX + oldWidth - this.minSize
-			}
-			return [newWidth, newX]
-		}
-
-		const rightResize = (
-			oldWidth: number,
-			deltaX: number,
-			oldPosX: number,
-		): [number, number] => {
-			const newWidth = oldWidth + deltaX
-			const maxWidth = this.props.canvasSize.width - oldPosX
-			return newWidth > maxWidth ? [maxWidth, oldPosX] : [Math.max(newWidth, this.minSize), oldPosX]
-		}
+		const deltaX = e.clientX - (this.isDragging ? this.dragStartX : this.resizeStartX)
+		const deltaY = e.clientY - (this.isDragging ? this.dragStartY : this.resizeStartY)
 
 		if (this.isDragging) {
-			const deltaX = e.clientX - this.dragStartX
-			const deltaY = e.clientY - this.dragStartY
-
-			let newPosX = this.props.shapePosition.x + deltaX
-			let newPosY = this.props.shapePosition.y + deltaY
-
-			newPosX = clamp(newPosX, 0, this.props.canvasSize.width - this.props.shapeSize.width)
-			newPosY = clamp(newPosY, 0, this.props.canvasSize.height - this.props.shapeSize.height)
-
-			this.props.shapeController.updateShapeSizeAndPosition(this.props.shapeId, {
-				size: undefined,
-				position: {
-					x: newPosX,
-					y: newPosY,
-				}},
+			this.props.shapeController.handleMove(
+				this.props.shapeId,
+				this.props.shapePosition,
+				deltaX,
+				deltaY,
 			)
-
 			this.dragStartX = e.clientX
 			this.dragStartY = e.clientY
 		}
 
 		if (this.isResizing) {
-			const deltaX = e.clientX - this.resizeStartX
-			const deltaY = e.clientY - this.resizeStartY
-
-			let newWidth = this.initialWidth
-			let newHeight = this.initialHeight
-			let newX = this.initialX
-			let newY = this.initialY
-
-			switch (this.resizeCorner) {
-				case 'top-left':
-					[newHeight, newY] = topResize(this.initialHeight, deltaY, this.initialY);
-					[newWidth, newX] = leftResize(this.initialWidth, deltaX, this.initialX)
-					break
-				case 'top-right':
-					[newHeight, newY] = topResize(this.initialHeight, deltaY, this.initialY);
-					[newWidth, newX] = rightResize(this.initialWidth, deltaX, this.initialX)
-					break
-				case 'bottom-left':
-					[newHeight, newY] = bottomResize(this.initialHeight, deltaY, this.initialY);
-					[newWidth, newX] = leftResize(this.initialWidth, deltaX, this.initialX)
-					break
-				case 'bottom-right':
-					[newHeight, newY] = bottomResize(this.initialHeight, deltaY, this.initialY);
-					[newWidth, newX] = rightResize(this.initialWidth, deltaX, this.initialX)
-					break
-				default:
-					return
-			}
-			this.props.shapeController.updateShapeSizeAndPosition(this.props.shapeId, {
-				size: {
-					width: newWidth,
-					height: newHeight,
+			this.props.shapeController.handleResize(
+				this.props.shapeId,
+				{
+					width: this.initialWidth,
+					height: this.initialHeight,
+					x: this.initialX,
+					y: this.initialY,
 				},
-				position: {
-					x: newX,
-					y: newY,
-				}},
+				{
+					x: deltaX,
+					y: deltaY,
+				},
+				this.resizeCorner,
 			)
 		}
 	}
@@ -245,6 +154,7 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 			</>
 		)
 	}
+
 	handleClickOutside = (event: MouseEvent | TouchEvent) => {
 		if (this.shapeRef.current
 			&& !this.shapeRef.current.contains(event.target as Node)
