@@ -81,7 +81,7 @@ class CanvasModel implements ICanvasModel {
 	}
 
 	getShapeIdToShapeMap(): Map<string, BaseShape> {
-		return this.shapes
+		return new Map(this.shapes)
 	}
 
 	getCanvasSize(): ShapeSize {
