@@ -81,7 +81,6 @@ class InsertImageObjectCommand extends AbstractCommand {
 	}
 
 	doExecute() {
-		console.log('execute')
 		if (this.insertedShapeId) {
 			this.data = ImageLocalStorage.getImageData(this.insertedShapeId)
 			if (this.data) {
@@ -94,7 +93,6 @@ class InsertImageObjectCommand extends AbstractCommand {
 	}
 
 	doUnexecute() {
-		console.log('unexecute')
 		if (this.insertedShapeId) {
 			this.canvasModel.removeShape(this.insertedShapeId)
 		}
@@ -102,7 +100,6 @@ class InsertImageObjectCommand extends AbstractCommand {
 	}
 
 	destroy() {
-		console.log('destroy')
 		if (this.shouldDelete && this.insertedShapeId) {
 			ImageLocalStorage.removeImage(this.insertedShapeId)
 		}
