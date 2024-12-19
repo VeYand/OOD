@@ -8,6 +8,8 @@ type ICommand = {
 	execute: () => void,
 	unexecute: () => void,
 	destroy: () => void,
+	canMergeWith: (command: ICommand) => boolean,
+	mergeWith: (command: ICommand) => void,
 }
 
 abstract class AbstractCommand implements ICommand {
@@ -29,6 +31,14 @@ abstract class AbstractCommand implements ICommand {
 		}
 	}
 
+	canMergeWith(_: ICommand) {
+		return false
+	}
+
+	mergeWith(_: ICommand) {
+		throw new Error('Not implemented')
+	}
+
 	abstract destroy(): void
 
 	protected abstract doExecute(): void
@@ -47,7 +57,7 @@ class InsertArtObjectCommand extends AbstractCommand {
 	}
 
 	doExecute() {
-		this.insertedShapeId = this.canvasModel.addShape(ShapeFactory.constructShape(this.type))
+		this.insertedShapeId = this.canvasModel.addShape(ShapeFactory.constructShape(this.type), this.insertedShapeId)
 	}
 	doUnexecute() {
 		if (this.insertedShapeId) {
@@ -71,18 +81,20 @@ class InsertImageObjectCommand extends AbstractCommand {
 	}
 
 	doExecute() {
+		console.log('execute')
 		if (this.insertedShapeId) {
 			this.data = ImageLocalStorage.getImageData(this.insertedShapeId)
 			if (this.data) {
 				ImageLocalStorage.removeImage(this.insertedShapeId)
 			}
 		}
-		this.insertedShapeId = this.canvasModel.addShape(ShapeFactory.constructShape('image', this.data))
+		this.insertedShapeId = this.canvasModel.addShape(ShapeFactory.constructShape('image', this.data), this.insertedShapeId)
 		ImageLocalStorage.addImage(this.insertedShapeId, this.data ?? '')
 		this.shouldDelete = false
 	}
 
 	doUnexecute() {
+		console.log('unexecute')
 		if (this.insertedShapeId) {
 			this.canvasModel.removeShape(this.insertedShapeId)
 		}
@@ -90,6 +102,7 @@ class InsertImageObjectCommand extends AbstractCommand {
 	}
 
 	destroy() {
+		console.log('destroy')
 		if (this.shouldDelete && this.insertedShapeId) {
 			ImageLocalStorage.removeImage(this.insertedShapeId)
 		}
@@ -132,6 +145,23 @@ class UpdateShapeSizeAndPositionCommand extends AbstractCommand {
 		)
 	}
 	destroy() {}
+
+	override canMergeWith(command: ICommand): boolean {
+		if (command instanceof UpdateShapeSizeAndPositionCommand) {
+			return this.shapeId === command.shapeId
+		}
+		return false
+	}
+
+	override mergeWith(command: ICommand): void {
+		if (command instanceof UpdateShapeSizeAndPositionCommand) {
+			this.newSize = command.newSize || this.newSize
+			this.newPosition = command.newPosition || this.newPosition
+		}
+		else {
+			throw new Error('Cannot merge with incompatible command')
+		}
+	}
 }
 
 class RemoveShapeCommand extends AbstractCommand {
@@ -161,6 +191,7 @@ export type {
 }
 
 export {
+	AbstractCommand,
 	InsertArtObjectCommand,
 	InsertImageObjectCommand,
 	UpdateShapeSizeAndPositionCommand,

@@ -36,8 +36,15 @@ class History {
 			this.commands.splice(this.currentActionIndex, this.commands.length - this.currentActionIndex)
 		}
 
-		this.commands.push(command)
-		this.currentActionIndex++
+		const lastCommand = this.commands[this.currentActionIndex - 1]
+
+		if (lastCommand?.canMergeWith(command)) {
+			lastCommand.mergeWith(command)
+		}
+		else {
+			this.commands.push(command)
+			this.currentActionIndex++
+		}
 
 		if (this.commands.length > History.MAX_COMMANDS_COUNT) {
 			this.commands.shift()

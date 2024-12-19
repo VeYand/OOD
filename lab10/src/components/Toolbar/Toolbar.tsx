@@ -30,11 +30,11 @@ class Toolbar extends Component<ToolbarProps> {
 				<CreateArtObjectBlock controller={this.controller} />
 				<ImageImportBlock controller={this.controller} />
 				<JsonBlock />
+				<HistoryBlock controller={this.controller}/>
 				<ShapeControlBlock
 					selectedShapeId={this.props.selectedShapeId}
 					handleDeleteShape={this.props.handleDeleteShape}
 				/>
-				<HistoryBlock controller={this.controller}/>
 			</div>
 		)
 	}
