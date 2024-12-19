@@ -1,10 +1,13 @@
 import {Component} from 'react'
 import {CanvasController} from '../controllers/CanvasController'
-import {CanvasModel, ICanvasModel} from '../models/CanvasModel'
+import {ICanvasModel} from '../models/CanvasModel'
 import {Canvas} from './Canvas/Canvas'
 import {Toolbar} from './Toolbar/Toolbar'
 
-type AppProps = {}
+type AppProps = {
+	model: ICanvasModel,
+	controller: CanvasController,
+}
 
 type AppState = {
 	model: ICanvasModel,
@@ -15,10 +18,9 @@ type AppState = {
 class App extends Component<AppProps, AppState> {
 	constructor(props: AppProps) {
 		super(props)
-		const model = new CanvasModel()
 		this.state = {
-			model: model,
-			controller: new CanvasController(model),
+			model: this.props.model,
+			controller: this.props.controller,
 		}
 	}
 
