@@ -1,5 +1,6 @@
 import React, {Component, createRef, ReactElement} from 'react'
 import {ShapePosition, ShapeSize} from 'types/shapes'
+import {ShapeController} from '../../../controllers/ShapeController'
 
 type InteractiveShapeProps = {
 	isSelected: boolean,
@@ -7,7 +8,8 @@ type InteractiveShapeProps = {
 	shapeSize: ShapeSize,
 	shapePosition: ShapePosition,
 	shape: ReactElement,
-	updateShapeSizeAndPosition: (size?: ShapeSize, position?: ShapePosition) => void,
+	shapeId: string,
+	shapeController: ShapeController,
 	canvasSize: ShapeSize,
 }
 
@@ -108,10 +110,13 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 			newPosX = clamp(newPosX, 0, this.props.canvasSize.width - this.props.shapeSize.width)
 			newPosY = clamp(newPosY, 0, this.props.canvasSize.height - this.props.shapeSize.height)
 
-			this.props.updateShapeSizeAndPosition(undefined, {
-				x: newPosX,
-				y: newPosY,
-			})
+			this.props.shapeController.updateShapeSizeAndPosition(this.props.shapeId, {
+				size: undefined,
+				position: {
+					x: newPosX,
+					y: newPosY,
+				}},
+			)
 
 			this.dragStartX = e.clientX
 			this.dragStartY = e.clientY
@@ -146,10 +151,15 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 				default:
 					return
 			}
-
-			this.props.updateShapeSizeAndPosition(
-				{width: newWidth, height: newHeight},
-				{x: newX, y: newY},
+			this.props.shapeController.updateShapeSizeAndPosition(this.props.shapeId, {
+				size: {
+					width: newWidth,
+					height: newHeight,
+				},
+				position: {
+					x: newX,
+					y: newY,
+				}},
 			)
 		}
 	}

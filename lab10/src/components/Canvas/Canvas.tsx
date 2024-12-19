@@ -1,9 +1,9 @@
 import {Component, ReactElement} from 'react'
 import {CanvasController} from '../../controllers/CanvasController'
+import {ShapeController} from '../../controllers/ShapeController'
 import {ChangeEvent, ICanvasModel} from '../../models/CanvasModel'
 import {IShape} from '../../models/Shape/BaseShape'
 import {ImageShape as ImageShapeModel} from '../../models/Shape/ImageShape'
-import {ShapePosition, ShapeSize} from '../../types/shapes'
 import {EllipseShape} from './Shapes/EllipseShape'
 import {ImageShape} from './Shapes/ImageShape'
 import {InteractiveShape} from './Shapes/InteractiveShape'
@@ -12,7 +12,8 @@ import {TriangleShape} from './Shapes/TriangleShape'
 
 type CanvasProps = {
 	model: ICanvasModel,
-	controller: CanvasController,
+	canvasController: CanvasController,
+	shapeController: ShapeController,
 	selectedShapeId?: string,
 	handleSelectShape: (shapeId?: string) => void,
 	handleDeleteShape: (shapeId: string) => void,
@@ -24,12 +25,14 @@ type CanvasState = {
 
 class Canvas extends Component<CanvasProps, CanvasState> {
 	private model: ICanvasModel
-	private controller: CanvasController
+	private canvasController: CanvasController
+	private shapeController: ShapeController
 
 	constructor(props: CanvasProps) {
 		super(props)
 		this.model = props.model
-		this.controller = props.controller
+		this.canvasController = props.canvasController
+		this.shapeController = this.props.shapeController
 		this.state = {
 			shapes: this.renderShapes(),
 		}
@@ -75,9 +78,9 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 				shapeSize={size}
 				shapePosition={position}
 				shape={shapeComponent}
-				updateShapeSizeAndPosition={(newSize?: ShapeSize, newPosition?: ShapePosition) =>
-					this.controller.updateShapeSizeAndPosition(shapeId, {size: newSize, position: newPosition})}
 				canvasSize={this.model.getCanvasSize()}
+				shapeId={shapeId}
+				shapeController={this.shapeController}
 			/>
 		)
 	}
@@ -116,7 +119,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 	}
 
 	override componentDidMount() {
-		this.controller.addObserver((shapeId: string, event: ChangeEvent) => {
+		this.canvasController.addObserver((shapeId: string, event: ChangeEvent) => {
 			switch (event) {
 				case 'create':
 					this.setState(prevState => ({

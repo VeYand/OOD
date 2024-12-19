@@ -1,17 +1,20 @@
 import {Component} from 'react'
 import {CanvasController} from '../controllers/CanvasController'
+import {ShapeController} from '../controllers/ShapeController'
 import {ICanvasModel} from '../models/CanvasModel'
 import {Canvas} from './Canvas/Canvas'
 import {Toolbar} from './Toolbar/Toolbar'
 
 type AppProps = {
 	model: ICanvasModel,
-	controller: CanvasController,
+	canvasController: CanvasController,
+	shapeController: ShapeController,
 }
 
 type AppState = {
 	model: ICanvasModel,
-	controller: CanvasController,
+	canvasController: CanvasController,
+	shapeController: ShapeController,
 	selectedShapeId?: string,
 }
 
@@ -20,7 +23,8 @@ class App extends Component<AppProps, AppState> {
 		super(props)
 		this.state = {
 			model: this.props.model,
-			controller: this.props.controller,
+			canvasController: this.props.canvasController,
+			shapeController: this.props.shapeController,
 		}
 	}
 
@@ -29,7 +33,7 @@ class App extends Component<AppProps, AppState> {
 	}
 
 	handleDeleteShape = (shapeId: string) => {
-		this.state.controller.removeShape(shapeId)
+		this.state.canvasController.removeShape(shapeId)
 	}
 
 	override render() {
@@ -37,13 +41,14 @@ class App extends Component<AppProps, AppState> {
 			<div style={{display: 'flex'}}>
 				<div style={{margin: '0 auto'}}>
 					<Toolbar
-						controller={this.state.controller}
+						controller={this.state.canvasController}
 						selectedShapeId={this.state.selectedShapeId}
 						handleDeleteShape={this.handleDeleteShape}
 					/>
 					<Canvas
 						model={this.state.model}
-						controller={this.state.controller}
+						canvasController={this.state.canvasController}
+						shapeController={this.state.shapeController}
 						handleSelectShape={this.handleSelectShape}
 						selectedShapeId={this.state.selectedShapeId}
 						handleDeleteShape={this.handleDeleteShape}
