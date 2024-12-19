@@ -10,6 +10,89 @@ Rectangle ..|> BaseShape
 Triangle ..|> BaseShape
 ImageShape ..|> BaseShape
 ICanvasModel ..> IShape
+
+AbstractCommand ..|> ICommand
+InsertArtObjectCommand o-- CanvasModel
+InsertArtObjectCommand ..|> AbstractCommand
+InsertImageObjectCommand o-- CanvasModel
+InsertImageObjectCommand ..|> AbstractCommand
+UpdateShapeSizeAndPositionCommand o-- CanvasModel
+UpdateShapeSizeAndPositionCommand ..|> AbstractCommand
+RemoveShapeCommand o-- CanvasModel
+RemoveShapeCommand ..|> AbstractCommand
+RemoveShapeCommand o-- BaseShape
+RemoveShapeCommand o-- CanvasModel
+LoadJsonCommand ..|> AbstractCommand
+History o-- ICommand
+
+namespace Command {
+    class History {
+        + canUndo(): boolean
+        + canRedo(): boolean
+        + undo()
+        + redo()
+        + addAndExecuteCommand(command: ICommand)
+    }
+
+    class ICommand {
+        <<interface>>
+        + execute()
+	    + unexecute()
+	    + destroy()
+	    + canMergeWith(command: ICommand): boolean
+	    + mergeWith(command: ICommand)
+    }
+
+    class AbstractCommand {
+        - executed: boolean
+        + execute()
+	    + unexecute()
+	    + canMergeWith(command: ICommand): boolean
+	    + mergeWith(command: ICommand)
+	    + destroy()*
+        # doExecute()*
+	    # doUnexecute()*
+    }
+
+    class InsertArtObjectCommand {
+        - insertedShapeId: ?string
+        + doExecute()
+	    + doUnexecute()
+        + destroy()
+    }
+
+    class InsertImageObjectCommand {
+        - insertedShapeId: ?string
+        - shouldDelete: boolean
+        - data: ?string
+        + doExecute()
+	    + doUnexecute()
+        + destroy()
+    }
+
+    class UpdateShapeSizeAndPositionCommand {
+        - oldSize: ?ShapeSize
+        - oldPosition: ?ShapePosition
+        + doExecute()
+	    + doUnexecute()
+        + destroy()
+    }
+
+    class RemoveShapeCommand {
+        - shape: ?BaseShape
+        + doExecute()
+	    + doUnexecute()
+        + destroy()
+    }
+
+    class LoadJsonCommand {
+        - oldJsonState: ?string
+        + doExecute()
+	    + doUnexecute()
+        + destroy()
+    }
+}
+
 namespace Model {
     class ShapeFactory {
         + constructShape(type: ShapeType, data?: string): BaseShape
@@ -20,12 +103,15 @@ namespace Model {
         + getShape(shapeId: string): IShape
         + getShapeIdToShapeMap(): Map<string, IShape>
         + getCanvasSize(): ShapeSize
+        + serializeCanvasToJson(): string
     }
 
     class CanvasModel {
         - canvasSize: ShapeSize
         - shapes: Map<string, BaseShape>
         - shapeChangeObservers: ShapeChangeObserver[]
+        + loadCanvasFromJson(jsonData: string): void
+        + serializeCanvasToJson(): string
         + addArtObject(type: ArtObjectType): void
         + addImage(data: string): void
         + updateShapeSizeAndPosition(shapeId: string, changes): void
@@ -140,10 +226,18 @@ namespace View {
 }
 
 CanvasController o-- CanvasModel
+CanvasController o-- History
 ShapeController o-- CanvasModel
+CanvasController o-- History
 namespace Controller {
     class CanvasController {
         - model: CanvasModel
+        - history: History
+        + undo()
+        + redo()
+        + canUndo(): boolean
+        + canRedo(): boolean
+        + loadCanvasFromJson(jsonString: string)
         + addArtObject(type: ArtObjectType): void
         + addImage(data: string): void
         + removeShape(shapeId: string): void
@@ -153,6 +247,7 @@ namespace Controller {
 
     class ShapeController {
         - model: CanvasModel
+        - history: History
         + updateShapeSizeAndPosition(shapeId: string, changes): void
         + handleMove(shapeId, initialPosition, deltaX, deltaY): void
         + handleResize(shapeId: string, initial, delta: ShapePosition, resizeCorner: string): void
