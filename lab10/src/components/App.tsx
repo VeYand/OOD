@@ -41,6 +41,7 @@ class App extends Component<AppProps, AppState> {
 			<div style={{display: 'flex'}}>
 				<div style={{margin: '0 auto'}}>
 					<Toolbar
+						canvasModel={this.state.model}
 						controller={this.state.canvasController}
 						selectedShapeId={this.state.selectedShapeId}
 						handleDeleteShape={this.handleDeleteShape}

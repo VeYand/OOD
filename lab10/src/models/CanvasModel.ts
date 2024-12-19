@@ -10,6 +10,7 @@ type ICanvasModel = {
 	getShape: (shapeId: string) => IShape,
 	getCanvasSize: () => ShapeSize,
 	getShapeIdToShapeMap: () => Map<string, IShape>,
+	serializeCanvasToJson: () => string,
 }
 
 class CanvasModel implements ICanvasModel {
@@ -65,11 +66,10 @@ class CanvasModel implements ICanvasModel {
 	}
 
 	removeShape(shapeId: string) {
-		if (!this.shapes.has(shapeId)) {
-			throw new Error(`Shape with id ${shapeId} not found`)
+		if (this.shapes.has(shapeId)) {
+			this.shapes.delete(shapeId)
+			this.notifyObservers(shapeId, 'delete')
 		}
-		this.shapes.delete(shapeId)
-		this.notifyObservers(shapeId, 'delete')
 	}
 
 	getShape(shapeId: string): BaseShape {
@@ -93,6 +93,70 @@ class CanvasModel implements ICanvasModel {
 		this.shapes.set(id, shape)
 		this.notifyObservers(id, 'create')
 		return id
+	}
+
+	serializeCanvasToJson(): string {
+		const shapes = Array.from(this.getShapeIdToShapeMap().entries()).map(([shapeId, shape]) => ({
+			shapeId,
+			type: shape.getType(),
+			size: shape.getSize(),
+			position: shape.getPosition(),
+			data: (shape as any).getData?.() || undefined,
+		}))
+
+		const canvasData = {
+			canvasSize: this.getCanvasSize(),
+			shapes,
+		}
+
+		return JSON.stringify(canvasData)
+	}
+
+	loadCanvasFromJson(jsonString: string) {
+		const jsonData = JSON.parse(jsonString)
+
+		if (this.validateCanvasDataJson(jsonData)) {
+			console.log(jsonData)
+			const currentShapes = Array.from(this.getShapeIdToShapeMap().keys())
+			currentShapes.forEach(shapeId => this.removeShape(shapeId))
+			this.canvasSize = jsonData.canvasSize
+			jsonData.shapes.forEach((shape: any) => {
+				const newShape = ShapeFactory.constructShape(
+					shape.type,
+					shape.data,
+				)
+				newShape.resize(shape.size)
+				newShape.move(shape.position)
+				this.addShape(newShape, shape.shapeId)
+			})
+		}
+		else {
+			throw new Error('Invalid canvas data format')
+		}
+	}
+
+	private validateShapeJson(shape: any): boolean {
+		return (
+			typeof shape.shapeId === 'string'
+			&& typeof shape.type === 'string'
+			&& typeof shape.size === 'object'
+			&& typeof shape.size.width === 'number'
+			&& typeof shape.size.height === 'number'
+			&& typeof shape.position === 'object'
+			&& typeof shape.position.x === 'number'
+			&& typeof shape.position.y === 'number'
+			&& (shape.data === undefined || typeof shape.data === 'string')
+		)
+	}
+
+	private validateCanvasDataJson(data: any): boolean {
+		return (
+			typeof data.canvasSize === 'object'
+			&& typeof data.canvasSize.width === 'number'
+			&& typeof data.canvasSize.height === 'number'
+			&& Array.isArray(data.shapes)
+			&& data.shapes.every((shape: any) => this.validateShapeJson(shape))
+		)
 	}
 
 	private notifyObservers(shapeId: string, event: ChangeEvent) {

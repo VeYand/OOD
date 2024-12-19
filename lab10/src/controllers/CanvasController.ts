@@ -1,5 +1,10 @@
 import {CanvasModel, ShapeChangeObserver} from '../models/CanvasModel'
-import {InsertArtObjectCommand, InsertImageObjectCommand, RemoveShapeCommand} from '../models/Command/commands'
+import {
+	InsertArtObjectCommand,
+	InsertImageObjectCommand,
+	LoadJsonCommand,
+	RemoveShapeCommand,
+} from '../models/Command/commands'
 import {History} from '../models/history/history'
 import {ArtObjectType} from '../types/shapes'
 
@@ -37,6 +42,10 @@ class CanvasController {
 	canUndo = () => this.history.canUndo()
 
 	canRedo = () => this.history.canRedo()
+
+	loadCanvasFromJson(jsonString: string) {
+		this.history.addAndExecuteCommand(new LoadJsonCommand(jsonString, this.model))
+	}
 
 	addObserver(onShapeChange: ShapeChangeObserver) {
 		this.model.addObserver(onShapeChange)

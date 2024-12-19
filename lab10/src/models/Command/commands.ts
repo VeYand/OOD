@@ -186,6 +186,28 @@ class RemoveShapeCommand extends AbstractCommand {
 	destroy() {}
 }
 
+class LoadJsonCommand extends AbstractCommand {
+	private oldJsonState?: string
+
+	constructor(
+		private newJsonState: string,
+		private canvasModel: CanvasModel,
+	) {
+		super()
+	}
+
+	doExecute() {
+		this.oldJsonState = this.canvasModel.serializeCanvasToJson()
+		this.canvasModel.loadCanvasFromJson(this.newJsonState)
+	}
+	doUnexecute() {
+		if (this.oldJsonState) {
+			this.canvasModel.loadCanvasFromJson(this.oldJsonState)
+		}
+	}
+	destroy() {}
+}
+
 export type {
 	ICommand,
 }
@@ -196,4 +218,5 @@ export {
 	InsertImageObjectCommand,
 	UpdateShapeSizeAndPositionCommand,
 	RemoveShapeCommand,
+	LoadJsonCommand,
 }
