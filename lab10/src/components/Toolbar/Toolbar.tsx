@@ -17,6 +17,11 @@ class Toolbar extends Component<ToolbarProps> {
 	constructor(props: ToolbarProps) {
 		super(props)
 		this.controller = props.controller
+		this.controller.addObserver(() => this.observer())
+	}
+
+	observer() {
+		this.forceUpdate()
 	}
 
 	override render() {
@@ -29,6 +34,7 @@ class Toolbar extends Component<ToolbarProps> {
 					selectedShapeId={this.props.selectedShapeId}
 					handleDeleteShape={this.props.handleDeleteShape}
 				/>
+				<HistoryBlock controller={this.controller}/>
 			</div>
 		)
 	}
@@ -113,6 +119,23 @@ const ShapeControlBlock = React.memo(({selectedShapeId, handleDeleteShape}: {sel
 		</div>
 	)
 })
+
+const HistoryBlock = ({controller}: {controller: CanvasController}) => (
+	<div style={{display: 'flex', gap: '10px', padding: '10px', background: '#e0e0e0', borderRadius: '5px'}}>
+		<button
+			disabled={!controller.canUndo()}
+			onClick={() => controller.undo()}
+		>
+			{'Undo'}
+		</button>
+		<button
+			disabled={!controller.canRedo()}
+			onClick={() => controller.redo()}
+		>
+			{'Redo'}
+		</button>
+	</div>
+)
 
 const MemoizedToolbar = React.memo(Toolbar)
 

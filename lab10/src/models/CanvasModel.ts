@@ -88,10 +88,11 @@ class CanvasModel implements ICanvasModel {
 		return this.canvasSize
 	}
 
-	private addShape(shape: BaseShape): void {
-		const shapeId = Date.now().toString()
-		this.shapes.set(shapeId, shape)
-		this.notifyObservers(shapeId, 'create')
+	addShape(shape: BaseShape, shapeId?: string): string {
+		const id = shapeId ?? Date.now().toString()
+		this.shapes.set(id, shape)
+		this.notifyObservers(id, 'create')
+		return id
 	}
 
 	private notifyObservers(shapeId: string, event: ChangeEvent) {
