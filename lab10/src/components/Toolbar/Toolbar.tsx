@@ -9,9 +9,9 @@ import {TriangleShape} from '../Canvas/Shapes/TriangleShape'
 type ToolbarProps = {
 	controller: CanvasController,
 	canvasModel: ICanvasReadModel,
-	selectedShapeIds: string[],
-	setSelectedShapeIds: (shapeIds: string[]) => void,
-	handleDeleteShapes: (shapeIds: string[]) => void,
+	selectedShapeId?: string,
+	setSelectedShapeId: (shapeId?: string) => void,
+	handleDeleteShape: (shapeId: string) => void,
 }
 
 class Toolbar extends Component<ToolbarProps> {
@@ -34,11 +34,11 @@ class Toolbar extends Component<ToolbarProps> {
 			<div style={{display: 'flex', gap: '10px'}}>
 				<CreateArtObjectBlock controller={this.controller} />
 				<ImageImportBlock controller={this.controller} />
-				<JsonBlock controller={this.controller} model={this.canvasModel} onLoad={() => this.props.setSelectedShapeIds([])}/>
+				<JsonBlock controller={this.controller} model={this.canvasModel} onLoad={() => this.props.setSelectedShapeId(undefined)}/>
 				<HistoryBlock controller={this.controller}/>
 				<ShapeControlBlock
-					selectedShapeIds={this.props.selectedShapeIds}
-					handleDeleteShapes={this.props.handleDeleteShapes}
+					selectedShapeId={this.props.selectedShapeId}
+					handleDeleteShape={this.props.handleDeleteShape}
 				/>
 			</div>
 		)
@@ -160,17 +160,17 @@ const JsonBlock = React.memo(({controller, model, onLoad}: {controller: CanvasCo
 	</div>
 ))
 
-const ShapeControlBlock = React.memo(({selectedShapeIds, handleDeleteShapes}: {
-	selectedShapeIds: string[],
-	handleDeleteShapes: (shapeIds: string[]) => void,
+const ShapeControlBlock = React.memo(({selectedShapeId, handleDeleteShape}: {
+	selectedShapeId?: string,
+	handleDeleteShape: (shapeId: string) => void,
 }) => {
-	if (!selectedShapeIds.length) {
-		return <></>
+	if (!selectedShapeId) {
+		return null
 	}
 
 	return (
 		<div style={{display: 'flex', gap: '10px', padding: '10px', background: '#e0e0e0', borderRadius: '5px'}}>
-			<button onClick={() => handleDeleteShapes(selectedShapeIds)}>
+			<button onClick={() => handleDeleteShape(selectedShapeId)}>
 				{'Delete shape'}
 			</button>
 		</div>
