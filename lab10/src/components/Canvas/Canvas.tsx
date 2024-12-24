@@ -14,9 +14,9 @@ type CanvasProps = {
 	model: ICanvasReadModel,
 	canvasController: CanvasController,
 	shapeController: ShapeController,
-	selectedShapeId?: string,
-	handleSelectShape: (shapeId?: string) => void,
-	handleDeleteShape: (shapeId: string) => void,
+	selectedShapeIds: string[],
+	setSelectedShapeIds: (shapeIds: string[]) => void,
+	handleDeleteShapes: (shapeIds: string[]) => void,
 }
 
 type CanvasState = {
@@ -27,6 +27,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 	private model: ICanvasReadModel
 	private canvasController: CanvasController
 	private shapeController: ShapeController
+	private isCtrlPressed = false
 
 	constructor(props: CanvasProps) {
 		super(props)
@@ -66,7 +67,12 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 				key={shapeId}
 				isSelected={isSelected}
 				setIsSelected={selected => {
-					this.props.handleSelectShape(selected ? shapeId : undefined)
+					if (selected) {
+						this.props.selectedShapeIds.push(shapeId)
+					}
+					else {
+						this.props.setSelectedShapeIds(this.props.selectedShapeIds.filter(id => id !== shapeId))
+					}
 					this.setState(prevState => ({
 						shapes: prevState.shapes.map(prevShape =>
 							(prevShape.key === shapeId
@@ -88,14 +94,23 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 	renderShapes = () => {
 		const shapesComponents: ReactElement[] = []
 		this.model.getShapeIdToShapeMap().forEach((shape, shapeId) => {
-			shapesComponents.push(this.renderShape(shapeId, shape, this.props.selectedShapeId === shapeId))
+			shapesComponents.push(this.renderShape(shapeId, shape, this.props.selectedShapeIds.includes(shapeId)))
 		})
 		return shapesComponents
 	}
 
 	handleKeyDown = (event: KeyboardEvent) => {
-		if (event.key === 'Delete' && this.props.selectedShapeId) {
-			this.props.handleDeleteShape(this.props.selectedShapeId)
+		if (event.key === 'Delete' && this.props.selectedShapeIds) {
+			this.props.handleDeleteShapes(this.props.selectedShapeIds)
+		}
+		else if (event.key === 'Control') {
+			this.isCtrlPressed = true
+		}
+	}
+
+	handleKeyUp = (event: KeyboardEvent) => {
+		if (event.key === 'Control') {
+			this.isCtrlPressed = false
 		}
 	}
 
@@ -123,7 +138,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 			switch (event) {
 				case 'create':
 					this.setState(prevState => ({
-						shapes: [...prevState.shapes, this.renderShape(shapeId, this.model.getShape(shapeId), this.props.selectedShapeId === shapeId)],
+						shapes: [...prevState.shapes, this.renderShape(shapeId, this.model.getShape(shapeId), this.props.selectedShapeIds.includes(shapeId))],
 					}))
 					break
 				case 'delete':
@@ -134,7 +149,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 				case 'update':
 					this.setState(prevState => ({
 						shapes: prevState.shapes.map(shape =>
-							(shape.key === shapeId ? this.renderShape(shapeId, this.model.getShape(shapeId), this.props.selectedShapeId === shapeId) : shape),
+							(shape.key === shapeId ? this.renderShape(shapeId, this.model.getShape(shapeId), this.props.selectedShapeIds.includes(shapeId)) : shape),
 						),
 					}))
 					break
@@ -142,10 +157,12 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 		})
 
 		document.addEventListener('keydown', this.handleKeyDown)
+		document.addEventListener('keyup', this.handleKeyUp)
 	}
 
 	override componentWillUnmount() {
 		document.removeEventListener('keydown', this.handleKeyDown)
+		document.removeEventListener('keyup', this.handleKeyUp)
 	}
 }
 

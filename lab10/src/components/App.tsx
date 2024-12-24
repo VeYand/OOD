@@ -15,7 +15,7 @@ type AppState = {
 	model: ICanvasReadModel,
 	canvasController: CanvasController,
 	shapeController: ShapeController,
-	selectedShapeId?: string,
+	selectedShapeIds: string[],
 }
 
 class App extends Component<AppProps, AppState> {
@@ -25,15 +25,18 @@ class App extends Component<AppProps, AppState> {
 			model: this.props.model,
 			canvasController: this.props.canvasController,
 			shapeController: this.props.shapeController,
+			selectedShapeIds: [],
 		}
 	}
 
-	handleSelectShape = (shapeId?: string) => {
-		this.setState({selectedShapeId: shapeId})
+	setSelectedShapes = (shapeIds: string[]) => {
+		this.setState({selectedShapeIds: shapeIds})
 	}
 
-	handleDeleteShape = (shapeId: string) => {
-		this.state.canvasController.removeShape(shapeId)
+	handleDeleteShapes = (shapeIds: string[]) => {
+		for (const shapeId of shapeIds) {
+			this.state.canvasController.removeShape(shapeId)
+		}
 	}
 
 	override render() {
@@ -43,17 +46,17 @@ class App extends Component<AppProps, AppState> {
 					<Toolbar
 						canvasModel={this.state.model}
 						controller={this.state.canvasController}
-						selectedShapeId={this.state.selectedShapeId}
-						setSelectedShapeId={this.handleSelectShape}
-						handleDeleteShape={this.handleDeleteShape}
+						selectedShapeIds={this.state.selectedShapeIds}
+						setSelectedShapeIds={this.setSelectedShapes}
+						handleDeleteShapes={this.handleDeleteShapes}
 					/>
 					<Canvas
 						model={this.state.model}
 						canvasController={this.state.canvasController}
 						shapeController={this.state.shapeController}
-						handleSelectShape={this.handleSelectShape}
-						selectedShapeId={this.state.selectedShapeId}
-						handleDeleteShape={this.handleDeleteShape}
+						setSelectedShapeIds={this.setSelectedShapes}
+						selectedShapeIds={this.state.selectedShapeIds}
+						handleDeleteShapes={this.handleDeleteShapes}
 					/>
 				</div>
 			</div>
