@@ -140,7 +140,7 @@ class CanvasModel implements ICanvasModel {
 	}
 
 	_addShape(shape: BaseShape, shapeId?: string): string {
-		const id = shapeId ?? Date.now().toString()
+		const id = shapeId ?? this._generateUniqueId()
 		this.shapes.set(id, shape)
 		this._notifyObservers(id, 'create')
 		return id
@@ -227,6 +227,13 @@ class CanvasModel implements ICanvasModel {
 		for (const observer of this.shapeChangeObservers) {
 			observer(shapeId, event)
 		}
+	}
+
+	private _generateUniqueId(): string {
+		if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+			return crypto.randomUUID()
+		}
+		return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`
 	}
 }
 
