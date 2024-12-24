@@ -21,6 +21,7 @@ type CanvasProps = {
 
 type CanvasState = {
 	shapes: ReactElement[],
+	canvasId: string,
 }
 
 class Canvas extends Component<CanvasProps, CanvasState> {
@@ -35,6 +36,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 		this.shapeController = this.props.shapeController
 		this.state = {
 			shapes: this.renderShapes(),
+			canvasId: (new Date()).getTime().toString(),
 		}
 	}
 
@@ -81,6 +83,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 				canvasSize={this.model.getCanvasSize()}
 				shapeId={shapeId}
 				shapeController={this.shapeController}
+				canvasId={this.state?.canvasId ?? ''}
 			/>
 		)
 	}
@@ -104,7 +107,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 
 		return (
 			<div
-				id={'canvas'}
+				id={this.state.canvasId}
 				style={{
 					position: 'relative',
 					width: canvasSize.width,

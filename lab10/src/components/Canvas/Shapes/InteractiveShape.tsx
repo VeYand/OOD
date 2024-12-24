@@ -11,6 +11,7 @@ type InteractiveShapeProps = {
 	shapeId: string,
 	shapeController: ShapeController,
 	canvasSize: ShapeSize,
+	canvasId: string,
 }
 
 class InteractiveShape extends Component<InteractiveShapeProps> {
@@ -158,7 +159,7 @@ class InteractiveShape extends Component<InteractiveShapeProps> {
 	handleClickOutside = (event: MouseEvent | TouchEvent) => {
 		if (this.shapeRef.current
 			&& !this.shapeRef.current.contains(event.target as Node)
-			&& document.getElementById('canvas')?.contains(event.target as Node)
+			&& document.getElementById(this.props.canvasId)?.contains(event.target as Node)
 		) {
 			this.props.setIsSelected(false)
 		}
