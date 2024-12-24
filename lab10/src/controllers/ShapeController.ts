@@ -1,15 +1,10 @@
-import {CanvasModel} from '../models/CanvasModel'
-import {UpdateShapeSizeAndPositionCommand} from '../models/Command/commands'
-import {History} from '../models/history/history'
+import {ICanvasModel} from '../models/CanvasModel'
 import {ShapePosition, ShapeSize} from '../types/shapes'
 
 class ShapeController {
 	private readonly minSize = 20
 
-	constructor(
-		private history: History,
-		private model: CanvasModel,
-	) {
+	constructor(private model: ICanvasModel) {
 	}
 
 	handleMove(
@@ -115,12 +110,7 @@ class ShapeController {
 	}
 
 	private updateShapeSizeAndPosition(shapeId: string, changes: {size?: ShapeSize, position?: ShapePosition}) {
-		this.history.addAndExecuteCommand(new UpdateShapeSizeAndPositionCommand(
-			shapeId,
-			this.model,
-			changes.size,
-			changes.position,
-		))
+		this.model.updateShapeSizeAndPosition(shapeId, changes)
 	}
 }
 

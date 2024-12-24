@@ -57,14 +57,17 @@ class InsertArtObjectCommand extends AbstractCommand {
 	}
 
 	doExecute() {
-		this.insertedShapeId = this.canvasModel.addShape(ShapeFactory.constructShape(this.type), this.insertedShapeId)
+		this.insertedShapeId = this.canvasModel._addShape(ShapeFactory.constructShape(this.type), this.insertedShapeId)
 	}
+
 	doUnexecute() {
 		if (this.insertedShapeId) {
-			this.canvasModel.removeShape(this.insertedShapeId)
+			this.canvasModel._removeShape(this.insertedShapeId)
 		}
 	}
-	destroy() {}
+
+	destroy() {
+	}
 }
 
 class InsertImageObjectCommand extends AbstractCommand {
@@ -87,14 +90,14 @@ class InsertImageObjectCommand extends AbstractCommand {
 				ImageLocalStorage.removeImage(this.insertedShapeId)
 			}
 		}
-		this.insertedShapeId = this.canvasModel.addShape(ShapeFactory.constructShape('image', this.data), this.insertedShapeId)
+		this.insertedShapeId = this.canvasModel._addShape(ShapeFactory.constructShape('image', this.data), this.insertedShapeId)
 		ImageLocalStorage.addImage(this.insertedShapeId, this.data ?? '')
 		this.shouldDelete = false
 	}
 
 	doUnexecute() {
 		if (this.insertedShapeId) {
-			this.canvasModel.removeShape(this.insertedShapeId)
+			this.canvasModel._removeShape(this.insertedShapeId)
 		}
 		this.shouldDelete = true
 	}
@@ -124,7 +127,7 @@ class UpdateShapeSizeAndPositionCommand extends AbstractCommand {
 		this.oldSize = shape.getSize()
 		this.oldPosition = shape.getPosition()
 
-		this.canvasModel.updateShapeSizeAndPosition(
+		this.canvasModel._updateShapeSizeAndPosition(
 			this.shapeId,
 			{
 				size: this.newSize,
@@ -132,8 +135,9 @@ class UpdateShapeSizeAndPositionCommand extends AbstractCommand {
 			},
 		)
 	}
+
 	doUnexecute() {
-		this.canvasModel.updateShapeSizeAndPosition(
+		this.canvasModel._updateShapeSizeAndPosition(
 			this.shapeId,
 			{
 				size: this.oldSize,
@@ -141,7 +145,9 @@ class UpdateShapeSizeAndPositionCommand extends AbstractCommand {
 			},
 		)
 	}
-	destroy() {}
+
+	destroy() {
+	}
 
 	override canMergeWith(command: ICommand): boolean {
 		if (command instanceof UpdateShapeSizeAndPositionCommand) {
@@ -173,36 +179,17 @@ class RemoveShapeCommand extends AbstractCommand {
 
 	doExecute() {
 		this.shape = this.canvasModel.getShape(this.shapeId)
-		this.canvasModel.removeShape(this.shapeId)
+		this.canvasModel._removeShape(this.shapeId)
 	}
+
 	doUnexecute() {
 		if (this.shape) {
-			this.canvasModel.addShape(this.shape, this.shapeId)
+			this.canvasModel._addShape(this.shape, this.shapeId)
 		}
 	}
-	destroy() {}
-}
 
-class LoadJsonCommand extends AbstractCommand {
-	private oldJsonState?: string
-
-	constructor(
-		private newJsonState: string,
-		private canvasModel: CanvasModel,
-	) {
-		super()
+	destroy() {
 	}
-
-	doExecute() {
-		this.oldJsonState = this.canvasModel.serializeCanvasToJson()
-		this.canvasModel.loadCanvasFromJson(this.newJsonState)
-	}
-	doUnexecute() {
-		if (this.oldJsonState) {
-			this.canvasModel.loadCanvasFromJson(this.oldJsonState)
-		}
-	}
-	destroy() {}
 }
 
 export type {
@@ -215,5 +202,4 @@ export {
 	InsertImageObjectCommand,
 	UpdateShapeSizeAndPositionCommand,
 	RemoveShapeCommand,
-	LoadJsonCommand,
 }

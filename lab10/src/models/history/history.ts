@@ -17,14 +17,20 @@ class History {
 		if (this.canUndo()) {
 			this.commands[--this.currentActionIndex]?.unexecute()
 		}
-		console.log(this.currentActionIndex)
 	}
 
 	redo(): void {
 		if (this.canRedo()) {
 			this.commands[this.currentActionIndex++]?.execute()
 		}
-		console.log(this.currentActionIndex)
+	}
+
+	clear(): void {
+		for (const command of this.commands) {
+			command.destroy()
+		}
+		this.currentActionIndex = 0
+		this.commands = []
 	}
 
 	addAndExecuteCommand(command: ICommand): void {

@@ -1,50 +1,38 @@
-import {CanvasModel, ShapeChangeObserver} from '../models/CanvasModel'
-import {
-	InsertArtObjectCommand,
-	InsertImageObjectCommand,
-	LoadJsonCommand,
-	RemoveShapeCommand,
-} from '../models/Command/commands'
-import {History} from '../models/history/history'
+import {ICanvasModel, ShapeChangeObserver} from '../models/CanvasModel'
 import {ArtObjectType} from '../types/shapes'
 
 class CanvasController {
 	constructor(
-		private history: History,
-		private model: CanvasModel,
+		private model: ICanvasModel,
 	) {
 	}
 
 	addArtObject(type: ArtObjectType) {
-		this.history.addAndExecuteCommand(new InsertArtObjectCommand(type, this.model))
+		this.model.addArtObject(type)
 	}
 
 	addImage(data: string) {
-		this.history.addAndExecuteCommand(new InsertImageObjectCommand(data, this.model))
+		this.model.addImage(data)
 	}
 
 	removeShape(shapeId: string) {
-		this.history.addAndExecuteCommand(new RemoveShapeCommand(shapeId, this.model))
+		this.model.removeShape(shapeId)
 	}
 
 	undo() {
-		if (this.history.canUndo()) {
-			this.history.undo()
-		}
+		this.model.undo()
 	}
 
 	redo() {
-		if (this.history.canRedo()) {
-			this.history.redo()
-		}
+		this.model.redo()
 	}
 
-	canUndo = () => this.history.canUndo()
+	canUndo = () => this.model.canUndo()
 
-	canRedo = () => this.history.canRedo()
+	canRedo = () => this.model.canRedo()
 
 	loadCanvasFromJson(jsonString: string) {
-		this.history.addAndExecuteCommand(new LoadJsonCommand(jsonString, this.model))
+		this.model.loadCanvasFromJson(jsonString)
 	}
 
 	addObserver(onShapeChange: ShapeChangeObserver) {

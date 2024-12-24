@@ -1,7 +1,7 @@
 import {Component, ReactElement} from 'react'
 import {CanvasController} from '../../controllers/CanvasController'
 import {ShapeController} from '../../controllers/ShapeController'
-import {ChangeEvent, ICanvasModel} from '../../models/CanvasModel'
+import {ChangeEvent, ICanvasReadModel} from '../../models/CanvasModel'
 import {IShape} from '../../models/Shape/BaseShape'
 import {ImageShape as ImageShapeModel} from '../../models/Shape/ImageShape'
 import {EllipseShape} from './Shapes/EllipseShape'
@@ -11,7 +11,7 @@ import {RectangleShape} from './Shapes/RectangleShape'
 import {TriangleShape} from './Shapes/TriangleShape'
 
 type CanvasProps = {
-	model: ICanvasModel,
+	model: ICanvasReadModel,
 	canvasController: CanvasController,
 	shapeController: ShapeController,
 	selectedShapeId?: string,
@@ -24,7 +24,7 @@ type CanvasState = {
 }
 
 class Canvas extends Component<CanvasProps, CanvasState> {
-	private model: ICanvasModel
+	private model: ICanvasReadModel
 	private canvasController: CanvasController
 	private shapeController: ShapeController
 

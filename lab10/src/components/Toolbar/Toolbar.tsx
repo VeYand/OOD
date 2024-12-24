@@ -1,6 +1,6 @@
 import React, {ChangeEvent, Component} from 'react'
 import {CanvasController} from '../../controllers/CanvasController'
-import {ICanvasModel} from '../../models/CanvasModel'
+import {ICanvasReadModel} from '../../models/CanvasModel'
 import {ArtObjectType} from '../../types/shapes'
 import {EllipseShape} from '../Canvas/Shapes/EllipseShape'
 import {RectangleShape} from '../Canvas/Shapes/RectangleShape'
@@ -8,14 +8,15 @@ import {TriangleShape} from '../Canvas/Shapes/TriangleShape'
 
 type ToolbarProps = {
 	controller: CanvasController,
-	canvasModel: ICanvasModel,
+	canvasModel: ICanvasReadModel,
 	selectedShapeId?: string,
+	setSelectedShapeId: (shapeId?: string) => void,
 	handleDeleteShape: (shapeId: string) => void,
 }
 
 class Toolbar extends Component<ToolbarProps> {
 	private readonly controller: CanvasController
-	private readonly canvasModel: ICanvasModel
+	private readonly canvasModel: ICanvasReadModel
 
 	constructor(props: ToolbarProps) {
 		super(props)
@@ -33,7 +34,7 @@ class Toolbar extends Component<ToolbarProps> {
 			<div style={{display: 'flex', gap: '10px'}}>
 				<CreateArtObjectBlock controller={this.controller} />
 				<ImageImportBlock controller={this.controller} />
-				<JsonBlock controller={this.controller} model={this.canvasModel}/>
+				<JsonBlock controller={this.controller} model={this.canvasModel} onLoad={() => this.props.setSelectedShapeId(undefined)}/>
 				<HistoryBlock controller={this.controller}/>
 				<ShapeControlBlock
 					selectedShapeId={this.props.selectedShapeId}
@@ -134,7 +135,7 @@ const handleSaveJson = (jsonData: string) => {
 	alert('Canvas data saved successfully.')
 }
 
-const JsonBlock = React.memo(({controller, model}: {controller: CanvasController, model: ICanvasModel}) => (
+const JsonBlock = React.memo(({controller, model, onLoad}: {controller: CanvasController, model: ICanvasReadModel, onLoad: () => void}) => (
 	<div style={{display: 'flex', gap: '10px', padding: '10px', background: '#e0e0e0', borderRadius: '5px'}}>
 		<button onClick={() => {
 			handleSaveJson(model.serializeCanvasToJson())
@@ -145,7 +146,10 @@ const JsonBlock = React.memo(({controller, model}: {controller: CanvasController
 			id="input-json-from-pc"
 			type="file"
 			accept=".json"
-			onChange={e => handleLoadJson(e, controller)}
+			onChange={e => {
+				handleLoadJson(e, controller)
+				onLoad()
+			}}
 			style={{display: 'none'}}
 		/>
 		<button>

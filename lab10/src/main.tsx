@@ -3,17 +3,15 @@ import {App} from './components/App'
 import {CanvasController} from './controllers/CanvasController'
 import {ShapeController} from './controllers/ShapeController'
 import {CanvasModel} from './models/CanvasModel'
-import {History} from './models/history/history'
 
 const root = document.getElementById('root')
 
 const model = new CanvasModel()
-const history = new History()
 if (root) {
 	createRoot(root).render(
 		<>
-			<App model={model} canvasController={new CanvasController(history, model)} shapeController={new ShapeController(history, model)}/>,
-			<App model={model} canvasController={new CanvasController(history, model)} shapeController={new ShapeController(history, model)}/>,
+			<App model={model} canvasController={new CanvasController(model)} shapeController={new ShapeController(model)}/>,
+			<App model={model} canvasController={new CanvasController(model)} shapeController={new ShapeController(model)}/>,
 		</>,
 	)
 }

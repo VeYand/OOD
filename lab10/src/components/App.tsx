@@ -1,18 +1,18 @@
 import {Component} from 'react'
 import {CanvasController} from '../controllers/CanvasController'
 import {ShapeController} from '../controllers/ShapeController'
-import {ICanvasModel} from '../models/CanvasModel'
+import {ICanvasReadModel} from '../models/CanvasModel'
 import {Canvas} from './Canvas/Canvas'
 import {Toolbar} from './Toolbar/Toolbar'
 
 type AppProps = {
-	model: ICanvasModel,
+	model: ICanvasReadModel,
 	canvasController: CanvasController,
 	shapeController: ShapeController,
 }
 
 type AppState = {
-	model: ICanvasModel,
+	model: ICanvasReadModel,
 	canvasController: CanvasController,
 	shapeController: ShapeController,
 	selectedShapeId?: string,
@@ -44,6 +44,7 @@ class App extends Component<AppProps, AppState> {
 						canvasModel={this.state.model}
 						controller={this.state.canvasController}
 						selectedShapeId={this.state.selectedShapeId}
+						setSelectedShapeId={this.handleSelectShape}
 						handleDeleteShape={this.handleDeleteShape}
 					/>
 					<Canvas
