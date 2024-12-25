@@ -143,6 +143,7 @@ class CanvasModel implements ICanvasModel {
 		const id = shapeId ?? this._generateUniqueId()
 		this.shapes.set(id, shape)
 		this._notifyObservers(id, 'create')
+		this.shapes = new Map([...this.shapes.entries()].sort(([keyA], [keyB]) => keyA.localeCompare(keyB)))
 		return id
 	}
 
@@ -230,10 +231,9 @@ class CanvasModel implements ICanvasModel {
 	}
 
 	private _generateUniqueId(): string {
-		if (typeof crypto !== 'undefined' && crypto.randomUUID) {
-			return crypto.randomUUID()
-		}
-		return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`
+		const timestamp = Date.now().toString(36)
+		const randomPart = Math.floor(Math.random() * 1e9).toString(36)
+		return `${timestamp}-${randomPart}`
 	}
 }
 

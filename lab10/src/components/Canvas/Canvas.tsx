@@ -125,9 +125,7 @@ class Canvas extends Component<CanvasProps, CanvasState> {
 		this.canvasController.addObserver((shapeId: string, event: ChangeEvent) => {
 			switch (event) {
 				case 'create':
-					this.setState(prevState => ({
-						shapes: [...prevState.shapes, this.renderShape(shapeId, this.model.getShape(shapeId), this.props.selectedShapeId === shapeId)],
-					}))
+					this.setState(() => ({shapes: this.renderShapes()}))
 					break
 				case 'delete':
 					this.setState(prevState => ({
