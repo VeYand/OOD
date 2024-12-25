@@ -25,9 +25,9 @@ type CanvasState = {
 }
 
 class Canvas extends Component<CanvasProps, CanvasState> {
-	private model: ICanvasReadModel
-	private canvasController: CanvasController
-	private shapeController: ShapeController
+	private readonly model: ICanvasReadModel
+	private readonly canvasController: CanvasController
+	private readonly shapeController: ShapeController
 
 	constructor(props: CanvasProps) {
 		super(props)

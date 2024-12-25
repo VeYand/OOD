@@ -9,10 +9,16 @@ const root = document.getElementById('root')
 const model = new CanvasModel()
 if (root) {
 	createRoot(root).render(
-		<>
-			<App model={model} canvasController={new CanvasController(model)} shapeController={new ShapeController(model)}/>,
-			<App model={model} canvasController={new CanvasController(model)} shapeController={new ShapeController(model)}/>,
-		</>,
+		<div>
+			<div style={{display: 'flex', gap: 10}}>
+				<App model={model} canvasController={new CanvasController(model)} shapeController={new ShapeController(model)}/>
+				<App model={model} canvasController={new CanvasController(model)} shapeController={new ShapeController(model)}/>
+			</div>
+			<div style={{display: 'flex', gap: 10}}>
+				<App model={model} canvasController={new CanvasController(model)} shapeController={new ShapeController(model)}/>
+				<App model={model} canvasController={new CanvasController(model)} shapeController={new ShapeController(model)}/>
+			</div>
+		</div>,
 	)
 }
 
