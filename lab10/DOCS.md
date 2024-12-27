@@ -1,16 +1,17 @@
-Архитектура актуальна до коммита 2bbf6118 
 ```mermaid
 classDiagram
 
 ShapeFactory ..> BaseShape
-CanvasModel o-- BaseShape
+CanvasModel *-- BaseShape
+ICanvasModel ..|> ICanvasReadModel
 CanvasModel ..|> ICanvasModel
+CanvasModel *-- History
 BaseShape ..|> IShape
 Ellipse ..|> BaseShape
 Rectangle ..|> BaseShape
 Triangle ..|> BaseShape
 ImageShape ..|> BaseShape
-ICanvasModel ..> IShape
+ICanvasReadModel ..> IShape
 
 AbstractCommand ..|> ICommand
 InsertArtObjectCommand o-- CanvasModel
@@ -23,7 +24,6 @@ RemoveShapeCommand o-- CanvasModel
 RemoveShapeCommand ..|> AbstractCommand
 RemoveShapeCommand o-- BaseShape
 RemoveShapeCommand o-- CanvasModel
-LoadJsonCommand ..|> AbstractCommand
 History o-- ICommand
 
 namespace Command {
@@ -32,6 +32,7 @@ namespace Command {
         + canRedo(): boolean
         + undo()
         + redo()
+        + clear()
         + addAndExecuteCommand(command: ICommand)
     }
 
@@ -85,13 +86,6 @@ namespace Command {
 	    + doUnexecute()
         + destroy()
     }
-
-    class LoadJsonCommand {
-        - oldJsonState: ?string
-        + doExecute()
-	    + doUnexecute()
-        + destroy()
-    }
 }
 
 namespace Model {
@@ -99,7 +93,7 @@ namespace Model {
         + constructShape(type: ShapeType, data?: string): BaseShape
     }
 
-    class ICanvasModel {
+    class ICanvasReadModel {
         <<interface>>
         + getShape(shapeId: string): IShape
         + getShapeIdToShapeMap(): Map<string, IShape>
@@ -107,21 +101,41 @@ namespace Model {
         + serializeCanvasToJson(): string
     }
 
+    class ICanvasModel {
+        <<interface>>
+        + addArtObject(type: ArtObjectType)
+	    + addImage(data: string)
+	    + removeShape(shapeId: string)
+	    + undo()
+	    + redo()
+	    + canUndo()
+	    + canRedo()
+	    + loadCanvasFromJson(jsonString: string)
+	    + addObserver(onShapeChange: ShapeChangeObserver)
+	    + removeObserver(onShapeChange: ShapeChangeObserver)
+	    + updateShapeSizeAndPosition(shapeId: string, changes)
+    }
+
     class CanvasModel {
         - canvasSize: ShapeSize
         - shapes: Map<string, BaseShape>
+        - history: History
         - shapeChangeObservers: ShapeChangeObserver[]
-        + loadCanvasFromJson(jsonData: string): void
-        + serializeCanvasToJson(): string
-        + addArtObject(type: ArtObjectType): void
-        + addImage(data: string): void
-        + updateShapeSizeAndPosition(shapeId: string, changes): void
-        + addObserver(onShapeChange: ShapeChangeObserver): void
-        + removeObserver(onShapeChange: ShapeChangeObserver): void
-        + removeShape(shapeId: string): void
-        + getShape(shapeId: string): BaseShape | undefined
-        + getShapeIdToShapeMap(): Map<string, BaseShape>
+        + addArtObject(type: ArtObjectType)
+	    + addImage(data: string)
+	    + removeShape(shapeId: string)
+	    + undo()
+	    + redo()
+	    + canUndo()
+	    + canRedo()
+	    + loadCanvasFromJson(jsonString: string)
+	    + addObserver(onShapeChange: ShapeChangeObserver)
+	    + removeObserver(onShapeChange: ShapeChangeObserver)
+	    + updateShapeSizeAndPosition(shapeId: string, changes)
+        + getShape(shapeId: string): IShape
+        + getShapeIdToShapeMap(): Map<string, IShape>
         + getCanvasSize(): ShapeSize
+        + serializeCanvasToJson(): string
     }
 
     class IShape {
@@ -160,13 +174,13 @@ namespace Model {
     }
 }
 
-App o-- ICanvasModel
+App o-- ICanvasReadModel
 App o-- CanvasController
 App o-- ShapeController
 App ..> Canvas
 App ..> Toolbar
 Toolbar o-- CanvasController
-Canvas o-- ICanvasModel
+Canvas o-- ICanvasReadModel
 Canvas o-- ShapeController
 Canvas o-- CanvasController
 Canvas ..> InteractiveShape
@@ -177,7 +191,7 @@ Canvas ..> ImageShapeComponent
 InteractiveShape o-- ShapeController
 namespace View {
     class App {
-        - model: ICanvasModel
+        - model: ICanvasReadModel
         - canvasController: CanvasController
         - shapeController: ShapeContoller
         + handleSelectShape(shapeId?: string): void
@@ -186,7 +200,7 @@ namespace View {
     }
 
     class Canvas {
-        - model: ICanvasModel
+        - model: ICanvasReadModel
         - canvasController: CanvasController
         - shapeController: ShapeController
         + renderShapes(): ReactElement[]
@@ -227,28 +241,24 @@ namespace View {
 }
 
 CanvasController o-- CanvasModel
-CanvasController o-- History
 ShapeController o-- CanvasModel
-CanvasController o-- History
 namespace Controller {
     class CanvasController {
         - model: CanvasModel
-        - history: History
+        + addArtObject(type: ArtObjectType)
+        + addImage(data: string)
+        + removeShape(shapeId: string)
         + undo()
         + redo()
         + canUndo(): boolean
         + canRedo(): boolean
         + loadCanvasFromJson(jsonString: string)
-        + addArtObject(type: ArtObjectType): void
-        + addImage(data: string): void
-        + removeShape(shapeId: string): void
         + addObserver(onShapeChange: ShapeChangeObserver): void
         + removeObserver(onShapeChange: ShapeChangeObserver): void
     }
 
     class ShapeController {
         - model: CanvasModel
-        - history: History
         + updateShapeSizeAndPosition(shapeId: string, changes): void
         + handleMove(shapeId, initialPosition, deltaX, deltaY): void
         + handleResize(shapeId: string, initial, delta: ShapePosition, resizeCorner: string): void
